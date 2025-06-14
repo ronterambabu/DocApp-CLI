@@ -137,7 +137,7 @@ export default function Login() {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={tw`bg-${loading ? 'blue-400' : 'blue-600'} rounded-xl h-14 justify-center items-center`}
+          style={tw`${loading ? 'bg-blue-400' : 'bg-blue-600'} rounded-xl h-14 justify-center items-center`}
           onPress={handleLogin}
           disabled={loading}
           accessibilityLabel="Login button"

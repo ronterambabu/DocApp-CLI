@@ -36,7 +36,7 @@ const specialties = [
 // Define your stack param list for navigation typing
 export type RootStackParamList = {
   AllSpecialtiesScreen: { type?: string };
-  doctors: { type?: string; specialty: string };
+  Doctors: { type?: string; specialty: string };
   ConsultOptionsScreen: { specialty: string };
   // ...other routes
 };
@@ -56,7 +56,7 @@ const AllSpecialtiesScreen = () => {
 
   const handleSpecialtyPress = (specialty: string) => {
     if (type === 'online' || type === 'offline') {
-      navigation.navigate('doctors', { type, specialty });
+      navigation.navigate('Doctors', { type, specialty });
     } else {
       navigation.navigate('ConsultOptionsScreen', { specialty });
     }

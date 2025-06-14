@@ -76,8 +76,7 @@ export type RootStackParamList = {
   Notification: undefined;
   Searcheverything: undefined;
   AllSpecialtiesScreen: { type?: string } | undefined;
-  LabTestCategoriesScreen: undefined;
-  pharmacytestcategories: undefined;
+  doctors: { type?: string; specialty: string };
   ConsultOptionsScreen: { specialty: string };
   HospitalDetailsScreen: { id: number; name: string; location: string; image: string };
   PharmacyDetailsScreen: { id: number; name: string; location: string; image: string };
@@ -552,7 +551,7 @@ const [showLocationModal, setShowLocationModal] = useState(false);
           </ScrollView>
         </View>
       </ScrollView>
-      <Footer />
+ 
     </SafeAreaView>
 
   );

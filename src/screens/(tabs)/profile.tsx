@@ -13,7 +13,7 @@ type RootStackParamList = {
   Settings: undefined;
   EditProfilepage: undefined;
   CompleteProfile: undefined;
-  appointments: undefined;
+  Appointments: undefined;
   PersonalDetails: undefined;
   MedicalRecords: undefined;
   PaymentMethods: undefined;
@@ -21,7 +21,7 @@ type RootStackParamList = {
   PrivacySecurity: undefined;
   TestBooking: undefined;
   HelpCenter: undefined;
-  '(auth)/login': undefined;
+  'Login': undefined;
 };
 
 type User = {
@@ -38,7 +38,7 @@ export default function ProfileScreen() {
 
   const handleLogout = async () => {
     await AsyncStorage.clear();
-    navigation.reset({ index: 0, routes: [{ name: '(auth)/login' }] });
+    navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
   };
 
   const loadUserFromToken = async () => {
@@ -106,7 +106,7 @@ export default function ProfileScreen() {
        
 <TouchableOpacity
   style={tw`flex-row items-center bg-white rounded-2xl p-4 mb-3 shadow-sm`}
-  onPress={() => navigation.navigate('appointments')}  // Update this route to your actual appointments screen if needed
+  onPress={() => navigation.navigate('Appointments')}  // Update this route to your actual appointments screen if needed
   activeOpacity={0.7}
   accessible
   accessibilityLabel="Appointments"
