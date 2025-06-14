@@ -1,28 +1,112 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
+// Import all screens referenced in navigation
+import OnboardingScreen from './src/screens/onboarding';
+import SearchEverything from './src/screens/SearchEverything';
+import VideoCallScreen from './src/screens/VideoCallScreen';
+import HomeScreen from './src/screens/(tabs)/index';
+import AllHospitalsScreen from './src/screens/(tabs)/AllHospitalsScreen';
+import AllPharmaciesScreen from './src/screens/(tabs)/AllPharmaciesScreen';
+import ProfileScreen from './src/screens/(tabs)/profile';
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
+import NotificationScreen from './src/screens/(tabs)/Notification';
+import AllSpecialtiesScreen from './src/screens/(tabs)/AllSpecialtiesScreen';
+import LabTestCategoriesScreen from './src/screens/(tabs)/LabTestCategoriesScreen';
+import PharmacyTestCategoriesScreen from './src/screens/(tabs)/pharmacytestcategories';
+import ConsultOptionsScreen from './src/screens/ConsultOptionsScreen';
+import HospitalDetailsScreen from './src/screens/(tabs)/HospitalDetailsScreen';
+import PharmacyDetailsScreen from './src/screens/(tabs)/PharmacyDetailsScreen';
+import Footer from './src/screens/(tabs)/Footer';
+import VideoConsultationScreen from './src/screens/VideoConsultationScreen';
+import AppointmentSuccessScreen from './src/screens/appointment-success';
+import NotFoundScreen from './src/screens/+not-found';
+// (auth) screens
+import AuthLayout from './src/screens/(auth)/_layout';
+import SignupScreen from './src/screens/(auth)/signup';
+import LoginScreen from './src/screens/(auth)/login';
+import DoctorLoginScreen from './src/screens/(auth)/doctor-login';
+import CompleteProfileScreen from './src/screens/(auth)/CompleteProfile';
+// (tabs) screens
+import TabsLayout from './src/screens/(tabs)/_layout';
+import VideoConsultationTab from './src/screens/(tabs)/videoconsultation';
+import TestBookingScreen from './src/screens/(tabs)/TestBooking';
+import SettingsScreen from './src/screens/(tabs)/Settings';
+import PrivacySecurityScreen from './src/screens/(tabs)/PrivacySecurity';
+import PharmacyScreen from './src/screens/(tabs)/pharmacy';
+import PersonalDetailsScreen from './src/screens/(tabs)/PersonalDetails';
+import PaymentMethodsScreen from './src/screens/(tabs)/PaymentMethods';
+import MedicalRecordsScreen from './src/screens/(tabs)/MedicalRecords';
+import LabTestsListScreen from './src/screens/(tabs)/LabTestsListScreen';
+import LabTestScreen from './src/screens/(tabs)/LabTestScreen';
+import DoctorAvailabilityScreen from './src/screens/(tabs)/DoctorAvailability';
+import DoctorPopularScreen from './src/screens/(tabs)/DoctorPopular';
+import DoctorsScreen from './src/screens/(tabs)/doctors';
+import EditProfilePageScreen from './src/screens/(tabs)/EditProfilepage';
+import EmergencyServicesScreen from './src/screens/(tabs)/EmergencyServices';
+import HelpCenterScreen from './src/screens/(tabs)/HelpCenter';
+// doctor dynamic screen
+import DoctorScreen from './src/screens/doctor/[id]';
 
+
+const Stack = createStackNavigator();
+
+export default function App() {
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <NewAppScreen templateFileName="App.tsx" />
-    </View>
+    <NavigationContainer>
+      <Footer />
+      <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+        />
+        <Stack.Screen name="AllHospitals" component={AllHospitalsScreen} />
+        <Stack.Screen name="AllPharmacies" component={AllPharmaciesScreen} />
+        <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+        <Stack.Screen name="Search" component={SearchEverything} />
+        <Stack.Screen name="VideoCall" component={VideoCallScreen} />
+        <Stack.Screen name="Profile" component={ProfileScreen} />
+        
+        <Stack.Screen name="Notification" component={NotificationScreen} />
+        <Stack.Screen name="AllSpecialtiesScreen" component={AllSpecialtiesScreen} />
+        <Stack.Screen name="LabTestCategoriesScreen" component={LabTestCategoriesScreen} />
+        <Stack.Screen name="pharmacytestcategories" component={PharmacyTestCategoriesScreen} />
+        <Stack.Screen name="ConsultOptionsScreen" component={ConsultOptionsScreen} />
+        <Stack.Screen name="HospitalDetailsScreen" component={HospitalDetailsScreen} />
+        <Stack.Screen name="PharmacyDetailsScreen" component={PharmacyDetailsScreen} />
+        <Stack.Screen name="VideoConsultationScreen" component={VideoConsultationScreen} />
+        <Stack.Screen name="AppointmentSuccess" component={AppointmentSuccessScreen} />
+        <Stack.Screen name="NotFound" component={NotFoundScreen} />
+        {/* (auth) screens */}
+        <Stack.Screen name="AuthLayout" component={AuthLayout} />
+        <Stack.Screen name="Signup" component={SignupScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="DoctorLogin" component={DoctorLoginScreen} />
+        <Stack.Screen name="CompleteProfile" component={CompleteProfileScreen} />
+        {/* (tabs) screens */}
+        <Stack.Screen name="TabsLayout" component={TabsLayout} />
+        <Stack.Screen name="VideoConsultationTab" component={VideoConsultationTab} />
+        <Stack.Screen name="TestBooking" component={TestBookingScreen} />
+        <Stack.Screen name="Settings" component={SettingsScreen} />
+        <Stack.Screen name="PrivacySecurity" component={PrivacySecurityScreen} />
+        <Stack.Screen name="Pharmacy" component={PharmacyScreen} />
+        <Stack.Screen name="PersonalDetails" component={PersonalDetailsScreen} />
+        <Stack.Screen name="PaymentMethods" component={PaymentMethodsScreen} />
+        <Stack.Screen name="MedicalRecords" component={MedicalRecordsScreen} />
+        <Stack.Screen name="LabTestsList" component={LabTestsListScreen} />
+        <Stack.Screen name="LabTest" component={LabTestScreen} />
+        <Stack.Screen name="DoctorAvailability" component={DoctorAvailabilityScreen} />
+        <Stack.Screen name="DoctorPopular" component={DoctorPopularScreen} />
+        <Stack.Screen name="Doctors" component={DoctorsScreen} />
+        <Stack.Screen name="EditProfilePage" component={EditProfilePageScreen} />
+        <Stack.Screen name="EmergencyServices" component={EmergencyServicesScreen} />
+        <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
+        {/* doctor dynamic screen */}
+        <Stack.Screen name="Doctor" component={DoctorScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
-export default App;
