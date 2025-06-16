@@ -22,22 +22,9 @@ import {
 interface SearchItem {
   title: string;
   type: string;
-  icon?: React.ReactNode;
-  action?: () => void;
+  icon: React.ReactElement;
+  action: () => void;
 }
-
-// Example: Add all user services and navigation actions here
-const allSearchOptions: SearchItem[] = [
-  { title: 'Find Doctors', type: 'Service', icon: <Stethoscope size={20} color="#202b6d" /> },
-  { title: 'Book Appointment', type: 'Service', icon: <CalendarCheck size={20} color="#202b6d" /> },
-  { title: 'Lab Tests', type: 'Service', icon: <FlaskConical size={20} color="#202b6d" /> },
-  { title: 'Pharmacy', type: 'Service', icon: <ShoppingBag size={20} color="#202b6d" /> },
-  { title: 'Medical Records', type: 'Service', icon: <FileText size={20} color="#202b6d" /> },
-  { title: 'Profile', type: 'Account', icon: <User size={20} color="#202b6d" /> },
-  { title: 'Settings', type: 'Account', icon: <Settings size={20} color="#202b6d" /> },
-  { title: 'Help Center', type: 'Support', icon: <HelpCircle size={20} color="#202b6d" /> },
-  // ...add more as needed
-];
 
 const locations = ['Bangalore', 'Mumbai', 'Delhi', 'Hyderabad', 'Chennai'];
 
@@ -47,6 +34,34 @@ const SearchScreen = () => {
   const [searchHistory, setSearchHistory] = useState<SearchItem[]>([]);
   const [selectedLocation, setSelectedLocation] = useState('Bangalore');
   const [showLocationModal, setShowLocationModal] = useState(false);
+
+  const allSearchOptions: SearchItem[] = [
+    { title: 'Find Doctors', type: 'Service', icon: <Stethoscope size={20} color="#202b6d" />, action: () => (navigation as any).navigate('Doctors') },
+    { title: 'Book Appointment', type: 'Service', icon: <CalendarCheck size={20} color="#202b6d" />, action: () => (navigation as any).navigate('Appointments') },
+    { title: 'Lab Tests', type: 'Service', icon: <FlaskConical size={20} color="#202b6d" />, action: () => (navigation as any).navigate('LabTestsList') },
+    { title: 'Lab Test Categories', type: 'Service', icon: <FlaskConical size={20} color="#202b6d" />, action: () => (navigation as any).navigate('LabTestCategoriesScreen') },
+    { title: 'Pharmacy', type: 'Service', icon: <ShoppingBag size={20} color="#202b6d" />, action: () => (navigation as any).navigate('Pharmacy') },
+    { title: 'Pharmacy Test Categories', type: 'Service', icon: <ShoppingBag size={20} color="#202b6d" />, action: () => (navigation as any).navigate('pharmacytestcategories') },
+    { title: 'Medical Records', type: 'Service', icon: <FileText size={20} color="#202b6d" />, action: () => (navigation as any).navigate('MedicalRecords') },
+    { title: 'All Hospitals', type: 'Service', icon: <FileText size={20} color="#202b6d" />, action: () => (navigation as any).navigate('AllHospitals') },
+    { title: 'All Pharmacies', type: 'Service', icon: <FileText size={20} color="#202b6d" />, action: () => (navigation as any).navigate('AllPharmacies') },
+    { title: 'All Specialties', type: 'Service', icon: <FileText size={20} color="#202b6d" />, action: () => (navigation as any).navigate('AllSpecialtiesScreen') },
+    { title: 'Consult Options', type: 'Service', icon: <Stethoscope size={20} color="#202b6d" />, action: () => (navigation as any).navigate('ConsultOptionsScreen') },
+    { title: 'Video Consultation', type: 'Service', icon: <Stethoscope size={20} color="#202b6d" />, action: () => (navigation as any).navigate('VideoConsultationScreen') },
+    { title: 'Video Call', type: 'Service', icon: <Stethoscope size={20} color="#202b6d" />, action: () => (navigation as any).navigate('VideoCall') },
+    { title: 'Appointment Success', type: 'Service', icon: <CalendarCheck size={20} color="#202b6d" />, action: () => (navigation as any).navigate('AppointmentSuccess') },
+    { title: 'Profile', type: 'Account', icon: <User size={20} color="#202b6d" />, action: () => (navigation as any).navigate('Profile') },
+    { title: 'Edit Profile', type: 'Account', icon: <User size={20} color="#202b6d" />, action: () => (navigation as any).navigate('EditProfilePage') },
+    { title: 'Personal Details', type: 'Account', icon: <User size={20} color="#202b6d" />, action: () => (navigation as any).navigate('PersonalDetails') },
+    { title: 'Payment Methods', type: 'Account', icon: <User size={20} color="#202b6d" />, action: () => (navigation as any).navigate('PaymentMethods') },
+    { title: 'Settings', type: 'Account', icon: <Settings size={20} color="#202b6d" />, action: () => (navigation as any).navigate('Settings') },
+    { title: 'Privacy & Security', type: 'Account', icon: <Settings size={20} color="#202b6d" />, action: () => (navigation as any).navigate('PrivacySecurity') },
+    { title: 'Notification', type: 'Account', icon: <Settings size={20} color="#202b6d" />, action: () => (navigation as any).navigate('Notification') },
+    { title: 'Help Center', type: 'Support', icon: <HelpCircle size={20} color="#202b6d" />, action: () => (navigation as any).navigate('HelpCenter') },
+    { title: 'Emergency Services', type: 'Support', icon: <HelpCircle size={20} color="#202b6d" />, action: () => (navigation as any).navigate('EmergencyServices') }
+   
+    // ...add more as needed
+  ];
 
   const clearAll = () => setSearchHistory([]);
   const removeItem = (index: number) =>
@@ -118,12 +133,7 @@ const SearchScreen = () => {
                   style={tw`flex-row items-center justify-between py-3 border-b border-gray-100 bg-white rounded-lg px-2 mb-1`}
                 >
                   <View style={tw`flex-row items-start`}>
-                    {/* Show Lucide icon if present, fallback to Search/Clock */}
-                    {item.icon ? (
-                      item.icon
-                    ) : (
-                      <Search size={18} color="#202b6d" style={tw`mt-1`} />
-                    )}
+                    {item.icon}
                     <View style={tw`ml-3`}>
                       <Text style={tw`text-gray-900 font-semibold text-base`}>{item.title}</Text>
                       <Text style={tw`text-xs text-gray-500 mt-0.5`}>{item.type}</Text>
@@ -131,7 +141,8 @@ const SearchScreen = () => {
                   </View>
                   {searchText.length === 0 && (
                     <Pressable onPress={() => removeItem(index)}>
-                      <MaterialIcons name="close" size={20} color="#999" />
+                      {/* You may want to use a Lucide icon here for consistency */}
+                      <Text style={tw`text-lg text-gray-400`}>×</Text>
                     </Pressable>
                   )}
                 </Pressable>

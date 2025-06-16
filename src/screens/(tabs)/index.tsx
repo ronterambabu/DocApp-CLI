@@ -69,16 +69,17 @@ export type RootStackParamList = {
   Onboarding: undefined;
   Search: undefined;
   VideoCall: undefined;
-  // Add all screens you navigate to from this file:
   Profile: undefined;
   Language: undefined;
   Notification: undefined;
   Searcheverything: undefined;
   AllSpecialtiesScreen: { type?: string } | undefined;
-  doctors: { type?: string; specialty: string };
+  Doctors: { specialty?: string; mode?: string };
   ConsultOptionsScreen: { specialty: string };
   HospitalDetailsScreen: { id: number; name: string; location: string; image: string };
   PharmacyDetailsScreen: { id: number; name: string; location: string; image: string };
+  LabTestCategoriesScreen: undefined;
+  pharmacytestcategories: undefined;
   AllOffersScreen: undefined;
   // ...add more as needed
 };
@@ -319,20 +320,42 @@ const [showLocationModal, setShowLocationModal] = useState(false);
 
   {/* Quick Actions Grid - Images only */}
 <View style={tw`flex-row flex-wrap justify-between mx-4 mt-6 gap-2`}>
-  <TouchableOpacity onPress={() => navigation.navigate('AllSpecialtiesScreen', { type: 'online' })}>
+  {/* Online Consultation */}
+  <TouchableOpacity 
+    onPress={() => navigation.navigate('Doctors', { 
+      specialty: '', 
+      mode: 'video'  // Directly go to video consultation tab
+    })}
+    style={tw`relative`}
+  >
     <Image
       source={require('../Images/onlineconsultations.jpg')}
       style={tw`w-[${(screenWidth - 48) / 2}px] h-30 rounded-3xl`}
       resizeMode="cover"
     />
+    <View style={tw`absolute bottom-2 left-2`}>
+      <Text style={tw`text-white font-bold text-lg`}>Video Consult</Text>
+      <Text style={tw`text-white text-sm`}>Consult Online Now</Text>
+    </View>
   </TouchableOpacity>
 
-  <TouchableOpacity onPress={() => navigation.navigate('AllSpecialtiesScreen', { type: 'offline' })}>
+  {/* In-Clinic Consultation */}
+  <TouchableOpacity 
+    onPress={() => navigation.navigate('Doctors', {
+      specialty: '',
+      mode: 'inclinic'  // Directly go to in-clinic tab
+    })}
+    style={tw`relative`}
+  >
     <Image
       source={require('../Images/onlineconsultations.jpg')}
       style={tw`w-[${(screenWidth - 48) / 2}px] h-30 rounded-3xl`}
       resizeMode="cover"
     />
+    <View style={tw`absolute bottom-2 left-2`}>
+      <Text style={tw`text-white font-bold text-lg`}>Visit Clinic</Text>
+      <Text style={tw`text-white text-sm`}>Book Appointment</Text>
+    </View>
   </TouchableOpacity>
 
   <TouchableOpacity onPress={() => navigation.navigate('LabTestCategoriesScreen')}>

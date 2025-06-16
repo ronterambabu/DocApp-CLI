@@ -2,9 +2,9 @@ import React, { useRef, useState } from 'react';
 import { NavigationContainer, NavigationContainerRef } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { UserProvider } from './src/screens/contexts/UserContext';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Footer from './src/screens/(tabs)/Footer';
-import { StatusBar } from 'react-native';
+import { StatusBar, View } from 'react-native';
 import { LoadingProvider } from './src/components/LoadingOverlay';
 
 // Import all screens referenced in navigation
@@ -65,7 +65,6 @@ export default function App() {
   const [currentRoute, setCurrentRoute] = useState<string | undefined>(undefined);
 
   const handleStateChange = () => {
-    // @ts-ignore
     const route = navigationRef.current?.getCurrentRoute?.();
     setCurrentRoute(route?.name);
   };
@@ -74,8 +73,7 @@ export default function App() {
     <UserProvider>
       <LoadingProvider>
         <SafeAreaProvider>
-          <SafeAreaView style={{ flex: 1, backgroundColor: '#f3f4f6' }}>
-            {/* Set notification bar color globally */}
+          <View style={{ flex: 1, backgroundColor: '#f3f4f6' }}>
             <StatusBar backgroundColor="#202b6d" barStyle="light-content" />
             <NavigationContainer
               ref={navigationRef}
@@ -86,8 +84,8 @@ export default function App() {
                 initialRouteName="Home"
                 screenOptions={{
                   headerShown: false,
-                  // Remove headerLeft (back arrow) globally for all screens
                   headerLeft: () => null,
+                  cardStyle: { backgroundColor: '#f3f4f6' },
                 }}
               >
                 <Stack.Screen
@@ -140,10 +138,9 @@ export default function App() {
                 {/* doctor dynamic screen */}
                 <Stack.Screen name="Doctor" component={DoctorScreen} />
               </Stack.Navigator>
-              {/* Show Footer unless on an auth screen */}
               {currentRoute && !AUTH_SCREENS.includes(currentRoute) && <Footer />}
             </NavigationContainer>
-          </SafeAreaView>
+          </View>
         </SafeAreaProvider>
       </LoadingProvider>
     </UserProvider>
