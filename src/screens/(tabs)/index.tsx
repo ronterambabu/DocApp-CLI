@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Platform,
-  StatusBar,
   Image,
   NativeSyntheticEvent,
   NativeScrollEvent,
@@ -76,8 +75,7 @@ export type RootStackParamList = {
   Notification: undefined;
   Searcheverything: undefined;
   AllSpecialtiesScreen: { type?: string } | undefined;
-  LabTestCategoriesScreen: undefined;
-  pharmacytestcategories: undefined;
+  doctors: { type?: string; specialty: string };
   ConsultOptionsScreen: { specialty: string };
   HospitalDetailsScreen: { id: number; name: string; location: string; image: string };
   PharmacyDetailsScreen: { id: number; name: string; location: string; image: string };
@@ -235,11 +233,6 @@ const [showLocationModal, setShowLocationModal] = useState(false);
 
   return (
     <SafeAreaView style={tw`flex-1 bg-gray-100`}>
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor="#202b6d" // Practo’s dark blue
-        translucent={true}
-      />
       <ScrollView
         contentContainerStyle={tw`pb-20`}
         showsVerticalScrollIndicator={false}
@@ -251,7 +244,7 @@ const [showLocationModal, setShowLocationModal] = useState(false);
       backgroundColor: '#202b6d',
       borderBottomLeftRadius: 24,
       borderBottomRightRadius: 24,
-      paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight! + 10 : 50,
+      paddingTop: Platform.OS === 'android' ? 10 : 50,
     },
   ]}
 >
@@ -552,7 +545,7 @@ const [showLocationModal, setShowLocationModal] = useState(false);
           </ScrollView>
         </View>
       </ScrollView>
-      <Footer />
+ 
     </SafeAreaView>
 
   );

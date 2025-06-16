@@ -12,7 +12,7 @@ const FALLBACK_SPECIALTY = 'General Consultation';
 // Adjust the names/types to match your navigator
 export type RootStackParamList = {
   ConsultOptionsScreen: { specialty?: string };
-  doctors: { specialty: string; mode: string };
+  Doctors: { specialty: string; mode: string };
 };
 
 type ConsultOptionsScreenRouteProp = RouteProp<RootStackParamList, 'ConsultOptionsScreen'>;
@@ -24,7 +24,7 @@ const ConsultOptionsScreen = () => {
   const specialty = route.params?.specialty || FALLBACK_SPECIALTY;
 
   const handleOptionPress = (mode: string) => {
-    navigation.navigate('doctors', { specialty, mode });
+    navigation.navigate('Doctors', { specialty, mode });
   };
 
   return (

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, Image, TouchableOpacity, StatusBar, ActivityIndicator } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, Text, ScrollView, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+// import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   Settings, User, Folder, CreditCard, Bell, Shield, LogOut, ChevronRight, ArrowLeft, CalendarCheck, HelpCircle
 } from 'lucide-react-native';
@@ -13,7 +13,7 @@ type RootStackParamList = {
   Settings: undefined;
   EditProfilepage: undefined;
   CompleteProfile: undefined;
-  appointments: undefined;
+  Appointments: undefined;
   PersonalDetails: undefined;
   MedicalRecords: undefined;
   PaymentMethods: undefined;
@@ -21,7 +21,7 @@ type RootStackParamList = {
   PrivacySecurity: undefined;
   TestBooking: undefined;
   HelpCenter: undefined;
-  '(auth)/login': undefined;
+  'Login': undefined;
 };
 
 type User = {
@@ -31,22 +31,25 @@ type User = {
 };
 
 export default function ProfileScreen() {
-  const insets = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   const handleLogout = async () => {
     await AsyncStorage.clear();
-    navigation.reset({ index: 0, routes: [{ name: '(auth)/login' }] });
+    navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
   };
 
   const loadUserFromToken = async () => {
     try {
       const token = await AsyncStorage.getItem('token');
       if (token) {
-        const decoded = jwtDecode(token);
-        setUser(decoded);
+        const decoded: any = jwtDecode(token);
+        setUser({
+          name: decoded.name ?? '',
+          email: decoded.email ?? '',
+          profile_picture: decoded.profile_picture ?? '',
+        });
       }
     } catch (err) {
       console.error('Error decoding JWT:', err);
@@ -60,8 +63,7 @@ export default function ProfileScreen() {
   }, []);
 
   return (
-    <View style={[tw`flex-1 bg-gray-100`, { paddingTop: insets.top }]}>
-      <StatusBar backgroundColor="#202b6d" barStyle="light-content" />
+    <View style={tw`flex-1 bg-gray-100`}>
       <View style={tw`bg-[#202b6d] h-20 flex-row items-center justify-between px-4 pb-2`}>
         <TouchableOpacity style={tw`w-12 h-12 rounded-full bg-white justify-center items-center shadow-sm`} onPress={() => navigation.goBack()}>
           <ArrowLeft size={24} color="#222B45" />
@@ -106,7 +108,7 @@ export default function ProfileScreen() {
        
 <TouchableOpacity
   style={tw`flex-row items-center bg-white rounded-2xl p-4 mb-3 shadow-sm`}
-  onPress={() => navigation.navigate('appointments')}  // Update this route to your actual appointments screen if needed
+  onPress={() => navigation.navigate('Appointments')}  // Update this route to your actual appointments screen if needed
   activeOpacity={0.7}
   accessible
   accessibilityLabel="Appointments"

@@ -1,6 +1,11 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import React, { useRef, useState } from 'react';
+import { NavigationContainer, NavigationContainerRef } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { UserProvider } from './src/screens/contexts/UserContext';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import Footer from './src/screens/(tabs)/Footer';
+import { StatusBar } from 'react-native';
+import { LoadingProvider } from './src/components/LoadingOverlay';
 
 // Import all screens referenced in navigation
 import OnboardingScreen from './src/screens/onboarding';
@@ -18,9 +23,9 @@ import PharmacyTestCategoriesScreen from './src/screens/(tabs)/pharmacytestcateg
 import ConsultOptionsScreen from './src/screens/ConsultOptionsScreen';
 import HospitalDetailsScreen from './src/screens/(tabs)/HospitalDetailsScreen';
 import PharmacyDetailsScreen from './src/screens/(tabs)/PharmacyDetailsScreen';
-import Footer from './src/screens/(tabs)/Footer';
 import VideoConsultationScreen from './src/screens/VideoConsultationScreen';
 import AppointmentSuccessScreen from './src/screens/appointment-success';
+import AppointmentsScreen from './src/screens/(tabs)/appointments';
 import NotFoundScreen from './src/screens/+not-found';
 // (auth) screens
 import AuthLayout from './src/screens/(auth)/_layout';
@@ -49,63 +54,99 @@ import HelpCenterScreen from './src/screens/(tabs)/HelpCenter';
 // doctor dynamic screen
 import DoctorScreen from './src/screens/doctor/[id]';
 
-
 const Stack = createStackNavigator();
 
+const AUTH_SCREENS = [
+  'AuthLayout', 'Signup', 'Login', 'DoctorLogin', 'CompleteProfile'
+];
+
 export default function App() {
+  const navigationRef = useRef<NavigationContainerRef<any>>(null);
+  const [currentRoute, setCurrentRoute] = useState<string | undefined>(undefined);
+
+  const handleStateChange = () => {
+    // @ts-ignore
+    const route = navigationRef.current?.getCurrentRoute?.();
+    setCurrentRoute(route?.name);
+  };
+
   return (
-    <NavigationContainer>
-      <Footer />
-      <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-        />
-        <Stack.Screen name="AllHospitals" component={AllHospitalsScreen} />
-        <Stack.Screen name="AllPharmacies" component={AllPharmaciesScreen} />
-        <Stack.Screen name="Onboarding" component={OnboardingScreen} />
-        <Stack.Screen name="Search" component={SearchEverything} />
-        <Stack.Screen name="VideoCall" component={VideoCallScreen} />
-        <Stack.Screen name="Profile" component={ProfileScreen} />
-        
-        <Stack.Screen name="Notification" component={NotificationScreen} />
-        <Stack.Screen name="AllSpecialtiesScreen" component={AllSpecialtiesScreen} />
-        <Stack.Screen name="LabTestCategoriesScreen" component={LabTestCategoriesScreen} />
-        <Stack.Screen name="pharmacytestcategories" component={PharmacyTestCategoriesScreen} />
-        <Stack.Screen name="ConsultOptionsScreen" component={ConsultOptionsScreen} />
-        <Stack.Screen name="HospitalDetailsScreen" component={HospitalDetailsScreen} />
-        <Stack.Screen name="PharmacyDetailsScreen" component={PharmacyDetailsScreen} />
-        <Stack.Screen name="VideoConsultationScreen" component={VideoConsultationScreen} />
-        <Stack.Screen name="AppointmentSuccess" component={AppointmentSuccessScreen} />
-        <Stack.Screen name="NotFound" component={NotFoundScreen} />
-        {/* (auth) screens */}
-        <Stack.Screen name="AuthLayout" component={AuthLayout} />
-        <Stack.Screen name="Signup" component={SignupScreen} />
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="DoctorLogin" component={DoctorLoginScreen} />
-        <Stack.Screen name="CompleteProfile" component={CompleteProfileScreen} />
-        {/* (tabs) screens */}
-        <Stack.Screen name="TabsLayout" component={TabsLayout} />
-        <Stack.Screen name="VideoConsultationTab" component={VideoConsultationTab} />
-        <Stack.Screen name="TestBooking" component={TestBookingScreen} />
-        <Stack.Screen name="Settings" component={SettingsScreen} />
-        <Stack.Screen name="PrivacySecurity" component={PrivacySecurityScreen} />
-        <Stack.Screen name="Pharmacy" component={PharmacyScreen} />
-        <Stack.Screen name="PersonalDetails" component={PersonalDetailsScreen} />
-        <Stack.Screen name="PaymentMethods" component={PaymentMethodsScreen} />
-        <Stack.Screen name="MedicalRecords" component={MedicalRecordsScreen} />
-        <Stack.Screen name="LabTestsList" component={LabTestsListScreen} />
-        <Stack.Screen name="LabTest" component={LabTestScreen} />
-        <Stack.Screen name="DoctorAvailability" component={DoctorAvailabilityScreen} />
-        <Stack.Screen name="DoctorPopular" component={DoctorPopularScreen} />
-        <Stack.Screen name="Doctors" component={DoctorsScreen} />
-        <Stack.Screen name="EditProfilePage" component={EditProfilePageScreen} />
-        <Stack.Screen name="EmergencyServices" component={EmergencyServicesScreen} />
-        <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
-        {/* doctor dynamic screen */}
-        <Stack.Screen name="Doctor" component={DoctorScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <UserProvider>
+      <LoadingProvider>
+        <SafeAreaProvider>
+          <SafeAreaView style={{ flex: 1, backgroundColor: '#f3f4f6' }}>
+            {/* Set notification bar color globally */}
+            <StatusBar backgroundColor="#202b6d" barStyle="light-content" />
+            <NavigationContainer
+              ref={navigationRef}
+              onReady={handleStateChange}
+              onStateChange={handleStateChange}
+            >
+              <Stack.Navigator
+                initialRouteName="Home"
+                screenOptions={{
+                  headerShown: false,
+                  // Remove headerLeft (back arrow) globally for all screens
+                  headerLeft: () => null,
+                }}
+              >
+                <Stack.Screen
+                  name="Home"
+                  component={HomeScreen}
+                />
+                <Stack.Screen name="AllHospitals" component={AllHospitalsScreen} />
+                <Stack.Screen name="AllPharmacies" component={AllPharmaciesScreen} />
+                <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+                <Stack.Screen name="Searcheverything" component={SearchEverything} />
+                <Stack.Screen name="VideoCall" component={VideoCallScreen} />
+                <Stack.Screen name="Profile" component={ProfileScreen} />
+                
+                <Stack.Screen name="Notification" component={NotificationScreen} />
+                <Stack.Screen name="AllSpecialtiesScreen" component={AllSpecialtiesScreen} />
+                <Stack.Screen name="LabTestCategoriesScreen" component={LabTestCategoriesScreen} />
+                <Stack.Screen name="pharmacytestcategories" component={PharmacyTestCategoriesScreen} />
+                <Stack.Screen name="ConsultOptionsScreen" component={ConsultOptionsScreen} />
+                <Stack.Screen name="HospitalDetailsScreen" component={HospitalDetailsScreen} />
+                <Stack.Screen name="PharmacyDetailsScreen" component={PharmacyDetailsScreen} />
+                <Stack.Screen name="VideoConsultationScreen" component={VideoConsultationScreen} />
+                <Stack.Screen name="AppointmentSuccess" component={AppointmentSuccessScreen} />
+                <Stack.Screen name="Appointments" component={AppointmentsScreen} />
+                {/* Not Found Screen */}
+                <Stack.Screen name="NotFound" component={NotFoundScreen} />
+                {/* (auth) screens */}
+                <Stack.Screen name="AuthLayout" component={AuthLayout} />
+                <Stack.Screen name="Signup" component={SignupScreen} />
+                <Stack.Screen name="Login" component={LoginScreen} />
+                <Stack.Screen name="DoctorLogin" component={DoctorLoginScreen} />
+                <Stack.Screen name="CompleteProfile" component={CompleteProfileScreen} />
+                {/* (tabs) screens */}
+                <Stack.Screen name="TabsLayout" component={TabsLayout} />
+                <Stack.Screen name="VideoConsultationTab" component={VideoConsultationTab} />
+                <Stack.Screen name="TestBooking" component={TestBookingScreen} />
+                <Stack.Screen name="Settings" component={SettingsScreen} />
+                <Stack.Screen name="PrivacySecurity" component={PrivacySecurityScreen} />
+                <Stack.Screen name="Pharmacy" component={PharmacyScreen} />
+                <Stack.Screen name="PersonalDetails" component={PersonalDetailsScreen} />
+                <Stack.Screen name="PaymentMethods" component={PaymentMethodsScreen} />
+                <Stack.Screen name="MedicalRecords" component={MedicalRecordsScreen} />
+                <Stack.Screen name="LabTestsList" component={LabTestsListScreen} />
+                <Stack.Screen name="LabTest" component={LabTestScreen} />
+                <Stack.Screen name="DoctorAvailability" component={DoctorAvailabilityScreen} />
+                <Stack.Screen name="DoctorPopular" component={DoctorPopularScreen} />
+                <Stack.Screen name="Doctors" component={DoctorsScreen} />
+                <Stack.Screen name="EditProfilePage" component={EditProfilePageScreen} />
+                <Stack.Screen name="EmergencyServices" component={EmergencyServicesScreen} />
+                <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
+                {/* doctor dynamic screen */}
+                <Stack.Screen name="Doctor" component={DoctorScreen} />
+              </Stack.Navigator>
+              {/* Show Footer unless on an auth screen */}
+              {currentRoute && !AUTH_SCREENS.includes(currentRoute) && <Footer />}
+            </NavigationContainer>
+          </SafeAreaView>
+        </SafeAreaProvider>
+      </LoadingProvider>
+    </UserProvider>
   );
 }
 

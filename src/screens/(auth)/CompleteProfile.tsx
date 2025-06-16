@@ -9,7 +9,6 @@ import {
   ActivityIndicator,
   ScrollView,
   SafeAreaView,
-  StatusBar,
   Alert,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -100,7 +99,6 @@ export default function CompleteProfile() {
         { paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 },
       ]}
     >
-      <StatusBar barStyle="dark-content" backgroundColor="#202b6d" />
       <ScrollView contentContainerStyle={tw`p-4 pt-6 pb-10`}>
         {/* Profile Picture */}
         <View style={tw`mb-6 items-center`}>

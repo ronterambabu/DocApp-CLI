@@ -5,7 +5,6 @@ import {
   Switch,
   TouchableOpacity,
   Alert,
-  SafeAreaView,
   ScrollView,
   Image,
 } from 'react-native';
@@ -13,6 +12,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { ArrowLeft } from 'lucide-react-native';
 import tw from 'twrnc'; // Import twrnc for Tailwind CSS
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const SettingsScreen = () => {
   const navigation = useNavigation();
@@ -27,7 +27,7 @@ const SettingsScreen = () => {
   };
 
   return (
-    <SafeAreaView style={tw`flex-1 bg-gray-100 px-5 pt-2.5`}>
+    <SafeAreaView style={tw`flex-1 bg-gray-100`}>
       <ScrollView contentContainerStyle={tw`pb-20`}>
         {/* Header */}
         <View style={tw`flex-row items-center justify-between mb-2.5`}>
