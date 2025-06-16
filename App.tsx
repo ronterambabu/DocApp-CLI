@@ -51,6 +51,8 @@ import DoctorsScreen from './src/screens/(tabs)/doctors';
 import EditProfilePageScreen from './src/screens/(tabs)/EditProfilepage';
 import EmergencyServicesScreen from './src/screens/(tabs)/EmergencyServices';
 import HelpCenterScreen from './src/screens/(tabs)/HelpCenter';
+import MyPaymentsScreen from '././src/screens/(tabs)/PaymentMethods';
+import WalletScreen from '././src/screens/(tabs)/wallet';
 // doctor dynamic screen
 import DoctorScreen from './src/screens/doctor/[id]';
 
@@ -100,7 +102,7 @@ export default function App() {
                 <Stack.Screen name="Searcheverything" component={SearchEverything} />
                 <Stack.Screen name="VideoCall" component={VideoCallScreen} />
                 <Stack.Screen name="Profile" component={ProfileScreen} />
-                
+
                 <Stack.Screen name="Notification" component={NotificationScreen} />
                 <Stack.Screen name="AllSpecialtiesScreen" component={AllSpecialtiesScreen} />
                 <Stack.Screen name="LabTestCategoriesScreen" component={LabTestCategoriesScreen} />
@@ -137,6 +139,8 @@ export default function App() {
                 <Stack.Screen name="EditProfilePage" component={EditProfilePageScreen} />
                 <Stack.Screen name="EmergencyServices" component={EmergencyServicesScreen} />
                 <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
+                <Stack.Screen name="MyPayments" component={MyPaymentsScreen} options={{ headerShown: false }} />
+                <Stack.Screen name="Wallet" component={WalletScreen} options={{ headerShown: false }} />
                 {/* doctor dynamic screen */}
                 <Stack.Screen name="Doctor" component={DoctorScreen} />
               </Stack.Navigator>

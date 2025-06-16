@@ -10,7 +10,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { ArrowLeft } from 'lucide-react-native';
-import tw from 'twrnc'; // Import twrnc for Tailwind CSS
+import tw from 'twrnc';
 
 const TEST_DATA = [
   { id: '1', name: 'Complete Blood Count (CBC)', price: 400 },
@@ -52,17 +52,18 @@ const TestBookingScreen = () => {
     const isSelected = selectedTests.includes(item.id);
     return (
       <TouchableOpacity
-        style={tw`bg-white p-4 rounded-3xl mb-3 border border-gray-300 ${isSelected ? 'border-blue-600 bg-blue-50' : ''}`}
+        style={tw`bg-white p-4 rounded-xl mb-3 mx-4 border border-gray-300 ${isSelected ? 'border-blue-600 bg-blue-50' : ''}`}
         onPress={() => toggleSelection(item.id)}
+        activeOpacity={0.8}
       >
         <View style={tw`flex-row items-center`}>
           <Icon
             name={isSelected ? 'checkbox' : 'square-outline'}
             size={24}
-            color={isSelected ? '#007bff' : '#888'}
+            color={isSelected ? '#2E86DE' : '#888'}
           />
           <View style={tw`ml-3 flex-1`}>
-            <Text style={tw`text-base font-medium`}>{item.name}</Text>
+            <Text style={tw`text-base font-medium text-gray-900`}>{item.name}</Text>
             <Text style={tw`text-sm text-gray-600 mt-1`}>₹{item.price}</Text>
           </View>
         </View>
@@ -72,28 +73,34 @@ const TestBookingScreen = () => {
 
   return (
     <SafeAreaView style={tw`flex-1 bg-gray-100`}>
-      <View style={tw`flex-row items-center justify-between mb-4`}>
+      {/* Header */}
+      <View style={tw`flex-row items-center px-4 py-3 bg-white shadow-sm`}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <ArrowLeft size={24} color="#222B45" />
         </TouchableOpacity>
-        <Text style={tw`text-xl font-bold text-center flex-1`}>Book a Test</Text>
-        <View style={tw`w-6`} /> {/* Spacer for alignment */}
+        <Text style={tw`text-xl font-bold text-center flex-1 -ml-6`}>Book a Test</Text>
       </View>
 
+      {/* Test List */}
       <FlatList
         data={TEST_DATA}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
-        contentContainerStyle={tw`pb-32`}
+        contentContainerStyle={tw`pb-32 pt-4`}
+        showsVerticalScrollIndicator={false}
       />
 
+      {/* Bottom Bar */}
       {selectedTests.length > 0 && (
-        <View style={tw`absolute bottom-[-40px] left-0 right-0 bg-white p-4 border-t border-gray-200 flex-row justify-between items-center`}>
-          <Text style={tw`text-base font-medium`}>
-            {selectedTests.length} test(s) selected — ₹{totalAmount}
+        <View style={tw`absolute bottom-0 left-0 right-0 bg-white px-4 py-3 border-t border-gray-200 flex-row justify-between items-center`}>
+          <Text style={tw`text-base font-medium text-gray-800`}>
+            {selectedTests.length} test(s) — ₹{totalAmount}
           </Text>
-          <TouchableOpacity style={tw`bg-blue-600 py-2 px-5 rounded-2xl`} onPress={handleBooking}>
-            <Text style={tw`text-white text-base`}>Book Now</Text>
+          <TouchableOpacity
+            style={tw`bg-blue-600 py-2 px-5 rounded-2xl`}
+            onPress={handleBooking}
+          >
+            <Text style={tw`text-white text-base font-semibold`}>Book Now</Text>
           </TouchableOpacity>
         </View>
       )}
