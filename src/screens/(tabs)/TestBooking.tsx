@@ -6,11 +6,9 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import Icon from 'react-native-vector-icons/Ionicons';
-import { useNavigation } from '@react-navigation/native';
-import { ArrowLeft } from 'lucide-react-native';
+import { CheckSquare, Square } from 'lucide-react-native';
 import tw from 'twrnc';
+import PageLayout from '../../components/PageLayout';
 
 const TEST_DATA = [
   { id: '1', name: 'Complete Blood Count (CBC)', price: 400 },
@@ -21,7 +19,6 @@ const TEST_DATA = [
 ];
 
 const TestBookingScreen = () => {
-  const navigation = useNavigation();
   const [selectedTests, setSelectedTests] = useState<string[]>([]);
 
   const toggleSelection = (id: string) => {
@@ -52,16 +49,21 @@ const TestBookingScreen = () => {
     const isSelected = selectedTests.includes(item.id);
     return (
       <TouchableOpacity
-        style={tw`bg-white p-4 rounded-xl mb-3 mx-4 border border-gray-300 ${isSelected ? 'border-blue-600 bg-blue-50' : ''}`}
+        style={tw`bg-white p-4 rounded-xl mb-3 mx-4 border ${
+          isSelected ? 'border-blue-600 bg-blue-50' : 'border-gray-300'
+        }`}
         onPress={() => toggleSelection(item.id)}
         activeOpacity={0.8}
+        accessibilityRole="checkbox"
+        accessibilityLabel={item.name}
+        accessibilityState={{ checked: isSelected }}
       >
         <View style={tw`flex-row items-center`}>
-          <Icon
-            name={isSelected ? 'checkbox' : 'square-outline'}
-            size={24}
-            color={isSelected ? '#2E86DE' : '#888'}
-          />
+          {isSelected ? (
+            <CheckSquare size={24} color="#2E86DE" />
+          ) : (
+            <Square size={24} color="#888" />
+          )}
           <View style={tw`ml-3 flex-1`}>
             <Text style={tw`text-base font-medium text-gray-900`}>{item.name}</Text>
             <Text style={tw`text-sm text-gray-600 mt-1`}>₹{item.price}</Text>
@@ -72,16 +74,11 @@ const TestBookingScreen = () => {
   };
 
   return (
-    <SafeAreaView style={tw`flex-1 bg-gray-100`}>
-      {/* Header */}
-      <View style={tw`flex-row items-center px-4 py-3 bg-white shadow-sm`}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <ArrowLeft size={24} color="#222B45" />
-        </TouchableOpacity>
-        <Text style={tw`text-xl font-bold text-center flex-1 -ml-6`}>Book a Test</Text>
-      </View>
-
-      {/* Test List */}
+    <PageLayout
+      title="Book a Test"
+      headerBackgroundColor="#2E3192"
+      scrollable={false}
+    >
       <FlatList
         data={TEST_DATA}
         renderItem={renderItem}
@@ -99,12 +96,14 @@ const TestBookingScreen = () => {
           <TouchableOpacity
             style={tw`bg-blue-600 py-2 px-5 rounded-2xl`}
             onPress={handleBooking}
+            accessibilityRole="button"
+            accessibilityLabel={`Book ${selectedTests.length} tests for ₹${totalAmount}`}
           >
             <Text style={tw`text-white text-base font-semibold`}>Book Now</Text>
           </TouchableOpacity>
         </View>
       )}
-    </SafeAreaView>
+    </PageLayout>
   );
 };
 

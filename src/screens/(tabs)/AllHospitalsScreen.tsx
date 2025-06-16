@@ -8,9 +8,9 @@ import {
   TextInput,
 } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-// @ts-ignore
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Search } from 'lucide-react-native';
 import tw from 'twrnc';
+import PageLayout from '../../components/PageLayout';
 
 const hospitals = [
   {
@@ -70,6 +70,9 @@ const AllHospitalsScreen = () => {
     <TouchableOpacity
       onPress={() => navigation.navigate('HospitalDetailsScreen', { id: item.id })}
       style={tw`bg-white rounded-4xl mx-4 mb-5 shadow-sm elevation-4 overflow-hidden`}
+      accessible
+      accessibilityLabel={`${item.name} hospital in ${item.location}`}
+      accessibilityRole="button"
     >
       <Image
         source={{ uri: item.image }}
@@ -84,26 +87,26 @@ const AllHospitalsScreen = () => {
   );
 
   return (
-    <View style={tw`flex-1 bg-gray-50 pt-12`}>
-      {/* Header */}
-      <View style={tw`flex-row items-center px-4 mb-4`}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={tw`mr-3`}>
-          <Ionicons name="arrow-back" size={24} color="#1E293B" />
-        </TouchableOpacity>
-        <Text style={tw`text-2xl font-bold text-slate-800`}>All Hospitals</Text>
-      </View>
-
+    <PageLayout
+      title="All Hospitals"
+      headerBackgroundColor="#2E3192"
+      scrollable={false}
+    >
       {/* Search Bar */}
-      <View
-        style={tw`mx-4 mb-4 bg-white rounded-3xl px-3.5 py-2.5 flex-row items-center shadow-sm elevation-2`}
-      >
-        <Ionicons name="search" size={20} color="#94A3B8" style={tw`mr-2`} />
-        <TextInput
-          placeholder="Search hospitals..."
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          style={tw`flex-1 text-base`}
-        />
+      <View style={tw`px-4 mb-4`}>
+        <View
+          style={tw`bg-white rounded-3xl px-3.5 py-2.5 flex-row items-center shadow-sm elevation-2`}
+        >
+          <Search size={20} color="#94A3B8" style={tw`mr-2`} />
+          <TextInput
+            placeholder="Search hospitals..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            style={tw`flex-1 text-base`}
+            accessibilityLabel="Search hospitals"
+            accessibilityRole="search"
+          />
+        </View>
       </View>
 
       {/* Hospital List */}
@@ -112,13 +115,14 @@ const AllHospitalsScreen = () => {
         keyExtractor={(item) => item.id}
         renderItem={renderHospitalCard}
         showsVerticalScrollIndicator={false}
+        contentContainerStyle={tw`pb-4`}
         ListEmptyComponent={
           <Text style={tw`text-center mt-10 text-base text-gray-400`}>
             No hospitals found.
           </Text>
         }
       />
-    </View>
+    </PageLayout>
   );
 };
 

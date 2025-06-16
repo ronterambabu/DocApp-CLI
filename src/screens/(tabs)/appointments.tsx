@@ -5,23 +5,21 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
-  SafeAreaView,
   ActivityIndicator,
   Alert,
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import api from '../../../apiConfig'; // Adjust the import path as necessary
+import api from '../../../apiConfig';
 import {
   Calendar,
   Clock,
   MapPin,
   Video,
   Phone,
-  ArrowLeft,
 } from 'lucide-react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import axios from 'axios';
 import tw from 'twrnc';
+import PageLayout from '../../components/PageLayout';
 
 const BASE_URL = 'http://3.108.233.123:5000';
 
@@ -37,14 +35,12 @@ type Appointment = {
   location: string;
 };
 
-// Add navigation typing for book-appointment if needed
 export type RootStackParamList = {
   AppointmentsScreen: undefined;
   'book-appointment': undefined;
 };
 
 export default function AppointmentsScreen() {
-  const insets = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [activeTab, setActiveTab] = useState<'upcoming' | 'completed' | 'cancelled'>('upcoming');
   const [appointments, setAppointments] = useState<Appointment[]>([]);
@@ -70,7 +66,7 @@ export default function AppointmentsScreen() {
 
   const renderItem = ({ item }: { item: Appointment }) => (
     <View
-      style={tw`bg-white rounded-2xl p-4 mb-4 shadow-md border border-gray-100`}
+      style={tw`bg-white rounded-2xl p-4 mb-4 shadow-md border border-gray-100 mx-4`}
       accessible
       accessibilityLabel={`Appointment with ${item.doctorName}`}
     >
@@ -138,52 +134,43 @@ export default function AppointmentsScreen() {
     </View>
   );
 
-  return (
-    <View style={tw`flex-1 bg-gray-50`}>
-      <SafeAreaView style={tw`bg-[#ffffff]`}>
-        <View style={tw`flex-row items-center px-6 pt-12 pb-4`}>
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={tw`p-2 mr-4`}
-            accessible
-            accessibilityLabel="Go back"
-            accessibilityRole="button"
+  const TabBar = () => (
+    <View style={tw`flex-row mx-4 mt-3 mb-4 bg-gray-100 rounded-xl p-1`}>
+      {['upcoming', 'completed', 'cancelled'].map((tab) => (
+        <TouchableOpacity
+          key={tab}
+          style={tw`flex-1 py-2.5 items-center rounded-lg relative ${
+            activeTab === tab ? 'bg-white shadow-sm' : 'bg-transparent'
+          }`}
+          onPress={() => setActiveTab(tab as 'upcoming' | 'completed' | 'cancelled')}
+          accessible
+          accessibilityLabel={`${tab} appointments`}
+          accessibilityRole="tab"
+          accessibilityState={{ selected: activeTab === tab }}
+        >
+          <Text
+            style={tw`${
+              activeTab === tab ? 'text-[#1A73E8] font-semibold' : 'text-gray-500'
+            } text-sm`}
           >
-            <ArrowLeft size={24} color="#111827" />
-          </TouchableOpacity>
-          <Text style={tw`text-lg font-bold text-[#111827] flex-1 text-center`}>
-            My Appointments
+            {tab.charAt(0).toUpperCase() + tab.slice(1)}
           </Text>
-          <View style={tw`w-12`} />
-        </View>
-      </SafeAreaView>
+          {activeTab === tab && (
+            <View style={tw`absolute bottom-0 left-1/2 w-1/3 h-0.5 bg-[#1A73E8] rounded-full -translate-x-1/2`} />
+          )}
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
 
-      <View style={tw`flex-row mx-4 mt-3 mb-4 bg-gray-100 rounded-xl p-1`}>
-        {['upcoming', 'completed', 'cancelled'].map((tab) => (
-          <TouchableOpacity
-            key={tab}
-            style={tw`flex-1 py-2.5 items-center rounded-lg relative ${
-              activeTab === tab ? 'bg-white shadow-sm' : 'bg-transparent'
-            }`}
-            onPress={() => setActiveTab(tab as 'upcoming' | 'completed' | 'cancelled')}
-            accessible
-            accessibilityLabel={`${tab} appointments`}
-            accessibilityRole="tab"
-          >
-            <Text
-              style={tw`${
-                activeTab === tab ? 'text-[#1A73E8] font-semibold' : 'text-gray-500'
-              } text-sm`}
-            >
-              {tab.charAt(0).toUpperCase() + tab.slice(1)}
-            </Text>
-            {activeTab === tab && (
-              <View style={tw`absolute bottom-0 left-1/2 w-1/3 h-0.5 bg-[#1A73E8] rounded-full -translate-x-1/2`} />
-            )}
-          </TouchableOpacity>
-        ))}
-      </View>
-
+  return (
+    <PageLayout
+      title="My Appointments"
+      headerBackgroundColor="#2E3192"
+      scrollable={false}
+    >
+      <TabBar />
+      
       {isLoading ? (
         <View style={tw`flex-1 items-center justify-center`}>
           <ActivityIndicator size="large" color="#1A73E8" />
@@ -194,7 +181,7 @@ export default function AppointmentsScreen() {
           data={filteredAppointments}
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
-          contentContainerStyle={tw`px-4 pb-6 pt-2`}
+          contentContainerStyle={tw`pt-2 pb-6`}
           ListEmptyComponent={
             <View style={tw`items-center justify-center mt-20`}>
               <Text style={tw`text-gray-400 text-sm`}>No {activeTab} appointments</Text>
@@ -213,6 +200,6 @@ export default function AppointmentsScreen() {
           }
         />
       )}
-    </View>
+    </PageLayout>
   );
 }

@@ -4,15 +4,12 @@ import {
   Text,
   Switch,
   TouchableOpacity,
-  SafeAreaView,
   Alert,
-  ScrollView,
-  StatusBar,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
-import { ArrowLeft } from 'lucide-react-native';
+import { Lock, FileText, ChevronRight } from 'lucide-react-native';
 import tw from 'twrnc';
+import PageLayout from '../../components/PageLayout';
 
 const PrivacySecurityScreen = () => {
   const navigation = useNavigation();
@@ -47,31 +44,14 @@ const PrivacySecurityScreen = () => {
   };
 
   return (
-    <SafeAreaView style={tw`flex-1 bg-gray-100`}>
-      <StatusBar barStyle="dark-content" backgroundColor="#F3F4F6" />
+    <PageLayout
+      title="Privacy & Security"
+      headerBackgroundColor="#2E3192"
+      scrollable={true}
+    >
+      {/* Two-Factor Authentication */}
       <View style={tw`px-4`}>
-        {/* Header */}
-        <TouchableOpacity
-          style={tw`mt-2 mb-4 p-2 self-start bg-white rounded-full shadow`}
-          onPress={() => navigation.goBack()}
-        >
-          <ArrowLeft size={24} color="#222B45" />
-        </TouchableOpacity>
-
-        <Text style={tw`text-2xl font-bold text-gray-900 mb-4`}>
-          Privacy & Security
-        </Text>
-      </View>
-
-      <ScrollView
-        style={tw`px-4`}
-        contentContainerStyle={tw`pb-10`}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* Two-Factor Authentication */}
-        <View
-          style={tw`bg-white p-4 rounded-xl mb-4 flex-row justify-between items-start`}
-        >
+        <View style={tw`bg-white p-4 rounded-xl mb-4 flex-row justify-between items-start`}>
           <View style={tw`flex-1 pr-3`}>
             <Text style={tw`text-base font-medium text-gray-900`}>
               Two-Factor Authentication
@@ -85,11 +65,16 @@ const PrivacySecurityScreen = () => {
 
         {/* Change Password */}
         <TouchableOpacity
-          style={tw`flex-row items-center bg-white p-4 rounded-xl mb-4`}
+          style={tw`flex-row items-center justify-between bg-white p-4 rounded-xl mb-4`}
           onPress={handleChangePassword}
+          accessibilityRole="button"
+          accessibilityLabel="Change Password"
         >
-          <Icon name="lock-closed-outline" size={22} color="#555" />
-          <Text style={tw`ml-3 text-base text-gray-800`}>Change Password</Text>
+          <View style={tw`flex-row items-center`}>
+            <Lock size={22} color="#555" />
+            <Text style={tw`ml-3 text-base text-gray-800`}>Change Password</Text>
+          </View>
+          <ChevronRight size={20} color="#aaa" />
         </TouchableOpacity>
 
         {/* App Permissions Header */}
@@ -103,30 +88,29 @@ const PrivacySecurityScreen = () => {
             key={key}
             style={tw`bg-white py-4 px-4 rounded-xl mb-3 flex-row justify-between items-center`}
           >
-            <Text style={tw`text-base text-gray-900`}>
-              {key.charAt(0).toUpperCase() + key.slice(1)}
-            </Text>
+            <Text style={tw`text-base text-gray-900 capitalize`}>{key}</Text>
             <Switch
               value={value}
-              onValueChange={() =>
-                togglePermission(key as keyof typeof appPermissions)
-              }
+              onValueChange={() => togglePermission(key as keyof typeof appPermissions)}
             />
           </View>
         ))}
 
         {/* Privacy Policy */}
         <TouchableOpacity
-          style={tw`flex-row items-center bg-white p-4 rounded-xl mt-4`}
+          style={tw`flex-row items-center justify-between bg-white p-4 rounded-xl mt-4`}
           onPress={handlePrivacyPolicy}
+          accessibilityRole="button"
+          accessibilityLabel="View Privacy Policy"
         >
-          <Icon name="document-text-outline" size={22} color="#555" />
-          <Text style={tw`ml-3 text-base text-gray-800`}>
-            View Privacy Policy
-          </Text>
+          <View style={tw`flex-row items-center`}>
+            <FileText size={22} color="#555" />
+            <Text style={tw`ml-3 text-base text-gray-800`}>View Privacy Policy</Text>
+          </View>
+          <ChevronRight size={20} color="#aaa" />
         </TouchableOpacity>
-      </ScrollView>
-    </SafeAreaView>
+      </View>
+    </PageLayout>
   );
 };
 
