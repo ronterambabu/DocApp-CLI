@@ -11,7 +11,7 @@ import {
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { Home, FileText, User, Stethoscope } from 'lucide-react-native';
 import tw from 'twrnc';
-import { Image } from 'react-native'; 
+
 import { useLoading } from '../../components/LoadingOverlay';
 
 type RootStackParamList = {
