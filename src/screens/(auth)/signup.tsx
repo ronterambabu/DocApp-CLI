@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  View, Text, TextInput, TouchableOpacity, Image, ScrollView, ActivityIndicator, Alert
+  View, Text, TextInput, TouchableOpacity, Image, ActivityIndicator, Alert
 } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { Eye, EyeOff, Mail, Lock, User, Phone } from 'lucide-react-native';
@@ -13,7 +13,7 @@ import CompleteProfile from './CompleteProfile';
 export type RootStackParamList = {
   '(tabs)': undefined;
   'CompleteProfile': undefined;
-  login: undefined;
+  Login: undefined;
 };
 
 // 👇 NEW: check login via cookie
@@ -126,7 +126,7 @@ export default function Signup() {
   };
 
   const goToLogin = () => {
-    navigation.navigate('login');
+    navigation.navigate('Login');
   };
 
   const toggleShowPassword = () => {
@@ -134,115 +134,109 @@ export default function Signup() {
   };
 
   return (
-    <ScrollView style={tw`flex-1 bg-white`} contentContainerStyle={tw`p-5 pb-10`}>
-      <View style={tw`mt-15 mb-10`}>
-        
-
-        <Text style={tw`font-bold text-3xl text-blue-600 mb-2`}>Create Account</Text>
+    <View style={tw`flex-1 bg-white justify-center px-5 py-10`}> 
+      <View style={tw`items-center mb-10 mt-8`}>  
+        <Image
+          source={{ uri: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png' }}
+          style={tw`w-20 h-20 mb-4 rounded-full bg-gray-200`}
+        />
+        <Text style={tw`font-bold text-3xl text-blue-700 mb-1`}>Create Account</Text>
         <Text style={tw`text-base text-gray-500`}>Sign up to get started</Text>
       </View>
 
-      <View style={tw`mb-6`}>
-        {/* Error message */}
-        {errorMessage ? (
-          <View style={tw`bg-red-100 border border-red-400 rounded-lg p-3 mb-4`}>
-            <Text style={tw`text-red-700 text-center`}>{errorMessage}</Text>
-          </View>
-        ) : null}
-
-        {/* Full Name */}
-        <View style={tw`flex-row items-center border border-gray-200 rounded-xl mb-4 px-3 h-14 bg-gray-100`}>
-          <User size={20} color="#8F9BB3" style={tw`mr-2`} />
-          <TextInput
-            style={tw`flex-1 h-14 text-base text-gray-800 font-normal`}
-            placeholder="Full Name"
-            placeholderTextColor="#8F9BB3"
-            value={name}
-            onChangeText={setName}
-            autoCapitalize="words"
-          />
+      {/* Error message */}
+      {errorMessage ? (
+        <View style={tw`bg-red-100 border border-red-400 rounded-lg p-3 mb-4`}>
+          <Text style={tw`text-red-700 text-center`}>{errorMessage}</Text>
         </View>
+      ) : null}
 
-        {/* Email */}
-        <View style={tw`flex-row items-center border border-gray-200 rounded-xl mb-4 px-3 h-14 bg-gray-100`}>
-          <Mail size={20} color="#8F9BB3" style={tw`mr-2`} />
-          <TextInput
-            style={tw`flex-1 h-14 text-base text-gray-800 font-normal`}
-            placeholder="Email"
-            placeholderTextColor="#8F9BB3"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            value={email}
-            onChangeText={setEmail}
-          />
-        </View>
+      {/* Full Name */}
+      <View style={tw`flex-row items-center border border-gray-200 rounded-xl mb-4 px-3 h-14 bg-gray-100`}>
+        <User size={20} color="#8F9BB3" style={tw`mr-2`} />
+        <TextInput
+          style={tw`flex-1 h-14 text-base text-gray-800 font-normal`}
+          placeholder="Full Name"
+          placeholderTextColor="#8F9BB3"
+          value={name}
+          onChangeText={setName}
+          autoCapitalize="words"
+        />
+      </View>
 
-        {/* Phone Number */}
-        <View style={tw`flex-row items-center border border-gray-200 rounded-xl mb-4 px-3 h-14 bg-gray-100`}>
-          <Phone size={20} color="#8F9BB3" style={tw`mr-2`} />
-          <Text style={tw`mr-1 text-gray-500`}>+91</Text>
-          <TextInput
-            style={tw`flex-1 h-14 text-base text-gray-800 font-normal`}
-            placeholder="Phone Number"
-            placeholderTextColor="#8F9BB3"
-            keyboardType="phone-pad"
-            value={phoneNumber}
-            onChangeText={setPhoneNumber}
-            maxLength={15}
-          />
-        </View>
+      {/* Email */}
+      <View style={tw`flex-row items-center border border-gray-200 rounded-xl mb-4 px-3 h-14 bg-gray-100`}>
+        <Mail size={20} color="#8F9BB3" style={tw`mr-2`} />
+        <TextInput
+          style={tw`flex-1 h-14 text-base text-gray-800 font-normal`}
+          placeholder="Email"
+          placeholderTextColor="#8F9BB3"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          value={email}
+          onChangeText={setEmail}
+        />
+      </View>
 
-        {/* Password */}
-        <View style={tw`flex-row items-center border border-gray-200 rounded-xl mb-4 px-3 h-14 bg-gray-100`}>
-          <Lock size={20} color="#8F9BB3" style={tw`mr-2`} />
-          <TextInput
-            style={tw`flex-1 h-14 text-base text-gray-800 font-normal`}
-            placeholder="Password"
-            placeholderTextColor="#8F9BB3"
-            secureTextEntry={!showPassword}
-            value={password}
-            onChangeText={setPassword}
-          />
-          <TouchableOpacity onPress={toggleShowPassword} style={tw`p-2`}>
-            {showPassword ? (
-              <EyeOff size={20} color="#8F9BB3" />
-            ) : (
-              <Eye size={20} color="#8F9BB3" />
-            )}
-          </TouchableOpacity>
-        </View>
+      {/* Phone Number */}
+      <View style={tw`flex-row items-center border border-gray-200 rounded-xl mb-4 px-3 h-14 bg-gray-100`}>
+        <Phone size={20} color="#8F9BB3" style={tw`mr-2`} />
+        <Text style={tw`mr-1 text-gray-500`}>+91</Text>
+        <TextInput
+          style={tw`flex-1 h-14 text-base text-gray-800 font-normal`}
+          placeholder="Phone Number"
+          placeholderTextColor="#8F9BB3"
+          keyboardType="phone-pad"
+          value={phoneNumber}
+          onChangeText={setPhoneNumber}
+          maxLength={15}
+        />
+      </View>
 
-        <View style={tw`mb-6`}>
-          <Text style={tw`text-sm text-gray-500 leading-5`}>
-            By signing up, you agree to our{' '}
-            <Text style={tw`text-blue-600 font-medium`}>Terms of Service</Text> and{' '}
-            <Text style={tw`text-blue-600 font-medium`}>Privacy Policy</Text>
-          </Text>
-        </View>
-
-        {/* Sign Up Button */}
-        <TouchableOpacity
-          style={tw`bg-blue-600 rounded-xl h-14 justify-center items-center ${loading ? 'opacity-70' : ''}`}
-          onPress={handleSignup}
-          disabled={loading}
-        >
-          {loading ? (
-            <ActivityIndicator color="#FFFFFF" />
+      {/* Password */}
+      <View style={tw`flex-row items-center border border-gray-200 rounded-xl mb-4 px-3 h-14 bg-gray-100`}>
+        <Lock size={20} color="#8F9BB3" style={tw`mr-2`} />
+        <TextInput
+          style={tw`flex-1 h-14 text-base text-gray-800 font-normal`}
+          placeholder="Password"
+          placeholderTextColor="#8F9BB3"
+          secureTextEntry={!showPassword}
+          value={password}
+          onChangeText={setPassword}
+        />
+        <TouchableOpacity onPress={toggleShowPassword} style={tw`p-2`}>
+          {showPassword ? (
+            <EyeOff size={20} color="#8F9BB3" />
           ) : (
-            <Text style={tw`text-white text-base font-semibold`}>Sign Up</Text>
+            <Eye size={20} color="#8F9BB3" />
           )}
         </TouchableOpacity>
       </View>
 
+      <Text style={tw`text-xs text-gray-500 mb-6 text-center`}>By signing up, you agree to our <Text style={tw`text-blue-600 font-medium`}>Terms of Service</Text> and <Text style={tw`text-blue-600 font-medium`}>Privacy Policy</Text>.</Text>
+
+      {/* Sign Up Button */}
+      <TouchableOpacity
+        style={tw`bg-blue-600 rounded-xl h-14 justify-center items-center mb-4 ${loading ? 'opacity-70' : ''}`}
+        onPress={handleSignup}
+        disabled={loading}
+      >
+        {loading ? (
+          <ActivityIndicator color="#FFFFFF" />
+        ) : (
+          <Text style={tw`text-white text-base font-semibold`}>Sign Up</Text>
+        )}
+      </TouchableOpacity>
+
       {/* OR Separator */}
-      <View style={tw`flex-row items-center my-6`}>
+      <View style={tw`flex-row items-center my-6`}> 
         <View style={tw`flex-1 h-px bg-gray-200`} />
         <Text style={tw`text-sm text-gray-500 mx-3 font-medium`}>OR</Text>
         <View style={tw`flex-1 h-px bg-gray-200`} />
       </View>
 
       {/* Social Signup */}
-      <View style={tw`flex-row justify-center mb-6`}>
+      <View style={tw`flex-row justify-center mb-6`}> 
         <TouchableOpacity style={tw`w-14 h-14 rounded-full bg-gray-100 justify-center items-center mx-3 border border-gray-200`}>
           <Image
             source={{ uri: 'https://cdn-icons-png.flaticon.com/512/2991/2991148.png' }}
@@ -258,12 +252,12 @@ export default function Signup() {
       </View>
 
       {/* Go to Login */}
-      <View style={tw`flex-row justify-center mt-4`}>
+      <View style={tw`flex-row justify-center mt-2 mb-4`}>
         <Text style={tw`text-sm text-gray-500`}>Already have an account? </Text>
         <TouchableOpacity onPress={goToLogin}>
           <Text style={tw`text-sm text-blue-600 font-semibold`}>Login</Text>
         </TouchableOpacity>
       </View>
-    </ScrollView>
+    </View>
   );
 }

@@ -3,14 +3,12 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Platform, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Chrome as Home, Calendar, User, PieChart, MessageCircle } from 'lucide-react-native';
-import Footer from './Footer';
 import tw from 'twrnc';
 import useLoadUser from '../../hooks/useLoadUser';
 // Import your tab screens
 import HomeScreen from './index';
 import AppointmentsScreen from './appointments';
 import DoctorsScreen from './doctors';
-
 import ProfileScreen from './profile';
 
 const Tab = createBottomTabNavigator();
@@ -59,7 +57,6 @@ export default function TabLayout() {
               tabBarIcon: ({ color, size }) => <PieChart size={size} color={color} />,
             }}
           />
-          
           <Tab.Screen
             name="Profile"
             component={ProfileScreen}
@@ -69,7 +66,6 @@ export default function TabLayout() {
             }}
           />
         </Tab.Navigator>
-        <Footer />
       </View>
     </SafeAreaProvider>
   );

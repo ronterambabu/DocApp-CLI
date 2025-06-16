@@ -4,9 +4,9 @@ import {
   Text,
   FlatList,
   TouchableOpacity,
-  SafeAreaView,
   Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { ArrowLeft } from 'lucide-react-native';
@@ -71,7 +71,7 @@ const TestBookingScreen = () => {
   };
 
   return (
-    <SafeAreaView style={tw`flex-1 bg-gray-100 px-5 pt-2.5`}>
+    <SafeAreaView style={tw`flex-1 bg-gray-100`}>
       <View style={tw`flex-row items-center justify-between mb-4`}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <ArrowLeft size={24} color="#222B45" />

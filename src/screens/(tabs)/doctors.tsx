@@ -11,9 +11,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import Feather from 'react-native-vector-icons/Feather';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { ArrowLeft, Search, MapPin } from 'lucide-react-native';
+import { ArrowLeft, Search as LucideSearch, MapPin, ThumbsUp, MessageCircle, Star, IndianRupee, Calendar as LucideCalendar } from 'lucide-react-native';
 import tw from 'twrnc';
 
 const doctors = [
@@ -78,30 +76,20 @@ const FindDoctorsScreen = () => {
       {/* Header */}
       <View style={[tw`pb-2`, { paddingTop: insets.top + 10 }]}>
         <View style={tw`flex-row items-center justify-between`}>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={tw`p-2`}>
-            <ArrowLeft color="#222B45" size={24} />
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <ArrowLeft size={24} color="#222B45" />
           </TouchableOpacity>
-          <View style={tw`flex-row items-center`}>
-            <MapPin size={18} color="#6B7280" />
-            <TouchableOpacity onPress={() => setLocationModalVisible(true)}>
-              <Text style={tw`text-base font-semibold text-purple-700 ml-1`}>
-                {location}
-              </Text>
-            </TouchableOpacity>
-          </View>
+          <Text style={tw`text-xl font-bold flex-1 text-center`}>Find Doctors</Text>
+          <View style={tw`w-8`} />
         </View>
-        <Text style={tw`text-center text-xl font-semibold text-gray-800 mt-2`}>
-          Find Your Health Concern
-        </Text>
       </View>
-
       {/* Search Bar */}
-      <View style={tw`flex-row items-center bg-gray-100 rounded-xl px-4 h-12 mb-3`}>
-        <Search color="#A0A3BD" size={20} />
+      <View style={tw`flex-row items-center bg-gray-100 rounded-xl px-3 py-2 mt-3 mb-2`}>
+        <LucideSearch size={20} color="#888" />
         <TextInput
-          style={tw`flex-1 ml-3 text-gray-900 text-base`}
-          placeholder="Search doctors or specialties"
-          placeholderTextColor="#9CA3AF"
+          style={tw`flex-1 ml-2 text-base`}
+          placeholder="Search doctors..."
+          placeholderTextColor="#888"
           value={search}
           onChangeText={setSearch}
         />
@@ -184,7 +172,7 @@ const FindDoctorsScreen = () => {
                 <View style={tw`flex-row flex-wrap items-center mt-1`}>
                   {item.recommendation && (
                     <View style={tw`flex-row items-center bg-green-100 px-2 py-0.5 rounded-full mr-1`}>
-                      <Feather name="thumbs-up" size={12} color="#047857" />
+                      <ThumbsUp size={12} color="#047857" />
                       <Text style={tw`text-xs text-green-800 ml-1`}>
                         {item.recommendation} Recommended
                       </Text>
@@ -192,27 +180,27 @@ const FindDoctorsScreen = () => {
                   )}
                   {item.rating && (
                     <View style={tw`flex-row items-center bg-purple-100 px-2 py-0.5 rounded-full mt-1 ml-1`}>
-                      <FontAwesome5 name="star" size={12} color="#7c3aed" />
+                      <Star size={12} color="#7c3aed" />
                       <Text style={tw`text-xs text-purple-800 ml-1`}>{item.rating}</Text>
                     </View>
                   )}
                 </View>
                 {item.patientStories && (
                   <View style={tw`flex-row items-center mt-1`}>
-                    <Feather name="message-circle" size={12} color="#6B7280" />
+                    <MessageCircle size={12} color="#6B7280" />
                     <Text style={tw`text-xs text-gray-500 ml-1`}>
                       {item.patientStories} Patient Stories
                     </Text>
                   </View>
                 )}
                 <View style={tw`flex-row items-start mt-1`}>
-                  <Feather name="map-pin" size={12} color="#6B7280" style={tw`mt-0.5`} />
+                  <MapPin size={12} color="#6B7280" style={tw`mt-0.5`} />
                   <Text style={tw`text-xs text-gray-500 ml-1`}>
                     {item.location} • {item.clinic}
                   </Text>
                 </View>
                 <View style={tw`flex-row items-center mt-1`}>
-                  <FontAwesome5 name="rupee-sign" size={10} color="#6B7280" />
+                  <IndianRupee size={10} color="#6B7280" />
                   <Text style={tw`text-xs text-gray-500 ml-1`}>
                     {item.fee} Consultation Fees
                   </Text>

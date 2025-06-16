@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Alert, SafeAreaView, StatusBar } from 'react-native';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import tw from 'twrnc';
@@ -13,8 +14,7 @@ const VideoConsultationScreen = () => {
   };
 
   return (
-    <SafeAreaView style={tw`flex-1 bg-blue-50`}>
-      <StatusBar barStyle="light-content" backgroundColor="#2A6EF7" />
+    <SafeAreaView style={tw`flex-1 bg-gray-100`}>
       
       {/* Top Header with Back Arrow */}
       <View style={tw`bg-blue-600 p-5 pt-12`}>

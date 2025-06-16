@@ -11,6 +11,7 @@ import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { Home, FileText, User, Stethoscope } from 'lucide-react-native';
 import tw from 'twrnc';
 import { Image } from 'react-native'; 
+import { useLoading } from '../../components/LoadingOverlay';
 
 type RootStackParamList = {
   Home: undefined;
@@ -21,8 +22,7 @@ type RootStackParamList = {
 const Footer = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [modalVisible, setModalVisible] = useState(false);
-  // For selected state, you may need to pass a prop or use navigation state if needed
-  // For now, fallback to always unselected
+  const { setLoading } = useLoading();
 
 const specialties = [
   { name: 'General Physician', image: require('../Images/PopUpICons/general_physician.png') },
@@ -46,7 +46,6 @@ const specialties = [
   { name: 'Bones & Joints', image: require('../Images/PopUpICons/arthritis.png') },
 ];
 
-
   return (
     <>
       {/* Modal */}
@@ -55,6 +54,7 @@ const specialties = [
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
+        onShow={() => setLoading(false)}
       >
         <View style={tw`flex-1 bg-black/50 justify-center items-center`}>
           <View style={tw`w-[95%] h-[80%] bg-white rounded-2xl p-5 items-center`}>
@@ -96,36 +96,39 @@ const specialties = [
         <TouchableOpacity
           style={tw`flex-1 items-center`}
           accessibilityRole="button"
-          onPress={() => navigation.getParent()?.navigate('Home')}
+          onPress={async () => {
+            if (navigation.getState().routes[navigation.getState().index].name !== 'Home') {
+              setLoading(true);
+              navigation.navigate('Home');
+              setTimeout(() => setLoading(false), 400);
+            }
+          }}
         >
           <Home size={22} color={'#B0B0B0'} />
           <Text style={tw`text-[10px] mt-0.5 text-gray-400`}>Home</Text>
         </TouchableOpacity>
+        <View style={tw`flex-1 items-center`} /> {/* Empty space for center */}
         <TouchableOpacity
           style={tw`flex-1 items-center`}
           accessibilityRole="button"
-          onPress={() => navigation.navigate('ConsultOptionsScreen', { specialty: 'General Physician' })}
-        >
-          <Stethoscope size={22} color={'#B0B0B0'} />
-          <Text style={tw`text-[10px] mt-0.5 text-gray-400`}>Doctor</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={tw`flex-1 items-center`}
-          accessibilityRole="button"
-          onPress={() => navigation.navigate('MedicalRecords')}
+          onPress={async () => {
+            setLoading(true);
+            navigation.navigate('MedicalRecords');
+            setTimeout(() => setLoading(false), 400);
+          }}
         >
           <FileText size={22} color={'#B0B0B0'} />
           <Text style={tw`text-[10px] mt-0.5 text-gray-400`}>Medical Records</Text>
         </TouchableOpacity>
       </View>
-      {/* Floating Button */}
+      {/* Floating Doctor Button Only */}
       <TouchableOpacity
-        style={tw`absolute bottom-3.5 left-1/2 -translate-x-8.75 shadow-lg z-10`}
+        style={tw`absolute bottom-0 left-1/2 -translate-x-8.75 shadow-lg z-10 flex-col items-center`}
         onPress={() => setModalVisible(true)}
         activeOpacity={0.8}
       >
-        <View style={tw`w-[70px] h-[70px] rounded-full bg-blue-600 justify-center items-center`}>
-          <User size={28} color="#fff" />
+        <View style={tw`w-[70px] h-[70px] rounded-full bg-blue-600 justify-center items-center border-4 border-white`}>
+          <Stethoscope size={32} color="#fff" />
         </View>
       </TouchableOpacity>
     </>

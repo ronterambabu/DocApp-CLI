@@ -18,8 +18,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // Define your stack param list for navigation typing
 export type RootStackParamList = {
   Tabs: undefined;
-  signup: undefined;
-  'doctor-login': undefined;
+  Signup: undefined;
+  'DoctorLogin': undefined;
   '(tabs)': undefined;
   login: undefined;
 };
@@ -178,7 +178,7 @@ export default function Login() {
       <View style={tw`flex-row justify-center mt-4 mb-6`}>
         <Text style={tw`text-sm text-gray-500`}>Don't have an account? </Text>
         <TouchableOpacity
-          onPress={() => navigation.navigate('signup')}
+          onPress={() => navigation.navigate('Signup')}
           accessibilityLabel="Sign up"
         >
           <Text style={tw`text-sm text-blue-600 font-semibold`}>Sign Up</Text>
@@ -187,7 +187,7 @@ export default function Login() {
 
       <TouchableOpacity
         style={tw`bg-white border border-gray-300 rounded-xl h-10 w-32 justify-center items-center mt-4 mx-auto`}
-        onPress={() => navigation.navigate('doctor-login')}
+        onPress={() => navigation.navigate('DoctorLogin')}
         accessibilityLabel="Doctor login button"
       >
         <Text style={tw`text-blue-600 text-sm font-semibold`}>Doctor Login</Text>

@@ -2,7 +2,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { View, StyleSheet, StatusBar } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 
 import { UserProvider } from '../screens/contexts/UserContext';
 // Import your screens here
@@ -35,7 +35,6 @@ export default function RootLayout() {
               {/* <Stack.Screen name="ConsultOptionsScreen" component={ConsultOptionsScreen} /> */}
             </Stack.Navigator>
           </NavigationContainer>
-          <StatusBar barStyle="dark-content" />
         </View>
       </SafeAreaProvider>
     </UserProvider>

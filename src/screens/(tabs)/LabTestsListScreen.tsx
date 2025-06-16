@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Platform,
-  StatusBar,
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
@@ -41,7 +40,7 @@ const LabTestsListScreen = () => {
   const selectedTest = mockTests.find((test) => test.id === selectedTestId);
 
   return (
-    <SafeAreaView style={[tw`flex-1 bg-gray-100`, { paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight || 0) : 0 }]}> 
+    <SafeAreaView style={[tw`flex-1 bg-gray-100`, { paddingTop: Platform.OS === 'android' ? 0 : 0 }]}> 
       <View style={tw`h-14 flex-row items-center justify-between px-4 border-b border-gray-300 bg-white`}>
         <TouchableOpacity
           style={tw`w-8 justify-center items-center`}
