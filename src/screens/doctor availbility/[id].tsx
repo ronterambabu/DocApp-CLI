@@ -100,15 +100,15 @@ const DoctorDetailScreen = () => {
 
   return (
     <View style={tw`flex-1 bg-white`}>  
-      {/* Blue header bar with doctor info */}
-      <View style={[tw`bg-blue-800 flex-row items-center px-4`, { paddingTop: insets.top + 8, paddingBottom: 16 }]}> 
+      {/* Blue header bar with doctor info, styled for exact match */}
+      <View style={[tw`bg-blue-800 flex-row items-center px-4`, { paddingTop: insets.top + 8, paddingBottom: 12, minHeight: 64 }]}> 
         <TouchableOpacity onPress={() => navigation.goBack()} accessibilityLabel="Go back" accessibilityRole="button" style={tw`mr-3`}>
           <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
-        <Image source={{ uri: doctor.image }} style={tw`w-10 h-10 rounded-full border-2 border-white`} />
+        <Image source={{ uri: doctor.image }} style={tw`w-11 h-11 rounded-full border-2 border-white`} />
         <View style={tw`ml-3 flex-1`}> 
           <Text style={tw`text-white font-bold text-base`}>{doctor.name}</Text>
-          <Text style={tw`text-white text-xs`}>{doctor.clinic || doctor.location}</Text>
+          <Text style={tw`text-white text-xs mt-0.5`}>{doctor.clinic || doctor.location}</Text>
         </View>
       </View>
 
@@ -119,8 +119,8 @@ const DoctorDetailScreen = () => {
           <Text style={tw`ml-2 text-base font-semibold text-blue-800`}>Clinic Visit Slots</Text>
         </View>
 
-        {/* Date Tabs */}
-        <View style={tw`flex-row px-2 pb-2`}> 
+        {/* Date Tabs - exact spacing and color */}
+        <View style={tw`flex-row px-2 pb-2`}>
           {slotData.map((slot, idx) => (
             <TouchableOpacity
               key={slot.date}
@@ -141,7 +141,7 @@ const DoctorDetailScreen = () => {
         {/* Selected Date Heading */}
         <Text style={tw`text-center text-base font-semibold mb-2`}>{selectedSlotGroup.date}</Text>
 
-        {/* Slot Groups */}
+        {/* Slot Groups - exact grouping and spacing */}
         <View style={tw`px-4`}> 
           {selectedSlotGroup.slots.length === 0 ? (
             <Text style={tw`text-center text-gray-400 my-8`}>No slots available</Text>
@@ -149,12 +149,12 @@ const DoctorDetailScreen = () => {
             selectedSlotGroup.slots.map((group, idx) => {
               const IconComponent = group.icon;
               return (
-                <View key={group.period} style={tw`mb-4`}>
+                <View key={group.period} style={tw`mb-4`}> 
                   <View style={tw`flex-row items-center mb-2`}>
                     <IconComponent color="#2563eb" size={18} />
                     <Text style={tw`ml-2 font-semibold text-gray-700`}>{group.period} <Text style={tw`text-xs text-gray-500`}>{group.count} slots</Text></Text>
                   </View>
-                  <View style={tw`flex-row flex-wrap`}>
+                  <View style={tw`flex-row flex-wrap`}> 
                     {group.times.map((time) => (
                       <TouchableOpacity
                         key={time}
@@ -174,7 +174,7 @@ const DoctorDetailScreen = () => {
         </View>
       </ScrollView>
 
-      {/* Book Appointment Button */}
+      {/* Book Appointment Button - fixed, shadow, spacing */}
       <View style={[tw`px-4 pb-4`, { paddingBottom: insets.bottom + 16, backgroundColor: 'white', shadowColor: '#000', shadowOpacity: 0.08, shadowRadius: 8, elevation: 8 }]}> 
         <TouchableOpacity
           style={tw`w-full py-3.5 rounded-xl items-center ${selectedTime ? 'bg-blue-600' : 'bg-gray-400 opacity-60'}`}
