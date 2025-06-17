@@ -53,6 +53,7 @@ import EmergencyServicesScreen from './src/screens/(tabs)/EmergencyServices';
 import HelpCenterScreen from './src/screens/(tabs)/HelpCenter';
 import MyPaymentsScreen from '././src/screens/(tabs)/PaymentMethods';
 import WalletScreen from '././src/screens/(tabs)/wallet';
+import ShopMedicalScreen from '././src/screens/(tabs)/shopmedical';
 // doctor dynamic screen
 import DoctorScreen from './src/screens/doctor/[id]';
 
@@ -137,8 +138,10 @@ export default function App() {
                 <Stack.Screen name="EditProfilePage" component={EditProfilePageScreen} />
                 <Stack.Screen name="EmergencyServices" component={EmergencyServicesScreen} />
                 <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
+                <Stack.Screen name="shopmedical" component={ShopMedicalScreen} />
                 <Stack.Screen name="MyPayments" component={MyPaymentsScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="Wallet" component={WalletScreen} options={{ headerShown: false }} />
+
                 {/* doctor dynamic screen */}
                 <Stack.Screen name="Doctor" component={DoctorScreen} />
               </Stack.Navigator>

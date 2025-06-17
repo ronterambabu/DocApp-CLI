@@ -6,6 +6,7 @@ import {
   FlatList,
   TouchableOpacity,
   TextInput,
+  Dimensions,
 } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { Search } from 'lucide-react-native';
@@ -51,11 +52,9 @@ const pharmacies = [
   },
 ];
 
-// Define your stack param list for navigation typing
 export type RootStackParamList = {
   AllPharmaciesScreen: undefined;
   PharmacyDetailsScreen: { id: string };
-  // ...other routes
 };
 
 const AllPharmaciesScreen = () => {
@@ -69,19 +68,21 @@ const AllPharmaciesScreen = () => {
   const renderPharmacyCard = ({ item }: { item: typeof pharmacies[0] }) => (
     <TouchableOpacity
       onPress={() => navigation.navigate('PharmacyDetailsScreen', { id: item.id })}
-      style={tw`bg-white rounded-4xl mx-4 mb-5 shadow-sm elevation-4 overflow-hidden`}
-      accessible
-      accessibilityLabel={`${item.name} pharmacy in ${item.location}`}
+      style={tw`bg-white rounded-2xl mx-4 mb-4 shadow-md overflow-hidden`}
       accessibilityRole="button"
+      accessibilityLabel={`${item.name} pharmacy in ${item.location}`}
     >
       <Image
         source={{ uri: item.image }}
-        style={tw`h-48 w-full`}
-        resizeMode="cover"
+        style={{
+          width: Dimensions.get('window').width - 32,
+          height: 180,
+          resizeMode: 'cover',
+        }}
       />
-      <View style={tw`p-3`}>
-        <Text style={tw`text-lg font-bold text-slate-800`}>{item.name}</Text>
-        <Text style={tw`text-sm text-gray-500 mt-0.5`}>{item.location}</Text>
+      <View style={tw`p-4`}>
+        <Text style={tw`text-lg font-bold text-gray-900`}>{item.name}</Text>
+        <Text style={tw`text-sm text-gray-500 mt-1`}>{item.location}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -93,18 +94,16 @@ const AllPharmaciesScreen = () => {
       scrollable={false}
     >
       {/* Search Bar */}
-      <View style={tw`px-4 mb-4`}>
-        <View
-          style={tw`bg-white rounded-3xl px-3.5 py-2.5 flex-row items-center shadow-sm elevation-2`}
-        >
-          <Search size={20} color="#94A3B8" style={tw`mr-2`} />
+      <View style={tw`px-4 mt-4 mb-3`}>
+        <View style={tw`flex-row items-center bg-white rounded-full px-4 py-2 shadow`}>
+          <Search size={20} color="#9CA3AF" style={tw`mr-2`} />
           <TextInput
             placeholder="Search pharmacies..."
+            placeholderTextColor="#9CA3AF"
             value={searchQuery}
             onChangeText={setSearchQuery}
-            style={tw`flex-1 text-base`}
+            style={tw`flex-1 text-base text-gray-800`}
             accessibilityLabel="Search pharmacies"
-            accessibilityRole="search"
           />
         </View>
       </View>
@@ -114,8 +113,8 @@ const AllPharmaciesScreen = () => {
         data={filteredPharmacies}
         keyExtractor={(item) => item.id}
         renderItem={renderPharmacyCard}
+        contentContainerStyle={tw`pb-10`}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={tw`pb-4`}
         ListEmptyComponent={
           <Text style={tw`text-center mt-10 text-base text-gray-400`}>
             No pharmacies found.
