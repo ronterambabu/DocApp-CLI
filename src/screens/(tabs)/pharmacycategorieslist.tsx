@@ -9,66 +9,75 @@ import {
   SafeAreaView,
   Alert,
   Modal,
-  ScrollView,
   Dimensions,
+  StyleSheet,
 } from 'react-native';
-// @ts-ignore
-import Feather from 'react-native-vector-icons/Feather';
+import { ArrowLeft, ShoppingCart, ChevronDown, Search } from 'lucide-react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import tw from 'twrnc';
+import PageHeader from '../../components/PageHeader';
 
 const categories = [
-  { name: 'Covid Essentials', image: { uri: 'https://source.unsplash.com/featured/?sanitizer,mask' } },
-  { name: 'Skin Care', image: { uri: 'https://source.unsplash.com/featured/?skincare' } },
-  { name: 'Vitamins and Minerals', image: { uri: 'https://source.unsplash.com/featured/?vitamins' } },
-  { name: 'Sexual Wellness', image: { uri: 'https://source.unsplash.com/featured/?wellness' } },
-  { name: 'Health Food and Drinks', image: { uri: 'https://source.unsplash.com/featured/?healthdrink' } },
-  { name: 'Pain Relief', image: { uri: 'https://source.unsplash.com/featured/?painrelief' } },
-  { name: 'Diabetic Care', image: { uri: 'https://source.unsplash.com/featured/?diabetes' } },
-  { name: 'Protein and Supplements', image: { uri: 'https://source.unsplash.com/featured/?protein,supplements' } },
-  { name: 'Skin Care', image: { uri: 'https://source.unsplash.com/featured/?skincare' } },
+  { name: 'Covid Essentials', image: { uri: 'https://assets-netstorage.groww.in/medias/medicines/covid-essentials.png' } },
+  { name: 'Skin Care', image: { uri: 'https://assets-netstorage.groww.in/medias/medicines/skin-care.png' } },
+  { name: 'Vitamins and Minerals', image: { uri: 'https://assets-netstorage.groww.in/medias/medicines/vitamins-minerals.png' } },
+  { name: 'Sexual Wellness', image: { uri: 'https://assets-netstorage.groww.in/medias/medicines/sexual-wellness.png' } },
+  { name: 'Health Food and Drinks', image: { uri: 'https://assets-netstorage.groww.in/medias/medicines/health-food-drinks.png' } },
+  { name: 'Baby Care', image: { uri: 'https://assets-netstorage.groww.in/medias/medicines/baby-care.png' } },
+  { name: 'Pain Relief', image: { uri: 'https://assets-netstorage.groww.in/medias/medicines/pain-relief.png' } },
+  { name: 'Diabetic Care', image: { uri: 'https://assets-netstorage.groww.in/medias/medicines/diabetic-care.png' } },
+  { name: 'Protein and Supplements', image: { uri: 'https://assets-netstorage.groww.in/medias/medicines/protein-supplements.png' } },
 ];
 
 const locations = ['Bangalore', 'Hyderabad', 'Mumbai', 'Delhi', 'Chennai'];
 
 type RootStackParamList = {
-  pharmacy: undefined;
+  Pharmacy: { category: string };
+  Home: undefined;
+  Cart: undefined;
 };
 
-export default function PharmacyScreen() {
+export default function PharmacyCategoriesScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [cart, setCart] = useState<{ name: string }[]>([]);
   const [location, setLocation] = useState('Bangalore');
   const [showLocationModal, setShowLocationModal] = useState(false);
-
-  const handleAddToCart = (item: { name: string }) => {
-    setCart((prev) => [...prev, item]);
-    Alert.alert('Added to Cart', `${item.name} added to cart`);
-  };
+  const [search, setSearch] = useState('');
 
   const screenWidth = Dimensions.get('window').width;
   const imageSize = (screenWidth - 64) / 3;
 
+  // Filter categories by search
+  const filteredCategories = categories.filter((cat) =>
+    cat.name.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
-    <SafeAreaView style={tw`flex-1 bg-white`}>
+    <SafeAreaView style={tw`flex-1 bg-[#f7fafd]`}>
       {/* Header */}
-      <View style={tw`flex-row items-center justify-between px-4 py-3 border-b border-gray-200`}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Feather name="arrow-left" size={24} color="black" />
-        </TouchableOpacity>
-        <Text style={tw`text-lg font-semibold`}>Pharmacy</Text>
-        <TouchableOpacity onPress={() => Alert.alert('Cart', `${cart.length} item(s) in cart`)}>
-          <Feather name="shopping-cart" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
+      <PageHeader
+        title="Pharmacy"
+        backgroundColor="#202b6d"
+        textColor="#fff"
+        leftComponent={
+          <TouchableOpacity onPress={() => navigation.goBack()} style={tw`p-2`}>
+            <ArrowLeft size={24} color="#fff" />
+          </TouchableOpacity>
+        }
+        rightComponent={
+          <TouchableOpacity onPress={() => navigation.navigate('Cart' as never)} style={tw`p-2`}>
+            <ShoppingCart size={24} color="#fff" />
+          </TouchableOpacity>
+        }
+      />
 
       {/* Location Selector */}
       <View style={tw`flex-row items-center px-4 py-2`}>
-        <Text style={tw`text-sm`}>Deliver to - </Text>
+        <Text style={tw`text-sm text-gray-700`}>Deliver to - </Text>
         <TouchableOpacity onPress={() => setShowLocationModal(true)}>
-          <Text style={tw`text-sm text-blue-500`}>{location}</Text>
+          <Text style={tw`text-sm text-blue-600 font-semibold`}>{location}</Text>
         </TouchableOpacity>
-        <Feather name="chevron-down" size={16} color="gray" style={tw`ml-1`} />
+        <ChevronDown size={18} color="gray" style={tw`ml-1`} />
       </View>
 
       {/* Location Modal */}
@@ -96,148 +105,89 @@ export default function PharmacyScreen() {
       </Modal>
 
       {/* Search Bar */}
-      <View style={tw`px-4 py-2`}>
-        <View style={tw`flex-row items-center bg-gray-100 rounded-full px-4 py-2`}>
-          <Feather name="search" size={20} color="gray" />
+      <View style={tw`px-4 pt-2 pb-1`}>
+        <View style={tw`flex-row items-center bg-white rounded-full px-4 py-2 shadow-sm`}>
+          <Search size={20} color="gray" />
           <TextInput
             placeholder="Search Medicines & Health Products"
             style={tw`ml-2 flex-1 text-sm`}
             placeholderTextColor="gray"
+            value={search}
+            onChangeText={setSearch}
           />
         </View>
       </View>
 
       {/* Section Title */}
-      <Text style={tw`px-4 pt-4 pb-2 font-semibold text-lg`}>
-        Shop Health Products By Categories
-      </Text>
+      <Text style={tw`px-4 pt-4 pb-2 font-bold text-lg text-gray-900`}>Shop Health Products By Categories</Text>
 
-      {/* Image Grid */}
+      {/* Image Grid with glassmorphism and gradient overlay */}
       <FlatList
-        data={categories}
+        data={filteredCategories}
         keyExtractor={(item) => item.name}
         numColumns={3}
         contentContainerStyle={tw`px-4 pb-6`}
         columnWrapperStyle={tw`justify-between`}
         renderItem={({ item }) => (
-         <TouchableOpacity onPress={() => navigation.navigate('pharmacy')}>
-            <View style={{ position: 'relative' }}>
+          <TouchableOpacity onPress={() => navigation.navigate('Pharmacy', { category: item.name })}>
+            <View style={{
+              backgroundColor: '#f5f8fc',
+              borderRadius: 16,
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: 18,
+              width: imageSize,
+              height: imageSize + 32,
+              shadowColor: '#000',
+              shadowOpacity: 0.06,
+              shadowRadius: 6,
+              elevation: 2,
+            }}>
               <Image
                 source={item.image}
-                style={{
-                  width: imageSize,
-                  height: imageSize,
-                  borderRadius: 12,
-                }}
-                resizeMode="cover"
+                style={{ width: imageSize - 12, height: imageSize - 12, resizeMode: 'contain', borderRadius: 12 }}
               />
-              <View
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: imageSize,
-                  height: imageSize,
-                  borderRadius: 12,
-                  backgroundColor: 'rgba(0, 0, 0, 0.2)',
-                }}
-              />
+              <Text style={{ fontSize: 14, fontWeight: '600', color: '#222', marginTop: 8, textAlign: 'center' }}>{item.name}</Text>
             </View>
-            <Text style={tw`text-xs text-center mt-2 w-[90%]`}>{item.name}</Text>
           </TouchableOpacity>
         )}
+        showsVerticalScrollIndicator={false}
       />
     </SafeAreaView>
   );
 }
 
-
-
-
-
-
-
-// image to code from path
-
-// import React from 'react';
-// import {
-//   View,
-//   Text,
-//   TextInput,
-//   FlatList,
-//   Image,
-//   TouchableOpacity,
-//   SafeAreaView,
-// } from 'react-native';
-// import { Feather, MaterialIcons } from '@expo/vector-icons';
-// import tw from 'twrnc';
-
-// const categories = [
-//   { name: 'Covid Essentials', image: require('../assets/covid.png') },
-//   { name: 'Skin Care', image: require('../assets/skincare.png') },
-//   { name: 'Vitamins and Minerals', image: require('../assets/vitamins.png') },
-//   { name: 'Sexual Wellness', image: require('../assets/wellness.png') },
-//   { name: 'Health Food and Drinks', image: require('../assets/healthfood.png') },
-//   { name: 'Baby Care', image: require('../assets/babycare.png') },
-//   { name: 'Pain Relief', image: require('../assets/painrelief.png') },
-//   { name: 'Diabetic Care', image: require('../assets/diabetic.png') },
-//   { name: 'Protein and Supplements', image: require('../assets/supplements.png') },
-// ];
-
-// export default function PharmacyScreen({ navigation }) {
-//   return (
-//     <SafeAreaView style={tw`flex-1 bg-white`}>
-//       {/* Header */}
-//       <View style={tw`flex-row items-center justify-between px-4 py-3 border-b border-gray-200`}>
-//         <TouchableOpacity onPress={() => navigation.goBack()}>
-//           <Feather name="arrow-left" size={24} color="black" />
-//         </TouchableOpacity>
-//         <Text style={tw`text-lg font-semibold`}>Practo Pharmacy</Text>
-//         <TouchableOpacity>
-//           <Feather name="shopping-cart" size={24} color="black" />
-//         </TouchableOpacity>
-//       </View>
-
-//       {/* Location */}
-//       <View style={tw`flex-row items-center px-4 py-2`}>
-//         <Text style={tw`text-sm`}>Deliver to - </Text>
-//         <TouchableOpacity>
-//           <Text style={tw`text-sm text-blue-500`}>Bangalore</Text>
-//         </TouchableOpacity>
-//         <Feather name="chevron-down" size={16} color="gray" style={tw`ml-1`} />
-//       </View>
-
-//       {/* Search Bar */}
-//       <View style={tw`px-4 py-2`}>
-//         <View style={tw`flex-row items-center bg-gray-100 rounded-full px-4 py-2`}>
-//           <Feather name="search" size={20} color="gray" />
-//           <TextInput
-//             placeholder="Search Medicines & Health Products"
-//             style={tw`ml-2 flex-1 text-sm`}
-//             placeholderTextColor="gray"
-//           />
-//         </View>
-//       </View>
-
-//       {/* Section Title */}
-//       <Text style={tw`px-4 pt-4 pb-2 font-semibold text-lg`}>
-//         Shop Health Products By Categories
-//       </Text>
-
-//       {/* Grid */}
-//       <FlatList
-//         data={categories}
-//         keyExtractor={(item) => item.name}
-//         numColumns={3}
-//         columnWrapperStyle={tw`justify-between px-4`}
-//         contentContainerStyle={tw`pb-6`}
-//         renderItem={({ item }) => (
-//           <View style={tw`items-center w-[30%] my-3`}>
-//             <Image source={item.image} style={tw`w-16 h-16 rounded-md`} resizeMode="contain" />
-//             <Text style={tw`text-center text-xs mt-2`}>{item.name}</Text>
-//           </View>
-//         )}
-//       />
-//     </SafeAreaView>
-//   );
-// }
+const styles = StyleSheet.create({
+  glassCard: {
+    borderRadius: 16,
+    overflow: 'hidden',
+    marginBottom: 8,
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 8,
+    elevation: 6,
+    position: 'relative',
+    justifyContent: 'flex-end',
+  },
+  gradientOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: 16,
+    backgroundColor: 'rgba(0,0,0,0.18)',
+  },
+  categoryText: {
+    position: 'absolute',
+    bottom: 10,
+    left: 0,
+    right: 0,
+    textAlign: 'center',
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 13,
+    textShadowColor: 'rgba(0,0,0,0.25)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+    paddingHorizontal: 4,
+  },
+});

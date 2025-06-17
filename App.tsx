@@ -54,8 +54,9 @@ import EmergencyServicesScreen from './src/screens/(tabs)/EmergencyServices';
 import HelpCenterScreen from './src/screens/(tabs)/HelpCenter';
 import MyPaymentsScreen from '././src/screens/(tabs)/PaymentMethods';
 import WalletScreen from '././src/screens/(tabs)/wallet';
+import CartScreen from '././src/screens/(tabs)/CartScreen';
 // doctor dynamic screen
-import DoctorScreen from './src/screens/doctor/[id]';
+import DoctorAvailbilityScreen from './src/screens/doctor availbility/[id]';
 
 const Stack = createStackNavigator();
 
@@ -143,8 +144,9 @@ export default function App() {
                 <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
                 <Stack.Screen name="MyPayments" component={MyPaymentsScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="Wallet" component={WalletScreen} options={{ headerShown: false }} />
+                <Stack.Screen name="Cart" component={CartScreen} options={{ headerShown: false }} />
                 {/* doctor dynamic screen */}
-                <Stack.Screen name="Doctor" component={DoctorScreen} />
+                {/* <Stack.Screen name="Doctor" component={DoctorScreen} /> */}
               </Stack.Navigator>
               {currentRoute && !AUTH_SCREENS.includes(currentRoute) && <Footer />}
             </NavigationContainer>

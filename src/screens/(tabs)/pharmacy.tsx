@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -7,155 +7,389 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Modal,
+  Alert,
+  TextInput,
+  ActivityIndicator,
+  ImageSourcePropType,
 } from 'react-native';
-// @ts-ignore
-import Feather from 'react-native-vector-icons/Feather';
+import { ArrowLeft, ShoppingCart, MapPin, Filter, Search, ChevronDown, X } from 'lucide-react-native';
 import { useNavigation, useRoute, RouteProp, NavigationProp } from '@react-navigation/native';
 import tw from 'twrnc';
+import PageHeader from '../../components/PageHeader';
 
-const allProducts = [
+type Product = {
+  id: string;
+  name: string;
+  brand: string;
+  price: string;
+  image: string;
+  description?: string;
+};
+
+type RootStackParamList = {
+  Pharmacy: {
+    category?: string;
+  };
+};
+
+const allProducts: Product[] = [
   {
     id: '1',
-    name: 'Tedibar Soap 75gm',
-    brand: 'Curatio Healthcare Pvt. Ltd.',
-    price: '199',
-    image: { uri: 'https://source.unsplash.com/featured/?babysoap' },
+    name: 'Baby Soap',
+    brand: 'Johnson & Johnson',
+    price: '50',
+    image: 'https://source.unsplash.com/featured/?babysoap',
+    description: 'Gentle baby soap for sensitive skin'
   },
   {
     id: '2',
-    name: 'Dettol Cool Soap 75gm',
-    brand: 'Reckitt Benckiser',
-    price: '40',
-    image: { uri: 'https://source.unsplash.com/featured/?dettol,soap' },
+    name: 'Dettol Soap',
+    brand: 'Dettol',
+    price: '35',
+    image: 'https://source.unsplash.com/featured/?dettol,soap',
+    description: 'Antibacterial soap for protection'
   },
   {
     id: '3',
-    name: 'Venusia Max Lotion 300ml',
-    brand: 'Dr. Reddys Laboratories Ltd.',
-    price: '802',
-    image: { uri: 'https://source.unsplash.com/featured/?lotion' },
+    name: 'Body Lotion',
+    brand: 'Nivea',
+    price: '250',
+    image: 'https://source.unsplash.com/featured/?lotion',
+    description: '24-hour moisturizing lotion'
   },
   {
     id: '4',
-    name: 'Kojivit Ultra Gel 30gm',
-    brand: 'Micro Labs Ltd.',
-    price: '719',
-    image: { uri: 'https://source.unsplash.com/featured/?skincream' },
+    name: 'Face Cream',
+    brand: 'Olay',
+    price: '450',
+    image: 'https://source.unsplash.com/featured/?skincream',
+    description: 'Anti-aging face cream'
   },
   {
     id: '5',
-    name: 'Dermadew Soap 75gm',
-    brand: 'Hegde & Hegde Pharmaceutica Llp',
-    price: '174',
-    image: { uri: 'https://source.unsplash.com/featured/?medicatedsoap' },
+    name: 'Medicated Soap',
+    brand: 'Dove',
+    price: '65',
+    image: 'https://source.unsplash.com/featured/?medicatedsoap',
+    description: 'Medicated soap for skin problems'
   },
 ];
 
-type RootStackParamList = {
-  pharmacy: undefined;
-};
-
 export default function ProductListScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<{ params: { category?: string } }, 'params'>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'Pharmacy'>>();
   const category = route.params?.category;
 
   const [filterVisible, setFilterVisible] = useState(false);
-  const [priceFilter, setPriceFilter] = useState<null | 'low' | 'medium' | 'high'>(null); // "low", "medium", "high"
+  const [sortVisible, setSortVisible] = useState(false);
+  const [priceFilter, setPriceFilter] = useState<null | 'low' | 'medium' | 'high'>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<'name' | 'price-asc' | 'price-desc'>('name');
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const filteredProducts = allProducts.filter((item) => {
-    const price = parseInt(item.price);
-    if (priceFilter === 'low') return price < 100;
-    if (priceFilter === 'medium') return price >= 100 && price <= 500;
-    if (priceFilter === 'high') return price > 500;
-    return true;
-  });
+  const getFilteredAndSortedProducts = useMemo(() => {
+    let filtered = allProducts.filter((item) => {
+      // Category filter
+      if (category && item.name && !item.name.toLowerCase().includes(category.toLowerCase())) {
+        return false;
+      }
 
-  const handleFilter = (range: null | 'low' | 'medium' | 'high') => {
-    setPriceFilter(range);
-    setFilterVisible(false);
+      // Search filter - search in name, brand, and description
+      if (searchQuery) {
+        const searchLower = searchQuery.toLowerCase();
+        return (
+          item.name.toLowerCase().includes(searchLower) ||
+          item.brand.toLowerCase().includes(searchLower) ||
+          (item.description && item.description.toLowerCase().includes(searchLower))
+        );
+      }
+
+      // Price filter
+      const price = parseInt(item.price);
+      if (priceFilter === 'low') return price < 100;
+      if (priceFilter === 'medium') return price >= 100 && price <= 500;
+      if (priceFilter === 'high') return price > 500;
+      return true;
+    });
+
+    // Sort products
+    return filtered.sort((a, b) => {
+      if (sortBy === 'name') {
+        return a.name.localeCompare(b.name);
+      } else if (sortBy === 'price-asc') {
+        return parseInt(a.price) - parseInt(b.price);
+      } else {
+        return parseInt(b.price) - parseInt(a.price);
+      }
+    });
+  }, [category, searchQuery, priceFilter, sortBy]);
+
+  const handleSearch = (text: string) => {
+    setLoading(true);
+    setSearchQuery(text);
+    // Simulate search delay for better UX
+    setTimeout(() => setLoading(false), 300);
   };
+
+  const renderEmptyState = () => (
+    <View style={tw`flex-1 justify-center items-center p-4`}>
+      <Text style={tw`text-xl font-semibold text-gray-800 mb-2`}>No Products Found</Text>
+      <Text style={tw`text-base text-gray-600 text-center`}>
+        {searchQuery 
+          ? `No products match "${searchQuery}"`
+          : "No products available in this category"}
+      </Text>
+      {(searchQuery || priceFilter || category) && (
+        <TouchableOpacity
+          style={tw`mt-4 py-2 px-4 bg-blue-50 rounded-lg`}
+          onPress={() => {
+            setSearchQuery('');
+            setPriceFilter(null);
+            if (category) {
+              navigation.setParams({ category: undefined });
+            }
+          }}
+        >
+          <Text style={tw`text-blue-600 font-medium`}>Clear All Filters</Text>
+        </TouchableOpacity>
+      )}
+    </View>
+  );
 
   return (
     <SafeAreaView style={tw`flex-1 bg-white`}>
-      <View style={tw`flex-row items-center justify-between px-4 py-3 border-b border-gray-200`}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Feather name="arrow-left" size={24} color="black" />
-        </TouchableOpacity>
-        <Text style={tw`text-lg font-semibold`}>{category || 'All Products'}</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('pharmacy')}>
-          <Feather name="shopping-cart" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
-
-      <View style={tw`flex-row items-center px-4 py-2`}>
-        <Feather name="map-pin" size={16} color="gray" />
-        <Text style={tw`text-sm ml-1`}>Deliver to - Bangalore</Text>
-        <TouchableOpacity>
-          <Text style={tw`text-sm text-blue-500 ml-2`}>Change</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={tw`flex-row items-center justify-between px-4 pt-2`}>
-        <Text style={tw`font-bold text-base`}>All Products</Text>
-        <TouchableOpacity onPress={() => setFilterVisible(true)}>
-          <Feather name="filter" size={20} color="black" />
-        </TouchableOpacity>
-      </View>
-
-      <Text style={tw`px-4 pb-2 text-xs text-gray-500`}>
-        {filteredProducts.length} products available
-      </Text>
-
-      <FlatList
-        data={filteredProducts}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={tw`px-4 pb-6`}
-        renderItem={({ item }) => (
-          <View style={tw`flex-row items-start py-3 border-b border-gray-200`}>
-            <Image
-              source={item.image}
-              style={tw`w-20 h-20 rounded-lg mr-4`}
-              resizeMode="cover"
-            />
-            <View style={tw`flex-1`}>
-              <Text style={tw`font-semibold text-sm`}>{item.name}</Text>
-              <Text style={tw`text-xs text-gray-500 mt-1`}>By {item.brand}</Text>
-              <View style={tw`flex-row justify-between items-center mt-2`}>
-                <Text style={tw`text-base font-semibold`}>MRP {item.price}</Text>
-                <TouchableOpacity
-                  style={tw`border border-blue-500 px-3 py-1 rounded-full`}
-                  onPress={() => navigation.navigate('pharmacy')}
-                >
-                  <Text style={tw`text-blue-500 text-sm`}>Add to Cart</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        )}
-        showsVerticalScrollIndicator={false}
+      <PageHeader 
+        title={category ? `${category}` : "Pharmacy"}
+        backgroundColor="#202b6d"
+        textColor="#fff"
+        leftComponent={
+          <TouchableOpacity onPress={() => navigation.goBack()} style={tw`p-2`}>
+            <ArrowLeft size={24} color="#fff" />
+          </TouchableOpacity>
+        }
+        rightComponent={
+          <TouchableOpacity onPress={() => navigation.navigate('Cart' as never)} style={tw`p-2`}>
+            <ShoppingCart size={24} color="#fff" />
+          </TouchableOpacity>
+        }
       />
 
-      {/* Filter Modal */}
-      <Modal visible={filterVisible} transparent animationType="slide">
-        <View style={tw`flex-1 justify-end bg-black bg-opacity-50`}>
-          <View style={tw`bg-white rounded-t-2xl p-4`}>
-            <Text style={tw`text-base font-semibold mb-3`}>Filter by Price</Text>
+      {/* Search Bar */}
+      <View style={tw`px-4 pb-2 pt-1 bg-white shadow-sm`}>
+        <View style={[
+          tw`flex-row items-center bg-gray-100 rounded-xl`,
+          isSearchFocused && tw`bg-white border-2 border-blue-500`
+        ]}>
+          <View style={tw`px-3 py-2`}>
+            <Search size={20} color={isSearchFocused ? "#3B82F6" : "#6B7280"} />
+          </View>
+          <TextInput
+            style={tw`flex-1 py-2 pr-3 text-base text-gray-800`}
+            placeholder="Search by name, brand, or description..."
+            placeholderTextColor="#9CA3AF"
+            value={searchQuery}
+            onChangeText={handleSearch}
+            onFocus={() => setIsSearchFocused(true)}
+            onBlur={() => setIsSearchFocused(false)}
+          />
+          {searchQuery ? (
+            <TouchableOpacity 
+              style={tw`px-3`}
+              onPress={() => setSearchQuery('')}
+            >
+              <X size={20} color="#6B7280" />
+            </TouchableOpacity>
+          ) : null}
+        </View>
 
-            <TouchableOpacity onPress={() => handleFilter('low')} style={tw`py-2`}>
-              <Text style={tw`text-sm`}>Below ₹100</Text>
+        <View style={tw`flex-row items-center justify-between mt-2`}>
+          <View style={tw`flex-row items-center`}>
+            <Text style={tw`text-sm text-gray-600`}>
+              {getFilteredAndSortedProducts.length} results
+            </Text>
+            {(searchQuery || priceFilter || category) && (
+              <TouchableOpacity
+                style={tw`ml-2 flex-row items-center`}
+                onPress={() => {
+                  setSearchQuery('');
+                  setPriceFilter(null);
+                  if (category) {
+                    navigation.setParams({ category: undefined });
+                  }
+                }}
+              >
+                <Text style={tw`text-sm text-blue-600`}>Clear All</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+          <View style={tw`flex-row items-center gap-2`}>
+            <TouchableOpacity 
+              onPress={() => setSortVisible(true)}
+              style={tw`flex-row items-center bg-white border border-gray-200 rounded-lg px-3 py-1.5`}
+            >
+              <ChevronDown size={16} color="#4B5563" />
+              <Text style={tw`ml-1 text-sm text-gray-700`}>Sort</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleFilter('medium')} style={tw`py-2`}>
-              <Text style={tw`text-sm`}>₹100 - ₹500</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleFilter('high')} style={tw`py-2`}>
-              <Text style={tw`text-sm`}>Above ₹500</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleFilter(null)} style={tw`py-2`}>
-              <Text style={tw`text-sm text-red-500`}>Clear Filter</Text>
+            <TouchableOpacity 
+              onPress={() => setFilterVisible(true)}
+              style={tw`bg-white border border-gray-200 rounded-lg px-3 py-1.5`}
+            >
+              <Filter size={16} color="#4B5563" />
             </TouchableOpacity>
           </View>
         </View>
+      </View>
+
+      {loading ? (
+        <View style={tw`flex-1 justify-center items-center`}>
+          <ActivityIndicator size="large" color="#3B82F6" />
+        </View>
+      ) : (
+        <FlatList
+          data={getFilteredAndSortedProducts}
+          numColumns={2}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={tw`p-2`}
+          ListEmptyComponent={renderEmptyState}
+          renderItem={({ item }) => (
+            <TouchableOpacity 
+              style={tw`flex-1 m-2 bg-white rounded-xl shadow-sm border border-gray-100`}
+              onPress={() => {
+                // Handle product press
+              }}
+            >
+              <Image
+                source={{ uri: item.image }}
+                style={tw`w-full h-32 rounded-t-xl`}
+                resizeMode="cover"
+              />
+              <View style={tw`p-3`}>
+                <Text style={tw`text-lg font-medium text-gray-800`}>{item.name}</Text>
+                <Text style={tw`text-sm text-gray-500`}>{item.brand}</Text>
+                <Text style={tw`text-xs text-gray-500 mt-1`} numberOfLines={2}>
+                  {item.description}
+                </Text>
+                <View style={tw`flex-row items-center justify-between mt-2`}>
+                  <Text style={tw`text-lg font-semibold text-blue-600`}>₹{item.price}</Text>
+                  <TouchableOpacity 
+                    style={tw`bg-blue-600 rounded-full p-2`}
+                    onPress={() => Alert.alert('Success', `${item.name} added to cart`)}
+                  >
+                    <ShoppingCart size={18} color="white" />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </TouchableOpacity>
+          )}
+        />
+      )}
+
+      {/* Sort Modal */}
+      <Modal
+        transparent={true}
+        visible={sortVisible}
+        animationType="slide"
+        onRequestClose={() => setSortVisible(false)}
+      >
+        <TouchableOpacity 
+          style={tw`flex-1 bg-black bg-opacity-50`} 
+          activeOpacity={1} 
+          onPress={() => setSortVisible(false)}
+        >
+          <View style={tw`mt-auto bg-white rounded-t-3xl`}>
+            <View style={tw`w-12 h-1 bg-gray-300 rounded-full mx-auto mt-3`} />
+            <View style={tw`p-4`}>
+              <Text style={tw`text-xl font-semibold text-gray-800 mb-4`}>Sort By</Text>
+              <TouchableOpacity 
+                style={tw`py-3 px-4 flex-row justify-between items-center`}
+                onPress={() => {
+                  setSortBy('name');
+                  setSortVisible(false);
+                }}
+              >
+                <Text style={tw`text-base ${sortBy === 'name' ? 'text-blue-600 font-medium' : 'text-gray-800'}`}>Name</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={tw`py-3 px-4 flex-row justify-between items-center`}
+                onPress={() => {
+                  setSortBy('price-asc');
+                  setSortVisible(false);
+                }}
+              >
+                <Text style={tw`text-base ${sortBy === 'price-asc' ? 'text-blue-600 font-medium' : 'text-gray-800'}`}>Price: Low to High</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={tw`py-3 px-4 flex-row justify-between items-center`}
+                onPress={() => {
+                  setSortBy('price-desc');
+                  setSortVisible(false);
+                }}
+              >
+                <Text style={tw`text-base ${sortBy === 'price-desc' ? 'text-blue-600 font-medium' : 'text-gray-800'}`}>Price: High to Low</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+
+      {/* Filter Modal */}
+      <Modal
+        transparent={true}
+        visible={filterVisible}
+        animationType="slide"
+        onRequestClose={() => setFilterVisible(false)}
+      >
+        <TouchableOpacity 
+          style={tw`flex-1 bg-black bg-opacity-50`} 
+          activeOpacity={1} 
+          onPress={() => setFilterVisible(false)}
+        >
+          <View style={tw`mt-auto bg-white rounded-t-3xl`}>
+            <View style={tw`w-12 h-1 bg-gray-300 rounded-full mx-auto mt-3`} />
+            <View style={tw`p-4`}>
+              <Text style={tw`text-xl font-semibold text-gray-800 mb-4`}>Filter By Price</Text>
+              <TouchableOpacity 
+                style={tw`py-3 px-4 flex-row justify-between items-center`}
+                onPress={() => {
+                  setPriceFilter('low');
+                  setFilterVisible(false);
+                }}
+              >
+                <Text style={tw`text-base ${priceFilter === 'low' ? 'text-blue-600 font-medium' : 'text-gray-800'}`}>Under ₹100</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={tw`py-3 px-4 flex-row justify-between items-center`}
+                onPress={() => {
+                  setPriceFilter('medium');
+                  setFilterVisible(false);
+                }}
+              >
+                <Text style={tw`text-base ${priceFilter === 'medium' ? 'text-blue-600 font-medium' : 'text-gray-800'}`}>₹100 - ₹500</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={tw`py-3 px-4 flex-row justify-between items-center`}
+                onPress={() => {
+                  setPriceFilter('high');
+                  setFilterVisible(false);
+                }}
+              >
+                <Text style={tw`text-base ${priceFilter === 'high' ? 'text-blue-600 font-medium' : 'text-gray-800'}`}>Above ₹500</Text>
+              </TouchableOpacity>
+              {(priceFilter || category) && (
+                <TouchableOpacity 
+                  style={tw`mt-4 py-3 px-4 bg-red-50 rounded-lg`}
+                  onPress={() => {
+                    setPriceFilter(null);
+                    setFilterVisible(false);
+                  }}
+                >
+                  <Text style={tw`text-base text-red-600 text-center`}>Clear Filters</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+        </TouchableOpacity>
       </Modal>
     </SafeAreaView>
   );
