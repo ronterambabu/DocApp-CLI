@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  View,
+import {  View,
   Text,
   TextInput,
   TouchableOpacity,
@@ -8,15 +7,18 @@ import {
   ScrollView,
   ActivityIndicator,
   Alert,
+  StatusBar,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-// @ts-ignore
-import Feather from 'react-native-vector-icons/Feather';
+import { ArrowLeft, Camera } from 'lucide-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import * as ImagePicker from 'expo-image-picker'; // Replace with CLI-compatible imports
 import tw from 'twrnc';
+import { useNavigation } from '@react-navigation/native';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 const EditProfileScreen = () => {
+  const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
 
   const [name, setName] = useState('');
@@ -85,61 +87,82 @@ const EditProfileScreen = () => {
         <ActivityIndicator size="large" color="#2E64FE" />
       </View>
     );
-  }
-
-  return (
-    <SafeAreaView style={tw`flex-1 bg-gray-100`}>
-      <ScrollView contentContainerStyle={tw`p-5 pb-10`}>
-        {/* Header */}
-        <View style={tw`flex-row items-center mb-5 justify-between`}>
-          <TouchableOpacity>
-            <Feather name="arrow-left" size={24} color="#2E64FE" />
+  }  return (
+    <SafeAreaView style={tw`flex-1 bg-gray-50`}>
+      <StatusBar
+        backgroundColor="#202b6d"
+        barStyle="light-content"
+        translucent={true}
+      />
+      {/* Header with gradient background */}
+      <View style={tw`bg-[#202b6d] px-4 py-3 shadow-lg`}>
+        <View style={tw`flex-row items-center justify-between`}>
+          <TouchableOpacity 
+            onPress={() => navigation.goBack()}
+            style={tw`p-2 -ml-2`}
+          >
+            <ArrowLeft size={24} color="#fff" />
           </TouchableOpacity>
-          <Text style={tw`text-xl font-bold text-blue-600`}>Edit Profile</Text>
-          <View style={tw`w-6`} />
+          <Text style={tw`text-lg font-bold text-white`}>Edit Profile</Text>
+          <View style={tw`w-10`} />
         </View>
-
+      </View>      <ScrollView 
+        contentContainerStyle={tw`px-4 pb-40`} 
+        showsVerticalScrollIndicator={false}
+      >
         {/* Profile Image */}
-        <TouchableOpacity style={tw`items-center mb-6`} onPress={pickImage}>
-          <Image
-            source={{ uri: profileImage }}
-            style={tw`w-30 h-30 rounded-full border-2 border-blue-600`}
-          />
-          <View style={tw`absolute bottom-0 right-[35%] bg-blue-600 p-1.5 rounded-full border-2 border-white`}>
-            <Feather name="camera" size={18} color="#fff" />
-          </View>
-        </TouchableOpacity>
-
-        {/* Form */}
-        <View style={tw`bg-white rounded-2xl p-5 shadow`}>
+        <View style={tw`items-center justify-center py-6 mt-2`}>
+          <TouchableOpacity 
+            style={tw`relative`} 
+            onPress={pickImage}
+            activeOpacity={0.9}
+          >
+            <Image
+              source={{ uri: profileImage }}
+              style={tw`w-28 h-28 rounded-full border-2 border-[#202b6d] shadow-lg`}
+            />
+            <View style={tw`absolute bottom-0 right-0 bg-[#202b6d] p-2 rounded-full border-2 border-white shadow`}>
+              <Camera size={16} color="#fff" />
+            </View>
+          </TouchableOpacity>
+        </View>        {/* Form */}
+        <View style={tw`bg-white rounded-3xl p-5 shadow-sm border border-gray-100`}>
           {[
-            { label: 'Full Name', value: name, setValue: setName, placeholder: 'Enter full name' },
+            { label: 'Full Name', value: name, setValue: setName, placeholder: 'Enter full name', icon: 'user' },
             { label: 'Email', value: email, setValue: setEmail, placeholder: 'Enter email', keyboardType: 'email-address' as const },
             { label: 'Phone Number', value: phone, setValue: setPhone, placeholder: 'Enter phone number', keyboardType: 'phone-pad' as const },
             { label: 'Gender', value: gender, setValue: setGender, placeholder: 'Enter gender' },
             { label: 'Date of Birth', value: dob, setValue: setDob, placeholder: 'YYYY-MM-DD' },
           ].map(({ label, value, setValue, placeholder, keyboardType }, index) => (
-            <View key={index} style={tw`mb-4`}>
-              <Text style={tw`mb-1.5 font-semibold text-gray-800`}>{label}</Text>
+            <View 
+              key={index} 
+              style={tw`mb-4 ${index !== 0 ? 'border-t border-gray-100 pt-4' : ''}`}
+            >
+              <Text style={tw`mb-2 font-medium text-gray-600 text-sm`}>{label}</Text>
               <TextInput
-                style={tw`h-12 rounded-xl bg-gray-200 px-3 text-base`}
+                style={tw`h-12 rounded-xl bg-gray-50 px-4 text-base border border-gray-200 text-gray-800`}
                 value={value}
                 onChangeText={setValue}
                 placeholder={placeholder}
+                placeholderTextColor="#9CA3AF"
                 keyboardType={keyboardType as import('react-native').KeyboardTypeOptions}
               />
             </View>
           ))}
         </View>
-
-        {/* Save Button */}
+      </ScrollView>      {/* Fixed Save Button */}
+      <View style={[
+        tw`absolute left-0 right-0 p-4 bg-white border-t border-gray-100 shadow-lg`,
+        { bottom: Platform.OS === 'ios' ? 80 : 60 } // Adjust for footer height
+      ]}>
         <TouchableOpacity
-          style={tw`bg-blue-600 rounded-xl py-3.5 items-center mt-7.5`}
+          style={tw`bg-[#202b6d] rounded-xl py-4 items-center shadow-sm`}
           onPress={handleSave}
+          activeOpacity={0.8}
         >
           <Text style={tw`text-white font-bold text-base`}>Save Changes</Text>
         </TouchableOpacity>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };

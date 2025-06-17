@@ -4,8 +4,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { UserProvider } from './src/screens/contexts/UserContext';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Footer from './src/screens/(tabs)/Footer';
-import { StatusBar, View } from 'react-native';
+import { StatusBar, View, Platform } from 'react-native';
 import { LoadingProvider } from './src/components/LoadingOverlay';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 
 // Import all screens referenced in navigation
 import OnboardingScreen from './src/screens/onboarding';
@@ -74,9 +75,12 @@ export default function App() {
   return (
     <UserProvider>
       <LoadingProvider>
-        <SafeAreaProvider>
-          <View style={{ flex: 1, backgroundColor: '#f3f4f6' }}>
-            <StatusBar backgroundColor="#202b6d" barStyle="light-content" />
+        <SafeAreaProvider>          <View style={{ flex: 1, backgroundColor: '#202b6d' }}>
+            <StatusBar
+              backgroundColor="#202b6d"
+              barStyle="light-content"
+              translucent={true}
+            />
             <NavigationContainer
               ref={navigationRef}
               onReady={handleStateChange}

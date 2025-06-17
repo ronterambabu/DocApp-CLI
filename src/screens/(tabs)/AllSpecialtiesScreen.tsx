@@ -2,109 +2,116 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
   TextInput,
   FlatList,
+  TouchableOpacity,
   Image,
 } from 'react-native';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { Search } from 'lucide-react-native';
+import { ArrowLeft, Search } from 'lucide-react-native';
+import { useNavigation, RouteProp, NavigationProp, useRoute } from '@react-navigation/native';
 import tw from 'twrnc';
-import PageLayout from '../../components/PageLayout';
-
-type RootStackParamList = {
-  DoctorsScreen: { specialty: string };
-};
+import PageHeader from '../../components/PageHeader';
 
 const specialties = [
-  { id: '1', name: 'General Physician', image: require('../Images/PopUpICons/general_physician.png'), doctorsCount: 10 },
-  { id: '2', name: 'Cardiologist', image: require('../Images/PopUpICons/cardiology.png'), doctorsCount: 8 },
-  { id: '3', name: 'Dermatologist', image: require('../Images/PopUpICons/skincare.png'), doctorsCount: 5 },
-  { id: '4', name: 'Neurologist', image: require('../Images/PopUpICons/neurology.png'), doctorsCount: 7 },
-  { id: '5', name: 'Pediatrician', image: require('../Images/PopUpICons/pediatrician.png'), doctorsCount: 6 },
-  { id: '6', name: 'Psychiatrist', image: require('../Images/PopUpICons/psychiatrist.png'), doctorsCount: 4 },
-  { id: '7', name: 'Oncologist', image: require('../Images/PopUpICons/oncology.png'), doctorsCount: 3 },
-  { id: '8', name: 'Orthopedic', image: require('../Images/PopUpICons/arthritis.png'), doctorsCount: 9 },
-  { id: '9', name: 'ENT Specialist', image: require('../Images/PopUpICons/medical.png'), doctorsCount: 2 },
-  { id: '10', name: 'Gastroenterologist', image: require('../Images/PopUpICons/stomach.png'), doctorsCount: 1 },
-  { id: '11', name: 'Endocrinologist', image: require('../Images/PopUpICons/endocrine.png'), doctorsCount: 3 },
-  { id: '12', name: 'Urologist', image: require('../Images/PopUpICons/kidney.png'), doctorsCount: 4 },
-  { id: '13', name: 'Gynecologist', image: require('../Images/PopUpICons/gynecologist.png'), doctorsCount: 5 },
-  { id: '14', name: 'Skin & Hair', image: require('../Images/PopUpICons/spots.png'), doctorsCount: 6 },
-  { id: '15', name: "Women's Health", image: require('../Images/PopUpICons/prenatal-care.png'), doctorsCount: 7 },
-  { id: '16', name: 'Dental Care', image: require('../Images/PopUpICons/tooth.png'), doctorsCount: 8 },
-  { id: '17', name: 'Ear, Nose, Throat', image: require('../Images/PopUpICons/medical.png'), doctorsCount: 2 },
-  { id: '18', name: 'Mental Wellness', image: require('../Images/PopUpICons/brain.png'), doctorsCount: 3 },
-  { id: '19', name: 'Bones & Joints', image: require('../Images/PopUpICons/arthritis.png'), doctorsCount: 9 },
+  { name: 'General Physician', image: require('../Images/PopUpICons/general_physician.png') },
+  { name: 'Cardiologist', image: require('../Images/PopUpICons/cardiology.png') },
+  { name: 'Dermatologist', image: require('../Images/PopUpICons/skincare.png') },
+  { name: 'Neurologist', image: require('../Images/PopUpICons/neurology.png') },
+  { name: 'Pediatrician', image: require('../Images/PopUpICons/pediatrician.png') },
+  { name: 'Psychiatrist', image: require('../Images/PopUpICons/psychiatrist.png') },
+  { name: 'Oncologist', image: require('../Images/PopUpICons/oncology.png') },
+  { name: 'Orthopedic', image: require('../Images/PopUpICons/arthritis.png') },
+  { name: 'ENT Specialist', image: require('../Images/PopUpICons/medical.png') },
+  { name: 'Gastroenterologist', image: require('../Images/PopUpICons/stomach.png') },
+  { name: 'Endocrinologist', image: require('../Images/PopUpICons/endocrine.png') },
+  { name: 'Urologist', image: require('../Images/PopUpICons/kidney.png') },
+  { name: 'Gynecologist', image: require('../Images/PopUpICons/gynecologist.png') },
+  { name: 'Skin & Hair', image: require('../Images/PopUpICons/spots.png') },
+  { name: "Women's Health", image: require('../Images/PopUpICons/prenatal-care.png') },
+  { name: 'Dental Care', image: require('../Images/PopUpICons/tooth.png') },
+  { name: 'Ear, Nose, Throat', image: require('../Images/PopUpICons/medical.png') },
+  { name: 'Mental Wellness', image: require('../Images/PopUpICons/brain.png') },
+  { name: 'Bones & Joints', image: require('../Images/PopUpICons/arthritis.png') },
 ];
 
-const AllSpecialtiesScreen = () => {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const [searchQuery, setSearchQuery] = useState('');
+// Define your stack param list for navigation typing
+export type RootStackParamList = {
+  AllSpecialtiesScreen: { mode?: string };
+  Doctors: { mode?: string; specialty: string };
+  ConsultOptionsScreen: { specialty: string };
+  // ...other routes
+};
 
-  const filteredSpecialties = specialties.filter((specialty) =>
-    specialty.name.toLowerCase().includes(searchQuery.toLowerCase())
+type AllSpecialtiesScreenRouteProp = RouteProp<RootStackParamList, 'AllSpecialtiesScreen'>;
+type AllSpecialtiesScreenNavProp = NavigationProp<RootStackParamList, 'AllSpecialtiesScreen'>;
+
+const AllSpecialtiesScreen = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const navigation = useNavigation<AllSpecialtiesScreenNavProp>();
+  const route = useRoute<AllSpecialtiesScreenRouteProp>();
+  const mode = route.params?.mode;
+
+  const filtered = specialties.filter(s =>
+    s.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const renderSpecialtyCard = ({ item }: { item: typeof specialties[0] }) => (
+  const handleSpecialtyPress = (specialty: string) => {
+    if (mode === 'video' || mode === 'inclinic') {
+      navigation.navigate('Doctors', { mode, specialty });
+    } else {
+      navigation.navigate('ConsultOptionsScreen', { specialty });
+    }
+  };
+
+  const renderItem = ({ item }: { item: typeof specialties[0] }) => (
     <TouchableOpacity
-      onPress={() => navigation.navigate('DoctorsScreen', { specialty: item.name })}
-      style={tw`bg-white rounded-4xl mx-4 mb-5 shadow-sm elevation-4 overflow-hidden`}
-      accessible
-      accessibilityLabel={`${item.name} specialty with ${item.doctorsCount} doctors`}
-      accessibilityRole="button"
+      style={tw`bg-white w-[48%] rounded-4xl py-6 px-3 items-center justify-center shadow-sm elevation-3`}
+      activeOpacity={0.85}
+      onPress={() => handleSpecialtyPress(item.name)}
     >
-      <Image
-        source={{ uri: item.image }}
-        style={tw`h-48 w-full`}
-        resizeMode="cover"
-      />
-      <View style={tw`p-3`}>
-        <Text style={tw`text-lg font-bold text-slate-800`}>{item.name}</Text>
-        <Text style={tw`text-sm text-gray-500 mt-0.5`}>
-          {item.doctorsCount} Doctors
-        </Text>
+      <View style={[tw`w-18 h-18 rounded-3xl mb-2.5`, { backgroundColor: '#becfe8', overflow: 'hidden' }]}>
+        <Image
+          source={item.image}
+          style={{ width: '100%', height: '100%' }}
+          resizeMode="contain"
+        />
       </View>
+      <Text style={[tw`mt-2.5 text-[15px] font-medium text-center`, { color: '#202b6d' }]}>
+        {item.name}
+      </Text>
     </TouchableOpacity>
   );
 
   return (
-    <PageLayout
-      title="All Specialties"
-      headerBackgroundColor="#2E3192"
-      scrollable={false}
-    >
+    <View style={tw`flex-1 bg-blue-50`}>
+      <PageHeader title="All Specialties" backgroundColor="#202b6d" textColor="#fff" onBackPress={() => navigation.goBack()} />
       {/* Search Bar */}
-      <View style={tw`px-4 mb-4`}>
-        <View
-          style={tw`bg-white rounded-3xl px-3.5 py-2.5 flex-row items-center shadow-sm elevation-2`}
-        >
-          <Search size={20} color="#94A3B8" style={tw`mr-2`} />
-          <TextInput
-            placeholder="Search specialties..."
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            style={tw`flex-1 text-base`}
-            accessibilityLabel="Search specialties"
-            accessibilityRole="search"
-          />
-        </View>
+      <View style={tw`flex-row items-center bg-white rounded-3.5xl px-3 py-2.5 mb-5 shadow-sm elevation-3 mx-4 mt-4`}>
+        <Search size={20} color="#999" style={tw`mr-2`} />
+        <TextInput
+          placeholder="Search specialties"
+          style={tw`text-base text-gray-800 flex-1`}
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          placeholderTextColor="#aaa"
+        />
       </View>
-
       {/* Specialties List */}
       <FlatList
-        data={filteredSpecialties}
-        keyExtractor={(item) => item.id}
-        renderItem={renderSpecialtyCard}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={tw`pb-4`}
+        data={filtered}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={renderItem}
+        numColumns={2}
+        columnWrapperStyle={tw`justify-between mb-4`}
+        contentContainerStyle={tw`pb-7.5 px-4`}
         ListEmptyComponent={
-          <Text style={tw`text-center mt-10 text-base text-gray-400`}>
+          <Text style={tw`text-center mt-12 text-base text-gray-500`}>
             No specialties found.
           </Text>
         }
+        showsVerticalScrollIndicator={false}
       />
-    </PageLayout>
+    </View>
   );
 };
 

@@ -25,6 +25,7 @@ import {
   Share2,
   Clock,
 } from 'lucide-react-native';
+import PageLayout from '../../components/PageLayout';
 
 interface Record {
   title: string;
@@ -194,47 +195,45 @@ const MedicalRecordsScreen = () => {
   );
 
   return (
-    <View style={tw`flex-1 bg-gray-50`}>
-      {Platform.OS === 'android' && (
-        <StatusBar backgroundColor="#202b6d" barStyle="light-content" />
+    <PageLayout
+      title="Medical Records"
+      headerBackgroundColor="#202b6d"
+      leftComponent={canGoBack ? (
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={tw`p-2 rounded-full`}
+        >
+          <ArrowLeft size={24} color="#fff" />
+        </TouchableOpacity>
+      ) : (
+        <View style={tw`w-10`} />
       )}
-      
-      {/* Header Section */}
-      <View style={tw`bg-[#202b6d] px-4 pt-4 pb-6`}>
-        <View style={tw`flex-row items-center justify-between mb-4`}>
-          {canGoBack ? (
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              style={tw`p-2 rounded-full`}
-            >
-              <ArrowLeft size={24} color="#fff" />
-            </TouchableOpacity>
-          ) : (
-            <View style={tw`w-10`} />
-          )}
-          <Text style={tw`text-xl font-bold text-white`}>Medical Records</Text>
-          <TouchableOpacity>
-            <Bell size={22} color="#fff" />
-          </TouchableOpacity>
-        </View>
-
-        <View style={tw`flex-row items-center bg-white/10 rounded-xl px-3 h-12`}>
-          <Search size={20} color="#fff" />
+      headerRight={
+        <TouchableOpacity>
+          <Bell size={22} color="#fff" />
+        </TouchableOpacity>
+      }      headerContent={
+        <View style={tw`flex-row items-center bg-white/95 rounded-xl px-3 h-12 mt-2 mb-2 shadow-sm`}>
+          <Search size={20} color="#202b6d" />
           <TextInput
             placeholder="Search medical records..."
-            placeholderTextColor="rgba(255,255,255,0.6)"
-            style={tw`flex-1 mx-2 text-base text-white`}
+            placeholderTextColor="#64748b"
+            style={tw`flex-1 mx-2 text-base font-medium text-gray-800`}
             value={searchText}
             onChangeText={setSearchText}
           />
-          <TouchableOpacity style={tw`p-2`}>
-            <SlidersHorizontal size={20} color="#fff" />
+          <TouchableOpacity 
+            style={tw`p-2 rounded-lg active:bg-gray-100`}
+            activeOpacity={0.7}
+          >
+            <SlidersHorizontal size={20} color="#202b6d" />
           </TouchableOpacity>
         </View>
-      </View>
-
+      }
+      scrollable={true}
+    >
       {/* Categories and Content */}
-      <View style={tw`flex-1 bg-white rounded-t-3xl -mt-3`}>
+      <View style={tw`bg-white rounded-t-3xl mt-4`}>
         {/* Categories */}
         <View style={tw`px-4 py-4`}>
           <ScrollView
@@ -309,19 +308,20 @@ const MedicalRecordsScreen = () => {
             </View>
           )}
         </ScrollView>
-      </View>
-
-      {/* FAB - Add New Record */}
+      </View>      {/* FAB - Add New Record */}
       <TouchableOpacity
         style={[
-          tw`absolute right-4 bg-[#202b6d] w-14 h-14 rounded-full items-center justify-center shadow-lg`,
-          { bottom: Platform.OS === 'ios' ? 90 : 70 }
+          tw`absolute right-6 bg-[#202b6d] w-14 h-14 rounded-full items-center justify-center shadow-lg`,
+          { 
+            bottom: Platform.OS === 'ios' ? 90 : 70,
+            right: Platform.OS === 'ios' ? 24 : 20 // Use platform-specific positioning
+          }
         ]}
         onPress={() => {/* Handle add new record */}}
       >
         <Plus size={24} color="#fff" />
       </TouchableOpacity>
-    </View>
+    </PageLayout>
   );
 };
 
