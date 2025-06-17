@@ -64,13 +64,19 @@ export default function ProfileScreen() {
 
   return (
     <View style={tw`flex-1 bg-gray-100`}>
-      <View style={tw`bg-[#202b6d] h-20 flex-row items-center justify-between px-4 pb-2`}>
-        <TouchableOpacity style={tw`w-12 h-12 rounded-full bg-white justify-center items-center shadow-sm`} onPress={() => navigation.goBack()}>
-          <ArrowLeft size={24} color="#222B45" />
+      <View style={tw`bg-[#202b6d] h-20 flex-row items-center justify-between px-4 pb-2`}> 
+        <TouchableOpacity 
+          style={tw`p-2 rounded-full`} 
+          onPress={() => navigation.goBack()}
+        >
+          <ArrowLeft size={24} color="#fff" />
         </TouchableOpacity>
         <Text style={tw`font-bold text-xl text-white`}>Profile</Text>
-        <TouchableOpacity style={tw`w-12 h-12 rounded-full bg-white justify-center items-center shadow-sm`} onPress={() => navigation.navigate('Settings')}>
-          <Settings size={24} color="#222B45" />
+        <TouchableOpacity 
+          style={tw`p-2 rounded-full`} 
+          onPress={() => navigation.navigate('Settings')}
+        >
+          <Settings size={24} color="#fff" />
         </TouchableOpacity>
       </View>
 
