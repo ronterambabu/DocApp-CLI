@@ -10,39 +10,57 @@ import {
   ScrollView,
   SafeAreaView,
   Alert,
+  StatusBar,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import type { ImagePickerResponse } from 'react-native-image-picker';
 import tw from 'twrnc';
 import { useUser } from '../contexts/UserContext';
-import { useNavigation } from '@react-navigation/native';
-// @ts-ignore
 import AntDesign from 'react-native-vector-icons/AntDesign';
-// @ts-ignore
 import Feather from 'react-native-vector-icons/Feather';
 import { launchImageLibrary } from 'react-native-image-picker';
-import API from '../../../apiConfig'; // Adjust the import path as necessary
+import API from '../../../apiConfig';
+
+type RootStackParamList = {
+  Profile: undefined;
+  CompleteProfile: undefined;
+};
+
+interface FormErrors {
+  dateOfBirth?: string;
+  gender?: string;
+}
 
 export default function CompleteProfile() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { user } = useUser();
   const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>();
   const [gender, setGender] = useState<'Male' | 'Female' | 'Others' | ''>('');
   const [profilePicture, setProfilePicture] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [errors, setErrors] = useState<FormErrors>({});
 
   const handlePickImage = async () => {
-    launchImageLibrary({ mediaType: 'photo', quality: 0.8 }, (response) => {
-      if (response.didCancel) return;
-      if (response.errorCode) {
-        Alert.alert('Error', response.errorMessage || 'Image picker error');
-        return;
+    launchImageLibrary(
+      { 
+        mediaType: 'photo', 
+        quality: 0.8,
+        maxWidth: 800,
+        maxHeight: 800,
+      }, 
+      (response: ImagePickerResponse) => {
+        if (response.didCancel) return;
+        if (response.errorCode) {
+          Alert.alert('Error', response.errorMessage || 'Image picker error');
+          return;
+        }
+        if (response.assets && response.assets[0]?.uri) {
+          setProfilePicture(response.assets[0].uri);
+        }
       }
-      if (response.assets && response.assets[0]?.uri) {
-        setProfilePicture(response.assets[0].uri);
-      }
-    });
+    );
   };
 
   const validateForm = () => {
