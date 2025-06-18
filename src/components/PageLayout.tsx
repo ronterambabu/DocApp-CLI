@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, ScrollView, ViewStyle } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, Text, ScrollView, ViewStyle, Platform } from 'react-native';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 import tw from 'twrnc';
 import PageHeader from './PageHeader';
 
@@ -16,6 +16,8 @@ interface PageLayoutProps {
   contentStyle?: ViewStyle;
   hideHeader?: boolean;
   headerRight?: React.ReactNode;
+  leftComponent?: React.ReactNode; // renamed prop
+  headerContent?: React.ReactNode;
 }
 
 const PageLayout: React.FC<PageLayoutProps> = ({
@@ -30,28 +32,41 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   contentStyle,
   hideHeader = false,
   headerRight,
+  leftComponent, // renamed prop
+  headerContent,
 }) => {
-  const insets = useSafeAreaInsets();
-
+  const statusBarHeight = getStatusBarHeight(true);
   const Content = scrollable ? ScrollView : View;
 
   return (
-    <View style={[tw`flex-1 bg-gray-100`, style]}>
+    <View
+      style={[
+        tw`flex-1 bg-gray-100`,
+        style,
+        hideHeader && { paddingTop: statusBarHeight },
+      ]}
+    >
       {!hideHeader && (
-        <PageHeader
-          title={title}
-          backgroundColor={headerBackgroundColor}
-          textColor={headerTextColor}
-          onBackPress={onBackPress}
-          rightComponent={headerRight}
-        />
+        <>
+          <PageHeader
+            title={title}
+            backgroundColor={headerBackgroundColor}
+            textColor={headerTextColor}
+            onBackPress={onBackPress}
+            rightComponent={headerRight}
+            leftComponent={leftComponent}
+          />
+          {headerContent && (
+            <View style={tw`px-4 mt-2`}>{headerContent}</View>
+          )}
+        </>
       )}
 
       <Content
         style={[tw`flex-1`, contentStyle]}
         contentContainerStyle={[
           scrollable && tw`grow`,
-          tw`pt-4`, // Add consistent top padding
+          tw`pt-4`,
         ]}
       >
         {sectionTitle && (

@@ -73,7 +73,7 @@ export type RootStackParamList = {
   Language: undefined;
   Notification: undefined;
   Searcheverything: undefined;
-  AllSpecialtiesScreen: { type?: string } | undefined;
+  AllSpecialtiesScreen: { mode?: string } | undefined;
   Doctors: { specialty?: string; mode?: string };
   ConsultOptionsScreen: { specialty: string };
   HospitalDetailsScreen: { id: number; name: string; location: string; image: string };
@@ -243,89 +243,89 @@ const [showLocationModal, setShowLocationModal] = useState(false);
     tw`px-4 pb-4`,
     {
       backgroundColor: '#202b6d',
-      borderBottomLeftRadius: 24,
-      borderBottomRightRadius: 24,
-      paddingTop: Platform.OS === 'android' ? 10 : 50,
+      borderBottomLeftRadius: 35,
+      borderBottomRightRadius: 35,
+      paddingTop: Platform.OS === 'android' ? 35 : 60,
+      height: Platform.OS === 'android' ? 170 : 180,
     },
   ]}
 >
-  {/* Top Row: Profile | Location | Language & Notification */}
-  <View style={tw`flex-row items-center justify-between`}>
-    {/* Profile Image */}
-    <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-      <Image
-        source={{ uri: profileImageUri }}
-        style={tw`w-14 h-14 rounded-full border-2 border-white`} // Slightly smaller than before
-      />
-    </TouchableOpacity>
+  <View style={tw`h-full justify-between`}>
+    {/* Top Row: Profile | Location | Language & Notification */}
+    <View style={tw`flex-row items-center justify-between mt-3`}>
+      {/* Profile Image */}
+      <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+        <Image
+          source={{ uri: profileImageUri }}
+          style={tw`w-14 h-14 rounded-full border-2 border-white`}
+        />
+      </TouchableOpacity>
 
-    {/* Location */}
-    <TouchableOpacity
-      onPress={() => setShowLocationModal(true)}
-      style={tw`flex-row items-center mx-3`}
-    >
-      <MapPin size={16} color="white" />
-      <Text style={tw`ml-1 text-white font-medium text-sm`}>
-        {selectedLocation}
-      </Text>
-      <ChevronDown size={16} color="white" style={tw`ml-1`} />
-    </TouchableOpacity>
-    <Modal isVisible={showLocationModal} onBackdropPress={() => setShowLocationModal(false)}>
-      <View style={tw`bg-white p-6 rounded-2xl items-center`}>
-        <Text style={tw`text-base font-semibold mb-2`}>Select your city</Text>
-        {cityList.map((city) => (
-          <TouchableOpacity
-            key={city}
-            style={tw`py-2 w-full items-center`}
-            onPress={() => {
-              setSelectedLocation(city);
-              setShowLocationModal(false);
-            }}
-          >
-            <Text style={tw`text-lg ${selectedLocation === city ? 'text-blue-600 font-bold' : 'text-gray-700'}`}>{city}</Text>
+      {/* Location */}
+      <TouchableOpacity
+        onPress={() => setShowLocationModal(true)}
+        style={tw`flex-row items-center mx-3`}
+      >
+        <MapPin size={16} color="white" />
+        <Text style={tw`ml-1 text-white font-medium text-sm`}>
+          {selectedLocation}
+        </Text>
+        <ChevronDown size={16} color="white" style={tw`ml-1`} />
+      </TouchableOpacity>
+      <Modal isVisible={showLocationModal} onBackdropPress={() => setShowLocationModal(false)}>
+        <View style={tw`bg-white p-6 rounded-2xl items-center`}>
+          <Text style={tw`text-base font-semibold mb-2`}>Select your city</Text>
+          {cityList.map((city) => (
+            <TouchableOpacity
+              key={city}
+              style={tw`py-2 w-full items-center`}
+              onPress={() => {
+                setSelectedLocation(city);
+                setShowLocationModal(false);
+              }}
+            >
+              <Text style={tw`text-lg ${selectedLocation === city ? 'text-blue-600 font-bold' : 'text-gray-700'}`}>{city}</Text>
+            </TouchableOpacity>
+          ))}
+          <TouchableOpacity style={tw`mt-4`} onPress={() => setShowLocationModal(false)}>
+            <Text style={tw`text-blue-600 font-bold`}>Close</Text>
           </TouchableOpacity>
-        ))}
-        <TouchableOpacity style={tw`mt-4`} onPress={() => setShowLocationModal(false)}>
-          <Text style={tw`text-blue-600 font-bold`}>Close</Text>
+        </View>
+      </Modal>
+
+      {/* Language & Notification */}
+      <View style={tw`flex-row items-center`}>
+        <TouchableOpacity onPress={() => navigation.navigate('Language')}>
+          <Globe size={18} color="white" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Notification')} style={tw`ml-3`}>
+          <View>
+            <Bell size={20} color="white" />
+            <View style={tw`absolute top-0 right-0 w-2 h-2 rounded-full bg-red-600`} />
+          </View>
         </TouchableOpacity>
       </View>
-    </Modal>
-
-    {/* Language & Notification */}
-    <View style={tw`flex-row items-center`}>
-      <TouchableOpacity onPress={() => navigation.navigate('Language')}>
-        <Globe size={18} color="white" />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('Notification')} style={tw`ml-3`}>
-        <View>
-          <Bell size={20} color="white" />
-          <View style={tw`absolute top-0 right-0 w-2 h-2 rounded-full bg-red-600`} />
-        </View>
-      </TouchableOpacity>
     </View>
-  </View>
 
-  {/* Search Bar */}
-  <TouchableOpacity
-   onPress={() => navigation.navigate('Searcheverything')}
-    activeOpacity={0.9}
-    style={tw`mt-4 flex-row items-center px-4 py-2.5 bg-white rounded-full shadow-sm border border-gray-200`}
-  >
-    <Search size={18} color="#6B7280" />
-    <Text style={tw`ml-3 text-gray-600 text-sm`}>
-      Search doctors, clinics, tests...
-    </Text>
-  </TouchableOpacity>
+    {/* Search Bar */}
+    <TouchableOpacity
+      onPress={() => navigation.navigate('Searcheverything')}
+      activeOpacity={0.9}
+      style={tw`mt-4 mb-4 flex-row items-center px-4 py-2.5 bg-white rounded-full shadow-sm border border-gray-200`}
+    >
+      <Search size={18} color="#6B7280" />
+      <Text style={tw`ml-3 text-gray-600 text-sm`}>
+        Search doctors, clinics, tests...
+      </Text>
+    </TouchableOpacity>
+  </View>
 </View>
 
   {/* Quick Actions Grid - Images only */}
 <View style={tw`flex-row flex-wrap justify-between mx-4 mt-6 gap-2`}>
   {/* Online Consultation */}
   <TouchableOpacity 
-    onPress={() => navigation.navigate('Doctors', { 
-      specialty: '', 
-      mode: 'video'  // Directly go to video consultation tab
-    })}
+    onPress={() => navigation.navigate('AllSpecialtiesScreen', { mode: 'video' })}
     style={tw`relative`}
   >
     <Image
@@ -341,10 +341,7 @@ const [showLocationModal, setShowLocationModal] = useState(false);
 
   {/* In-Clinic Consultation */}
   <TouchableOpacity 
-    onPress={() => navigation.navigate('Doctors', {
-      specialty: '',
-      mode: 'inclinic'  // Directly go to in-clinic tab
-    })}
+    onPress={() => navigation.navigate('AllSpecialtiesScreen', { mode: 'inclinic' })}
     style={tw`relative`}
   >
     <Image

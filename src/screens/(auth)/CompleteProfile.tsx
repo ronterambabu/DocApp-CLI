@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   Image,
   Platform,
@@ -10,57 +9,87 @@ import {
   ScrollView,
   SafeAreaView,
   Alert,
+  StatusBar,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import type { ImagePickerResponse } from 'react-native-image-picker';
+import { Plus, Calendar } from 'lucide-react-native';
 import tw from 'twrnc';
 import { useUser } from '../contexts/UserContext';
-import { useNavigation } from '@react-navigation/native';
-// @ts-ignore
-import AntDesign from 'react-native-vector-icons/AntDesign';
-// @ts-ignore
-import Feather from 'react-native-vector-icons/Feather';
 import { launchImageLibrary } from 'react-native-image-picker';
-import API from '../../../apiConfig'; // Adjust the import path as necessary
+import API from '../../../apiConfig';
+
+type RootStackParamList = {
+  Profile: undefined;
+  CompleteProfile: undefined;
+};
+
+interface FormErrors {
+  dateOfBirth?: string;
+  gender?: string;
+}
+
+interface ProfilePayload {
+  date_of_birth: string;
+  gender: string;
+  profile_picture?: string;
+}
+
+interface User {
+  token: string;
+  name?: string;
+  email?: string;
+  phone?: string;
+}
 
 export default function CompleteProfile() {
-  const navigation = useNavigation();
-  const { user } = useUser();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { user } = useUser() as { user: User | null };
   const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>();
   const [gender, setGender] = useState<'Male' | 'Female' | 'Others' | ''>('');
   const [profilePicture, setProfilePicture] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [errors, setErrors] = useState<FormErrors>({});
 
-  const handlePickImage = async () => {
-    launchImageLibrary({ mediaType: 'photo', quality: 0.8 }, (response) => {
-      if (response.didCancel) return;
-      if (response.errorCode) {
-        Alert.alert('Error', response.errorMessage || 'Image picker error');
-        return;
+  const handlePickImage = async (): Promise<void> => {
+    launchImageLibrary(
+      { 
+        mediaType: 'photo', 
+        quality: 0.8,
+        maxWidth: 800,
+        maxHeight: 800,
+      }, 
+      (response: ImagePickerResponse) => {
+        if (response.didCancel) return;
+        if (response.errorCode) {
+          Alert.alert('Error', response.errorMessage || 'Image picker error');
+          return;
+        }
+        if (response.assets && response.assets[0]?.uri) {
+          setProfilePicture(response.assets[0].uri);
+        }
       }
-      if (response.assets && response.assets[0]?.uri) {
-        setProfilePicture(response.assets[0].uri);
-      }
-    });
+    );
   };
 
-  const validateForm = () => {
-    const newErrors: { [key: string]: string } = {};
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {};
     if (!dateOfBirth) newErrors.dateOfBirth = 'Date of birth is required';
     if (!gender) newErrors.gender = 'Gender is required';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (): Promise<void> => {
     if (!validateForm()) return;
 
     setLoading(true);
 
     try {
-      const payload: any = {
-        date_of_birth: dateOfBirth?.toISOString().split('T')[0],
+      const payload: ProfilePayload = {
+        date_of_birth: dateOfBirth?.toISOString().split('T')[0] ?? '',
         gender,
       };
       if (profilePicture) {
@@ -80,7 +109,7 @@ export default function CompleteProfile() {
 
       if (response.ok) {
         Alert.alert('Success', 'Profile completed successfully!', [
-          { text: 'OK', onPress: () => navigation.navigate && navigation.navigate('Profile') },
+          { text: 'OK', onPress: () => navigation.navigate('Profile') },
         ]);
       } else {
         Alert.alert('Error', data.message || 'Failed to complete profile');
@@ -92,13 +121,12 @@ export default function CompleteProfile() {
     }
   };
 
-  return (
-    <SafeAreaView
-      style={[
-        tw`flex-1 bg-white`,
-        { paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 },
-      ]}
-    >
+  return (    <SafeAreaView style={tw`flex-1 bg-white`}>
+      <StatusBar
+        backgroundColor="#202b6d"
+        barStyle="light-content"
+        translucent={true}
+      />
       <ScrollView contentContainerStyle={tw`p-4 pt-6 pb-10`}>
         {/* Profile Picture */}
         <View style={tw`mb-6 items-center`}>
@@ -115,7 +143,7 @@ export default function CompleteProfile() {
               />
             ) : (
               <View style={tw`w-28 h-28 bg-white rounded-full items-center justify-center border-2 border-gray-200 shadow-sm`}>
-                <AntDesign name="plus" size={24} color="#6B7280" />
+                <Plus size={24} color="#6B7280" />
                 <Text style={tw`text-gray-500 text-xs mt-1`}>Upload Photo</Text>
               </View>
             )}
@@ -144,7 +172,7 @@ export default function CompleteProfile() {
             <Text style={tw`text-gray-700 text-sm`}>
               {dateOfBirth ? dateOfBirth.toDateString() : 'Select Date'}
             </Text>
-            <Feather name="calendar" size={18} color="#6B7280" />
+            <Calendar size={18} color="#6B7280" />
           </TouchableOpacity>
           {errors.dateOfBirth && (
             <Text style={tw`text-red-500 text-xs mt-1`}>{errors.dateOfBirth}</Text>
@@ -205,7 +233,7 @@ export default function CompleteProfile() {
 
         {/* Skip Option */}
         <TouchableOpacity
-          onPress={() => navigation.navigate && navigation.navigate('Profile')}
+          onPress={() => navigation.navigate('Profile')}
           style={tw`items-center mt-6 bg-gray-100 rounded-lg py-2 px-4`}
           activeOpacity={0.7}
         >
