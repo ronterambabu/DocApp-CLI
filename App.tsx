@@ -77,81 +77,81 @@ export default function App() {
     <UserProvider>
       <LoadingProvider>
         <SafeAreaProvider>          <View style={{ flex: 1, backgroundColor: '#202b6d' }}>
-            <StatusBar
-              backgroundColor="#202b6d"
-              barStyle="light-content"
-              translucent={true}
-            />
-            <NavigationContainer
-              ref={navigationRef}
-              onReady={handleStateChange}
-              onStateChange={handleStateChange}
+          <StatusBar
+            backgroundColor="#202b6d"
+            barStyle="light-content"
+            translucent={true}
+          />
+          <NavigationContainer
+            ref={navigationRef}
+            onReady={handleStateChange}
+            onStateChange={handleStateChange}
+          >
+            <Stack.Navigator
+              initialRouteName="Home"
+              screenOptions={{
+                headerShown: false,
+                headerLeft: () => null,
+                cardStyle: { backgroundColor: '#f3f4f6' },
+              }}
             >
-              <Stack.Navigator
-                initialRouteName="Home"
-                screenOptions={{
-                  headerShown: false,
-                  headerLeft: () => null,
-                  cardStyle: { backgroundColor: '#f3f4f6' },
-                }}
-              >
-                <Stack.Screen
-                  name="Home"
-                  component={HomeScreen}
-                />
-                <Stack.Screen name="AllHospitals" component={AllHospitalsScreen} />
-                <Stack.Screen name="AllPharmacies" component={AllPharmaciesScreen} />
-                <Stack.Screen name="Onboarding" component={OnboardingScreen} />
-                <Stack.Screen name="Searcheverything" component={SearchEverything} />
-                <Stack.Screen name="VideoCall" component={VideoCallScreen} />
-                <Stack.Screen name="Profile" component={ProfileScreen} />
+              <Stack.Screen
+                name="Home"
+                component={HomeScreen}
+              />
+              <Stack.Screen name="AllHospitals" component={AllHospitalsScreen} />
+              <Stack.Screen name="AllPharmacies" component={AllPharmaciesScreen} />
+              <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+              <Stack.Screen name="Searcheverything" component={SearchEverything} />
+              <Stack.Screen name="VideoCall" component={VideoCallScreen} />
+              <Stack.Screen name="Profile" component={ProfileScreen} />
 
-                <Stack.Screen name="Notification" component={NotificationScreen} />
-                <Stack.Screen name="AllSpecialtiesScreen" component={AllSpecialtiesScreen} />
-                <Stack.Screen name="LabTestCategoriesScreen" component={LabTestCategoriesScreen} />
-                <Stack.Screen name="pharmacytestcategories" component={PharmacyTestCategoriesScreen} />
-                <Stack.Screen name="ConsultOptionsScreen" component={ConsultOptionsScreen} />
-                <Stack.Screen name="HospitalDetailsScreen" component={HospitalDetailsScreen} />
-                <Stack.Screen name="PharmacyDetailsScreen" component={PharmacyDetailsScreen} />
-                <Stack.Screen name="VideoConsultationScreen" component={VideoConsultationScreen} />
-                <Stack.Screen name="AppointmentSuccess" component={AppointmentSuccessScreen} />
-                <Stack.Screen name="Appointments" component={AppointmentsScreen} />
-                {/* Not Found Screen */}
-                <Stack.Screen name="NotFound" component={NotFoundScreen} />
-                {/* (auth) screens */}
-                <Stack.Screen name="AuthLayout" component={AuthLayout} />
-                <Stack.Screen name="Signup" component={SignupScreen} />
-                <Stack.Screen name="Login" component={LoginScreen} />
-                <Stack.Screen name="DoctorLogin" component={DoctorLoginScreen} />
-                <Stack.Screen name="CompleteProfile" component={CompleteProfileScreen} />
-                {/* (tabs) screens */}
-                <Stack.Screen name="TabsLayout" component={TabsLayout} />
-                <Stack.Screen name="VideoConsultationTab" component={VideoConsultationTab} />
-                <Stack.Screen name="TestBooking" component={TestBookingScreen} />
-                <Stack.Screen name="Settings" component={SettingsScreen} />
-                <Stack.Screen name="PrivacySecurity" component={PrivacySecurityScreen} />
-                <Stack.Screen name="Pharmacy" component={PharmacyScreen} />
-                <Stack.Screen name="PersonalDetails" component={PersonalDetailsScreen} />
-                <Stack.Screen name="PaymentMethods" component={PaymentMethodsScreen} />
-                <Stack.Screen name="MedicalRecords" component={MedicalRecordsScreen} />
-                <Stack.Screen name="LabTestsList" component={LabTestsListScreen} />
-                <Stack.Screen name="LabTest" component={LabTestScreen} />
-                <Stack.Screen name="DoctorAvailability" component={DoctorAvailabilityScreen} />
-                <Stack.Screen name="DoctorPopular" component={DoctorPopularScreen} />
-                <Stack.Screen name="Doctors" component={DoctorsScreen} />
-                <Stack.Screen name="EditProfilePage" component={EditProfilePageScreen} />
-                <Stack.Screen name="EmergencyServices" component={EmergencyServicesScreen} />
-                <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
-                <Stack.Screen name="shopmedical" component={ShopMedicalScreen} />
-                <Stack.Screen name="MyPayments" component={MyPaymentsScreen} options={{ headerShown: false }} />
-                <Stack.Screen name="Wallet" component={WalletScreen} options={{ headerShown: false }} />
+              <Stack.Screen name="Notification" component={NotificationScreen} />
+              <Stack.Screen name="AllSpecialtiesScreen" component={AllSpecialtiesScreen} />
+              <Stack.Screen name="LabTestCategoriesScreen" component={LabTestCategoriesScreen} />
+              <Stack.Screen name="pharmacytestcategories" component={PharmacyTestCategoriesScreen} />
+              <Stack.Screen name="ConsultOptionsScreen" component={ConsultOptionsScreen} />
+              <Stack.Screen name="HospitalDetailsScreen" component={HospitalDetailsScreen} />
+              <Stack.Screen name="PharmacyDetailsScreen" component={PharmacyDetailsScreen} />
+              <Stack.Screen name="VideoConsultationScreen" component={VideoConsultationScreen} />
+              <Stack.Screen name="AppointmentSuccess" component={AppointmentSuccessScreen} />
+              <Stack.Screen name="Appointments" component={AppointmentsScreen} />
+              {/* Not Found Screen */}
+              <Stack.Screen name="NotFound" component={NotFoundScreen} />
+              {/* (auth) screens */}
+              <Stack.Screen name="AuthLayout" component={AuthLayout} />
+              <Stack.Screen name="Signup" component={SignupScreen} />
+              <Stack.Screen name="Login" component={LoginScreen} />
+              <Stack.Screen name="DoctorLogin" component={DoctorLoginScreen} />
+              <Stack.Screen name="CompleteProfile" component={CompleteProfileScreen} />
+              {/* (tabs) screens */}
+              <Stack.Screen name="TabsLayout" component={TabsLayout} />
+              <Stack.Screen name="VideoConsultationTab" component={VideoConsultationTab} />
+              <Stack.Screen name="TestBooking" component={TestBookingScreen} />
+              <Stack.Screen name="Settings" component={SettingsScreen} />
+              <Stack.Screen name="PrivacySecurity" component={PrivacySecurityScreen} />
+              <Stack.Screen name="Pharmacy" component={PharmacyScreen} />
+              <Stack.Screen name="PersonalDetails" component={PersonalDetailsScreen} />
+              <Stack.Screen name="PaymentMethods" component={PaymentMethodsScreen} />
+              <Stack.Screen name="MedicalRecords" component={MedicalRecordsScreen} />
+              <Stack.Screen name="LabTestsList" component={LabTestsListScreen} />
+              <Stack.Screen name="LabTest" component={LabTestScreen} />
+              <Stack.Screen name="DoctorAvailability" component={DoctorAvailabilityScreen} />
+              <Stack.Screen name="DoctorPopular" component={DoctorPopularScreen} />
+              <Stack.Screen name="Doctors" component={DoctorsScreen} />
+              <Stack.Screen name="EditProfilePage" component={EditProfilePageScreen} />
+              <Stack.Screen name="EmergencyServices" component={EmergencyServicesScreen} />
+              <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
+              <Stack.Screen name="shopmedical" component={ShopMedicalScreen} />
+              <Stack.Screen name="MyPayments" component={MyPaymentsScreen} options={{ headerShown: false }} />
+              <Stack.Screen name="Wallet" component={WalletScreen} options={{ headerShown: false }} />
 
-                {/* doctor dynamic screen */}
-                <Stack.Screen name="Doctor" component={DoctorScreen} />
-              </Stack.Navigator>
-              {currentRoute && !AUTH_SCREENS.includes(currentRoute) && <Footer />}
-            </NavigationContainer>
-          </View>
+              {/* doctor dynamic screen */}
+              <Stack.Screen name="Doctor" component={DoctorScreen} />
+            </Stack.Navigator>
+            {currentRoute && !AUTH_SCREENS.includes(currentRoute) && <Footer />}
+          </NavigationContainer>
+        </View>
         </SafeAreaProvider>
       </LoadingProvider>
     </UserProvider>
