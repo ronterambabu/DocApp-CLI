@@ -20,7 +20,7 @@ import ProfileScreen from './src/screens/(tabs)/profile';
 import NotificationScreen from './src/screens/(tabs)/Notification';
 import AllSpecialtiesScreen from './src/screens/(tabs)/AllSpecialtiesScreen';
 import LabTestCategoriesScreen from './src/screens/(tabs)/LabTestCategoriesScreen';
-import PharmacyTestCategoriesScreen from './src/screens/(tabs)/pharmacytestcategories';
+import PharmacyTestCategoriesScreen from './src/screens/(tabs)/pharmacycategorieslist';
 import ConsultOptionsScreen from './src/screens/ConsultOptionsScreen';
 import HospitalDetailsScreen from './src/screens/(tabs)/HospitalDetailsScreen';
 import PharmacyDetailsScreen from './src/screens/(tabs)/PharmacyDetailsScreen';
@@ -54,9 +54,9 @@ import EmergencyServicesScreen from './src/screens/(tabs)/EmergencyServices';
 import HelpCenterScreen from './src/screens/(tabs)/HelpCenter';
 import MyPaymentsScreen from '././src/screens/(tabs)/PaymentMethods';
 import WalletScreen from '././src/screens/(tabs)/wallet';
-import ShopMedicalScreen from '././src/screens/(tabs)/shopmedical';
+import CartScreen from '././src/screens/(tabs)/CartScreen';
 // doctor dynamic screen
-import DoctorScreen from './src/screens/doctor/[id]';
+import DoctorAvailbilityScreen from './src/screens/doctor availbility/[id]';
 
 const Stack = createStackNavigator();
 
@@ -142,12 +142,11 @@ export default function App() {
               <Stack.Screen name="EditProfilePage" component={EditProfilePageScreen} />
               <Stack.Screen name="EmergencyServices" component={EmergencyServicesScreen} />
               <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
-              <Stack.Screen name="shopmedical" component={ShopMedicalScreen} />
               <Stack.Screen name="MyPayments" component={MyPaymentsScreen} options={{ headerShown: false }} />
               <Stack.Screen name="Wallet" component={WalletScreen} options={{ headerShown: false }} />
-
+              <Stack.Screen name="Cart" component={CartScreen} options={{ headerShown: false }} />
               {/* doctor dynamic screen */}
-              <Stack.Screen name="Doctor" component={DoctorScreen} />
+              {/* <Stack.Screen name="Doctor" component={DoctorScreen} /> */}
             </Stack.Navigator>
             {currentRoute && !AUTH_SCREENS.includes(currentRoute) && <Footer />}
           </NavigationContainer>
