@@ -31,7 +31,7 @@ const specialties = [
   { name: 'Dental Care', image: require('../Images/PopUpICons/tooth.png') },
   { name: 'Ear, Nose, Throat', image: require('../Images/PopUpICons/medical.png') },
   { name: 'Mental Wellness', image: require('../Images/PopUpICons/brain.png') },
-  { name: 'Bones & Joints', image: require('../Images/PopUpICons/arthritis.png') },
+ 
 ];
 
 // Define your stack param list for navigation typing
@@ -62,21 +62,23 @@ const AllSpecialtiesScreen = () => {
       navigation.navigate('ConsultOptionsScreen', { specialty });
     }
   };
-
   const renderItem = ({ item }: { item: typeof specialties[0] }) => (
     <TouchableOpacity
-      style={tw`bg-white w-[48%] rounded-4xl py-6 px-3 items-center justify-center shadow-sm elevation-3`}
+      style={[
+        tw`bg-white rounded-3xl py-4 px-2 items-center justify-center shadow-sm elevation-3`,
+        { width: '31%', marginHorizontal: '1%', marginBottom: 12 }
+      ]}
       activeOpacity={0.85}
       onPress={() => handleSpecialtyPress(item.name)}
     >
-      <View style={[tw`w-18 h-18 rounded-3xl mb-2.5`, { backgroundColor: '#becfe8', overflow: 'hidden' }]}>
+      <View style={[tw`w-12 h-12 rounded-2xl mb-2`, { backgroundColor: '#becfe8', overflow: 'hidden' }]}>
         <Image
           source={item.image}
           style={{ width: '100%', height: '100%' }}
           resizeMode="contain"
         />
       </View>
-      <Text style={[tw`mt-2.5 text-[15px] font-medium text-center`, { color: '#202b6d' }]}>
+      <Text style={[tw`text-[12px] font-medium text-center`, { color: '#202b6d' }]} numberOfLines={2}>
         {item.name}
       </Text>
     </TouchableOpacity>
@@ -95,15 +97,15 @@ const AllSpecialtiesScreen = () => {
           onChangeText={setSearchQuery}
           placeholderTextColor="#aaa"
         />
-      </View>
-      {/* Specialties List */}
+      </View>      {/* Specialties List */}      
       <FlatList
         data={filtered}
         keyExtractor={(item, index) => index.toString()}
         renderItem={renderItem}
-        numColumns={2}
-        columnWrapperStyle={tw`justify-between mb-4`}
-        contentContainerStyle={tw`pb-7.5 px-4`}
+        numColumns={3}
+        contentContainerStyle={tw`pb-32 px-3`}
+        columnWrapperStyle={tw`justify-center`}
+        style={tw`flex-1`}
         ListEmptyComponent={
           <Text style={tw`text-center mt-12 text-base text-gray-500`}>
             No specialties found.

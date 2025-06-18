@@ -2,34 +2,33 @@ import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
-  FlatList,
-  TextInput,
   Image,
   TouchableOpacity,
-  Modal,
-  Pressable,
   ScrollView,
+  FlatList,
+  TextInput,
+  Modal,
+  Linking,
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
+import tw from 'twrnc';
 import {
   ArrowLeft,
-  Search as LucideSearch,
-  MapPin,
+  Share2,
   ThumbsUp,
-  MessageCircle,
-  Star,
-  IndianRupee,
-  Calendar as LucideCalendar,
+  MessageSquare,
+  MapPin,
   Video,
   Hospital,
   Filter,
   SlidersHorizontal,
   Clock,
   Users,
+  Star,
+  LucideSearch,
   X,
 } from 'lucide-react-native';
-import tw from 'twrnc';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import PageHeader from '../../components/PageHeader';
 
 const doctors = [
@@ -255,6 +254,45 @@ const FindDoctorsScreen = () => {
 
   const insets = useSafeAreaInsets();
 
+  // Add button handlers
+  const handleInClinicPress = (doctor: any) => {
+    navigation.navigate('DoctorProfile', {
+      doctor: {
+        ...doctor,
+        clinics: [{
+          name: doctor.clinic,
+          location: doctor.location,
+          fee: doctor.fee,
+          slots: [
+            {
+              date: 'tomorrow',
+              times: ['09:30 AM', '09:45 AM', '10:00 AM', '10:15 AM']
+            }
+          ]
+        }]
+      }
+    });
+  };
+
+  const handleVideoPress = (doctor: any) => {
+    navigation.navigate('DoctorProfile', {
+      doctor: {
+        ...doctor,
+        clinics: [{
+          name: doctor.clinic,
+          location: doctor.location,
+          fee: doctor.fee,
+          slots: [
+            {
+              date: 'tomorrow',
+              times: ['09:30 AM', '09:45 AM', '10:00 AM', '10:15 AM']
+            }
+          ]
+        }]
+      }
+    });
+  };
+
   return (
     <View style={tw`flex-1 bg-white`}>
       <PageHeader
@@ -374,79 +412,64 @@ const FindDoctorsScreen = () => {
       <FlatList
         data={filteredDoctors}
         keyExtractor={(item) => item.id}
-        contentContainerStyle={tw`px-4 pb-6`}
         renderItem={({ item }) => (
-          <View style={tw`mb-4`}>
-            <View style={tw`bg-white rounded-xl border border-gray-200 p-4`}>
-              <View style={tw`flex-row`}>
-                <Image source={{ uri: item.image }} style={tw`w-18 h-18 rounded-full`} />
-                <View style={tw`ml-4 flex-1`}>
-                  <Text style={tw`text-base font-bold text-gray-900`}>{item.name}</Text>
-                  <Text style={tw`text-sm text-gray-600`}>{item.specialty}</Text>
-                  <Text style={tw`text-xs text-gray-500 mt-0.5`}>{item.experience} yrs exp</Text>
-                  <Text style={tw`text-xs text-green-600 mt-0.5`}>🟢 Online Now</Text>
-                  <View style={tw`flex-row flex-wrap items-center mt-1`}>
-                    {item.recommendation && (
-                      <View style={tw`flex-row items-center bg-green-100 px-2 py-0.5 rounded-full mr-1`}>
-                        <ThumbsUp size={12} color="#047857" />
-                        <Text style={tw`text-xs text-green-800 ml-1`}>
-                          {item.recommendation} Recommended
-                        </Text>
-                      </View>
-                    )}
-                    {item.rating && (
-                      <View style={tw`flex-row items-center bg-purple-100 px-2 py-0.5 rounded-full mt-1 ml-1`}>
-                        <Star size={12} color="#7c3aed" />
-                        <Text style={tw`text-xs text-purple-800 ml-1`}>{item.rating}</Text>
-                      </View>
-                    )}
-                  </View>
-                  {item.patientStories && (
-                    <View style={tw`flex-row items-center mt-1`}>
-                      <MessageCircle size={12} color="#6B7280" />
-                      <Text style={tw`text-xs text-gray-500 ml-1`}>
-                        {item.patientStories} Patient Stories
-                      </Text>
-                    </View>
-                  )}
-                  <View style={tw`flex-row items-start mt-1`}>
-                    <MapPin size={12} color="#6B7280" style={tw`mt-0.5`} />
-                    <Text style={tw`text-xs text-gray-500 ml-1`}>
-                      {item.location} • {item.clinic}
-                    </Text>
-                  </View>
-                  <View style={tw`flex-row items-center mt-1`}>
-                    <IndianRupee size={10} color="#6B7280" />
-                    <Text style={tw`text-xs text-gray-500 ml-1`}>
-                      {item.fee} Consultation Fees
-                    </Text>
-                  </View>
-                  <Text style={tw`text-xs text-green-700 font-semibold mt-1`}>
-                    NEXT AVAILABLE AT
-                  </Text>
-                  <Text style={tw`text-xs text-black`}>{item.nextAvailable}</Text>
+          <TouchableOpacity
+            onPress={() => handleInClinicPress(item)}
+            style={tw`bg-white p-4 mb-4 rounded-xl shadow-sm mx-4`}
+          >
+            <View style={tw`flex-row`}>
+              <Image
+                source={{ uri: item.image }}
+                style={tw`w-20 h-20 rounded-lg`}
+              />
+              <View style={tw`flex-1 ml-3`}>
+                <Text style={tw`text-lg font-bold text-gray-800`}>{item.name}</Text>
+                <Text style={tw`text-gray-600`}>{item.specialty}</Text>
+                <View style={tw`flex-row items-center mt-1`}>
+                  <Clock size={14} color="#666" />
+                  <Text style={tw`text-gray-600 ml-1`}>{item.experience} Years experience</Text>
+                </View>
+                <View style={tw`flex-row items-center mt-1`}>
+                  <MapPin size={14} color="#666" />
+                  <Text style={tw`text-gray-600 ml-1`}>{item.location}</Text>
                 </View>
               </View>
-              <View style={tw`flex-row mt-3`}>
-                <TouchableOpacity style={tw`flex-1 border border-blue-500 py-2 rounded-lg mr-2 items-center`}>
-                  <Text style={tw`text-blue-600 font-semibold text-sm`}>Contact Clinic</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={tw`flex-1 bg-blue-600 py-2 rounded-lg items-center`}
-                  disabled={activeTab !== 'inclinic'}
-                  onPress={() => {
-                    if (activeTab === 'inclinic') {
-                      navigation.navigate('DoctorAvailability', { doctor: item });
-                    }
-                  }}
-                >
-                  <Text style={tw`text-white font-semibold text-sm`}>
-                    {activeTab === 'video' ? 'Start Video Call' : 'Book Visit'}
-                  </Text>
-                </TouchableOpacity>
-              </View>
             </View>
-          </View>
+
+            <View style={tw`flex-row justify-between items-center mt-3 pt-3 border-t border-gray-100`}>
+              <View style={tw`flex-row items-center`}>
+                {item.rating && (
+                  <View style={tw`flex-row items-center mr-4`}>
+                    <Star size={16} color="#FFD700" fill="#FFD700" />
+                    <Text style={tw`ml-1 font-medium`}>{item.rating}</Text>
+                  </View>
+                )}
+                <View style={tw`flex-row items-center`}>
+                  <ThumbsUp size={14} color="#22c55e" />
+                  <Text style={tw`ml-1 font-medium`}>{item.recommendation}</Text>
+                  <Text style={tw`text-gray-600 ml-1`}>• {item.patientStories} Stories</Text>
+                </View>
+              </View>
+              <Text style={tw`text-[#202b6d] font-bold`}>₹{item.fee}</Text>
+            </View>
+
+            <View style={tw`flex-row mt-3`}>
+              <TouchableOpacity
+                onPress={() => Linking.openURL('tel:+1234567890')}
+                style={tw`flex-1 border border-[#25a9e1] py-2 rounded-lg mr-2`}
+              >
+                <Text style={tw`text-[#25a9e1] text-center font-medium`}>Contact Clinic</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => item.type === 'inclinic' ? handleInClinicPress(item) : handleVideoPress(item)}
+                style={tw`flex-1 bg-[#25a9e1] py-2 rounded-lg ml-2`}
+              >
+                <Text style={tw`text-white text-center font-medium`}>
+                  {item.type === 'inclinic' ? 'Book Clinic Visit' : 'Book Video Consult'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
         )}
       />
 

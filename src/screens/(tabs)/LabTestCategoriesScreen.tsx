@@ -6,19 +6,11 @@ import {
   TouchableOpacity,
   TextInput,
   Image,
-  Dimensions,
 } from 'react-native';
-import Feather from 'react-native-vector-icons/Feather';
+import { Search } from 'lucide-react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import tw from 'twrnc';
-
-// Device dimensions
-const screenWidth = Dimensions.get('window').width;
-const itemSpacing = 16;
-const horizontalPadding = 32;
-const numColumns = 2;
-const itemSize = (screenWidth - horizontalPadding - itemSpacing * (numColumns - 1)) / numColumns;
+import PageHeader from '../../components/PageHeader';
 
 const categories = [
   { id: '1', name: 'Blood Test', image: require('../Images/labtesticons/blood-test.png') },
@@ -39,7 +31,7 @@ const categories = [
 ];
 
 type RootStackParamList = {
-  LabTestScreen: { category: string };
+  LabTestsList: { category: string };
 };
 
 const LabTestCategoriesScreen = () => {
@@ -49,81 +41,62 @@ const LabTestCategoriesScreen = () => {
   const filteredCategories = categories.filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase())
   );
-
   const handleCategorySelect = (category: string) => {
-    navigation.navigate('LabTestScreen', { category });
+    // Navigate to LabTestsList with the selected category
+    navigation.navigate('LabTestsList', { 
+      category: category // Removed invalid `showAllTests` param
+    });
   };
+  const renderItem = ({ item }: { item: typeof categories[0] }) => (    <TouchableOpacity
+      style={[
+        tw`bg-white rounded-3xl py-4 px-2 items-center justify-center shadow-sm elevation-3 mb-3`,
+        { width: '31%', marginHorizontal: '1%' }
+      ]}
+      activeOpacity={0.85}
+      onPress={() => handleCategorySelect(item.name)}
+    >
+      <View style={[tw`w-12 h-12 rounded-2xl mb-2`, { backgroundColor: '#becfe8', overflow: 'hidden' }]}> 
+        <Image
+          source={item.image}
+          style={{ width: '100%', height: '100%' }}
+          resizeMode="contain"
+        />
+      </View>
+      <Text style={[tw`text-[12px] font-medium text-center`, { color: '#202b6d' }]} numberOfLines={2}> 
+        {item.name}
+      </Text>
+    </TouchableOpacity>
+  );
 
   return (
-    <SafeAreaView style={tw`flex-1 bg-gray-100`}>
-      {/* Header */}
-      <View style={tw`h-14 flex-row items-center justify-between px-4 border-b border-gray-300 bg-white`}>
-        <TouchableOpacity
-          style={tw`w-8 justify-center items-center`}
-          onPress={() => navigation.goBack()}
-          activeOpacity={0.7}
-        >
-          <Feather name="arrow-left" size={24} color="#202b6d" />
-        </TouchableOpacity>
-
-        <View style={tw`flex-1 items-center`}>
-          <Text style={[tw`text-xl font-bold`, { color: '#202b6d' }]}>Select a Test Category</Text>
-        </View>
-
-        <View style={tw`w-8`} />
-      </View>
-
+    <View style={tw`flex-1 bg-blue-50`}> 
+      <PageHeader title="Lab Test Categories" backgroundColor="#202b6d" textColor="#fff" onBackPress={() => navigation.goBack()} />
       {/* Search Bar */}
-      <View style={tw`flex-row items-center bg-white mx-4 mt-4 mb-2 px-3 py-2 rounded-3xl shadow`}>
-        <Feather name="search" size={20} color="#999" style={tw`mr-2`} />
+      <View style={tw`flex-row items-center bg-white rounded-3.5xl px-3 py-2.5 mb-5 shadow-sm elevation-3 mx-4 mt-4`}>
+        <Search size={20} color="#999" style={tw`mr-2`} />
         <TextInput
-          style={tw`flex-1 h-10 text-base text-gray-800`}
-          placeholder="Search tests..."
-          placeholderTextColor="#999"
+          style={tw`text-base text-gray-800 flex-1`}
+          placeholder="Search categories"
+          placeholderTextColor="#aaa"
           value={search}
           onChangeText={setSearch}
         />
       </View>
-
-      {/* Category Grid */}
-      <FlatList
+      {/* Category Grid */}      <FlatList
         data={filteredCategories}
         keyExtractor={(item) => item.id}
-        numColumns={numColumns}
-        contentContainerStyle={tw`px-4 pb-5`}
-        columnWrapperStyle={{ justifyContent: 'space-between' }}
+        renderItem={renderItem}
+        numColumns={3}
+        columnWrapperStyle={tw`justify-between`}
+        contentContainerStyle={tw`pb-7.5 px-4`}
+        ListEmptyComponent={
+          <Text style={tw`text-center mt-12 text-base text-gray-500`}>
+            No categories found.
+          </Text>
+        }
         showsVerticalScrollIndicator={false}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={{
-              width: itemSize,
-              aspectRatio: 1,
-              backgroundColor: 'white',
-              borderRadius: 16,
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginBottom: 16,
-              shadowColor: '#000',
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.1,
-              shadowRadius: 4,
-              elevation: 2,
-            }}
-            activeOpacity={0.8}
-            onPress={() => handleCategorySelect(item.name)}
-          >
-            <Image
-              source={item.image}
-              style={{ width: 100, height: 100 }}
-              resizeMode="contain"
-            />
-            <Text style={[tw`mt-3 text-center text-[14px] font-semibold`, { color: '#202b6d' }]}>
-              {item.name}
-            </Text>
-          </TouchableOpacity>
-        )}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 

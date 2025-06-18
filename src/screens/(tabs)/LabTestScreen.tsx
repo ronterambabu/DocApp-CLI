@@ -1,128 +1,42 @@
-import tw from 'twrnc';
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  SafeAreaView,
-  Platform,
-  TextInput,
-  FlatList,
-} from 'react-native';
-import Feather from 'react-native-vector-icons/Feather';
+import React from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { useNavigation, useRoute, NavigationProp, RouteProp } from '@react-navigation/native';
-
-const mockTests = [
-  { id: '1', name: 'Basic', description: 'Includes CBC, ESR, and Blood Sugar', price: '₹499' },
-  { id: '2', name: 'Advanced Panel', description: 'Thyroid, Kidney & Liver function tests', price: '₹999' },
-  { id: '3', name: 'Diabetes Package', description: 'Fasting Glucose, HbA1c, Lipid profile', price: '₹799' },
-  { id: '4', name: 'Heart Health', description: 'ECG, Cholesterol, Blood Pressure', price: '₹899' },
-  { id: '5', name: 'Full Body Checkup', description: 'All major tests included', price: '₹1499' },
-  { id: '6', name: 'Vitamin Deficiency', description: 'Vitamin B12, D3 & Iron', price: '₹699' },
-];
+import tw from 'twrnc';
+import PageHeader from '../../components/PageHeader';
 
 type RootStackParamList = {
-  LabTestScreen: { category: string };
-  BookingScreen: { test: { id: string; name: string; description: string; price: string } };
+  LabTest: { test: { id: string; name: string; description: string; price: string } };
 };
 
-const LabTestsScreen = () => {
+const LabTestScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<RootStackParamList, 'LabTestScreen'>>();
-  const { category } = route.params;
-
-  const [search, setSearch] = useState('');
-  const [selectedTestId, setSelectedTestId] = useState<string | null>(null);
-
-  const filteredTests = mockTests.filter((test) =>
-    test.name.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const selectedTest = mockTests.find(test => test.id === selectedTestId);
+  const route = useRoute<RouteProp<RootStackParamList, 'LabTest'>>();
+  const { test } = route.params;
 
   return (
-    <SafeAreaView style={tw`flex-1 bg-gray-100 ${Platform.OS === 'android' ? 'pt-[${StatusBar.currentHeight}px]' : ''}`}>
-      <View style={tw`h-14 flex-row items-center justify-between px-4 border-b border-gray-300 bg-white`}>
-        <TouchableOpacity
-          style={tw`w-8 justify-center items-center`}
-          onPress={() => navigation.goBack()}
-          activeOpacity={0.7}
-          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-        >
-          <Feather name="arrow-left" size={24} color="#2E64FE" />
-        </TouchableOpacity>
-        <Text style={tw`text-xl font-bold text-blue-600 text-center flex-1`}>{category}</Text>
-        <View style={tw`w-8`} />
-      </View>
-
-      {selectedTest && (
-        <View style={tw`bg-blue-100 p-3 mx-4 my-2.5 rounded-xl border border-blue-600`}>
-          <Text style={tw`text-xs font-semibold text-blue-600 mb-0.5`}>Selected Test:</Text>
-          <Text style={tw`text-base font-bold text-blue-800`}>{selectedTest.name}</Text>
+    <View style={tw`flex-1 bg-blue-50`}>
+      <PageHeader
+        title={test.name}
+        backgroundColor="#202b6d"
+        textColor="#fff"
+        onBackPress={() => navigation.goBack()}
+      />
+      <View style={tw`flex-1 justify-center items-center px-6`}>
+        <View style={tw`bg-white rounded-3xl shadow-lg p-7 w-full max-w-xl items-center`}>
+          <Text style={tw`text-2xl font-bold text-blue-800 mb-2 text-center`}>{test.name}</Text>
+          <Text style={tw`text-base text-gray-700 mb-4 text-center`}>{test.description}</Text>
+          <Text style={tw`text-xl font-bold text-green-600 mb-6`}>{test.price}</Text>
+          <TouchableOpacity
+            style={tw`bg-blue-600 px-8 py-3 rounded-xl`}
+            activeOpacity={0.85}
+            onPress={() => {/* handle booking or add to cart here */}}
+          >
+            <Text style={tw`text-white text-lg font-semibold`}>Book Now</Text>
+          </TouchableOpacity>
         </View>
-      )}
-
-      <View style={tw`flex-1 p-4`}>
-        <Text style={tw`text-lg font-semibold mb-2.5 text-gray-800`}>Available Tests</Text>
-
-        <TextInput
-          style={tw`bg-white p-3 rounded-lg mb-4 text-base text-gray-800 shadow-sm`}
-          placeholder="Search tests..."
-          placeholderTextColor="#888"
-          value={search}
-          onChangeText={setSearch}
-          returnKeyType="search"
-          autoCorrect={false}
-        />
-
-        {filteredTests.length === 0 ? (
-          <View style={tw`p-5 items-center`}>
-            <Text style={tw`text-base text-gray-500`}>No tests found matching "{search}"</Text>
-          </View>
-        ) : (
-          <FlatList
-            data={filteredTests}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={tw`pb-5`}
-            showsVerticalScrollIndicator={false}
-            renderItem={({ item }) => {
-              const isSelected = item.id === selectedTestId;
-              return (
-                <View style={tw`bg-white rounded-xl py-4 px-5 mb-4 shadow-md ${isSelected ? 'border-2 border-blue-600' : ''}`}>
-                  <Text style={tw`text-lg font-bold ${isSelected ? 'text-blue-800' : 'text-blue-600'}`}>{item.name}</Text>
-                  <Text style={tw`mt-2 text-sm text-gray-600`}>{item.description}</Text>
-                  <View style={tw`flex-row mt-4 justify-between items-center`}>
-                    <Text style={tw`text-base font-semibold text-green-600`}>{item.price}</Text>
-                    <TouchableOpacity
-                      style={tw`px-4 py-2 rounded-lg ${isSelected ? 'bg-blue-300' : 'bg-blue-600'}`}
-                      activeOpacity={0.7}
-                      onPress={() => setSelectedTestId(item.id)}
-                      disabled={isSelected}
-                    >
-                      <Text style={tw`text-white text-sm font-semibold`}>{isSelected ? 'Selected' : 'Book Now'}</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              );
-            }}
-          />
-        )}
-
-        <TouchableOpacity
-          style={tw`py-3.5 rounded-xl mt-2.5 items-center ${!selectedTest ? 'bg-blue-300' : 'bg-blue-600'}`}
-          onPress={() => {
-            if (selectedTest) {
-              navigation.navigate('BookingScreen', { test: selectedTest });
-            }
-          }}
-          disabled={!selectedTest}
-          activeOpacity={0.8}
-        >
-          <Text style={tw`text-white text-base font-bold`}>Confirm Selection</Text>
-        </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
-export default LabTestsScreen;
+export default LabTestScreen;

@@ -209,7 +209,7 @@ const MedicalRecordsScreen = () => {
         <View style={tw`w-10`} />
       )}
       headerRight={
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => (navigation as any).navigate('Notification')}>
           <Bell size={22} color="#fff" />
         </TouchableOpacity>
       }      headerContent={

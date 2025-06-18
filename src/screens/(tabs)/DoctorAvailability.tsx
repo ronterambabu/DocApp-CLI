@@ -1,150 +1,217 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-  Platform,
-  KeyboardAvoidingView,
-  Alert,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { ArrowLeft } from 'lucide-react-native';
+import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
+import PageHeader from '../../components/PageHeader';
+import { CalendarDays, Sun, CloudSun, Moon, BriefcaseMedical, ArrowLeft, Video } from 'lucide-react-native';
 import tw from 'twrnc';
 
-export default function DoctorAvailabilityScreen() {
-  const navigation = useNavigation();
+// Helper function to get dates
+const getDates = () => {
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const dayAfter = new Date(today);
+  dayAfter.setDate(dayAfter.getDate() + 2);
 
-  const doctor = {
-    name: 'Dr. John Doe',
-    specialty: 'Cardiologist',
-    experience: '10 years experience',
-    image: 'https://randomuser.me/api/portraits/men/75.jpg',
+  const formatDate = (date: Date) => {
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return {
+      full: `${date.getDate() === today.getDate() ? 'Today' : 
+             date.getDate() === tomorrow.getDate() ? 'Tomorrow' : 
+             days[date.getDay()]}, ${date.getDate()} ${months[date.getMonth()]}`,
+      slots: date.getDate() === today.getDate() ? 0 : 28
+    };
   };
 
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  return [today, tomorrow, dayAfter].map(formatDate);
+};
 
-  const afternoonSlots = ['1:00 PM', '1:30 PM', '2:00 PM', '2:30 PM', '3:00 PM', '3:30 PM', '4:00 PM'];
-  const eveningSlots = ['5:00 PM', '5:30 PM', '6:00 PM', '6:30 PM', '7:00 PM'];
-  const slotsAvailable = afternoonSlots.length > 0 || eveningSlots.length > 0;
+const slots = {
+  Morning: ['11:00 AM', '11:15 AM', '11:30 AM', '11:45 AM'],
+  Afternoon: [
+    '12:00 PM', '12:15 PM', '12:30 PM', '12:45 PM',
+    '01:00 PM', '01:15 PM', '01:30 PM', '01:45 PM',
+    '02:00 PM', '02:15 PM', '02:30 PM', '02:45 PM',
+    '03:00 PM', '03:15 PM', '03:30 PM', '03:45 PM',
+  ],
+  Evening: ['04:00 PM', '04:15 PM', '04:30 PM', '04:45 PM', '05:00 PM', '05:15 PM', '05:30 PM', '05:45 PM'],
+};
 
-  const handleConfirmDate = (date: Date) => {
-    setSelectedDate(date);
-    setSelectedTime(null);
+type Doctor = { 
+  name: string; 
+  clinic: string; 
+  image: string; 
+  specialty?: string; 
+  fee?: number;
+  experience?: number;
+  rating?: string | null;
+};
+
+const doctorDefault = {
+  name: 'Dr. Navya Chowdary',
+  clinic: 'Sasha Luxe Dermatology and Cosmetic Surgery Centre, madhapur',
+  image: 'https://randomuser.me/api/portraits/women/44.jpg',
+  specialty: 'Dermatologist',
+  fee: 1000,
+  experience: 15,
+  rating: '4.8'
+};
+
+type RootStackParamList = { 
+  DoctorAvailability: { 
+    doctor: Doctor; 
+    consultationType?: 'video' | 'inclinic';
+  }; 
+  AppointmentBooking: {
+    doctor: Doctor;
+    slot: string;
+    date: string;
+    consultationType: 'video' | 'inclinic';
+  };
+};
+
+const DoctorAvailabilityScreen = () => {
+  const insets = useSafeAreaInsets();
+  const navigation = useNavigation<any>();
+  const route = useRoute<RouteProp<RootStackParamList, 'DoctorAvailability'>>();
+  const doctor = route.params?.doctor || doctorDefault;
+  const consultationType = route.params?.consultationType || 'inclinic';  const dates = getDates();
+  const [selectedDate, setSelectedDate] = useState(dates[1].full); // Default to tomorrow
+
+  const handleSlotSelection = (slot: string) => {
+    navigation.navigate('AppointmentBooking', {
+      doctor,
+      slot,
+      date: selectedDate,
+      consultationType
+    });
+  };
+
+  const dateTabs = dates.map(date => ({
+    label: date.full,
+    slots: date.slots
+  }));
+  const renderSlots = (label: string, data: string[], icon: React.ReactNode) => {
+    const isToday = selectedDate.includes('Today');
+    const currentTime = new Date().getHours() * 100 + new Date().getMinutes();
+    
+    const isSlotAvailable = (slot: string) => {
+      if (!isToday) return true;
+      const [time, period] = slot.split(' ');
+      const [hours, minutes] = time.split(':');
+      let slotTime = parseInt(hours) * 100 + parseInt(minutes);
+      if (period === 'PM' && parseInt(hours) !== 12) {
+        slotTime += 1200;
+      }
+      return slotTime > currentTime;
+    };
+
+    const availableSlots = data.filter(slot => isSlotAvailable(slot));
+
+    if (availableSlots.length === 0) return null;
+
+    return (
+      <View style={tw`mb-6`}>
+        <View style={tw`flex-row items-center mb-2`}>
+          {icon}
+          <Text style={tw`ml-2 text-gray-700 font-semibold`}>{label}</Text>
+          <Text style={tw`ml-2 text-gray-400`}>{availableSlots.length} slots</Text>
+        </View>
+        <View style={tw`flex-row flex-wrap`}>
+          {data.map((slot: string, idx: number) => {
+            const available = isSlotAvailable(slot);
+            return (
+              <TouchableOpacity
+                key={idx}
+                style={tw`border ${available ? 'border-blue-500' : 'border-gray-300'} 
+                         px-4 py-2 rounded-lg mb-2 mr-2 
+                         ${available ? 'bg-white' : 'bg-gray-50'}`}
+                activeOpacity={0.85}
+                onPress={() => available && handleSlotSelection(slot)}
+                disabled={!available}
+              >
+                <Text style={tw`${available ? 'text-blue-700' : 'text-gray-400'} text-base font-semibold`}>
+                  {slot}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      </View>
+    );
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={tw`flex-1 bg-gray-50 pt-[${Platform.OS === 'android' ? 10 : 15}]`}
-    >
-      {/* Header */}
-      <View style={tw`flex-row items-center px-4 pb-3 bg-white`}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={tw`pr-3`}>
-          <ArrowLeft size={24} color="#222B45" />
-        </TouchableOpacity>
-        <Text style={tw`text-xl font-semibold text-gray-800`}>Select Time</Text>
-      </View>
-
-      {/* Doctor Card */}
-      <View style={tw`flex-row bg-white m-4 p-3.5 rounded-4xl items-center elevation-3`}>
-        <Image source={{ uri: doctor.image }} style={tw`w-18 h-18 rounded-3xl`} />
-        <View style={tw`ml-3`}>
-          <Text style={tw`text-base font-bold text-gray-800`}>{doctor.name}</Text>
-          <Text style={tw`text-xs text-blue-600 mt-0.5`}>{doctor.specialty}</Text>
-          <Text style={tw`text-xs text-gray-500 mt-0.5`}>{doctor.experience}</Text>
-        </View>
-      </View>
-
-      {/* Date Picker Tabs */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={tw`mx-4 mb-3`}>
-        {[0, 1, 2].map((offset) => {
-          const date = new Date();
-          date.setDate(date.getDate() + offset);
-          const label = offset === 0 ? 'Today' : offset === 1 ? 'Tomorrow' : date.toDateString().split(' ')[0];
-          const isSelected = selectedDate.toDateString() === date.toDateString();
-
-          return (
-            <TouchableOpacity
-              key={offset}
-              style={tw`bg-gray-200 py-2.5 px-4 rounded-3xl mr-2.5 ${isSelected ? 'bg-blue-600' : ''}`}
-              onPress={() => handleConfirmDate(date)}
+    <View style={[tw`flex-1 bg-white`, { paddingTop: insets.top }]}> 
+      <PageHeader
+        title=""
+        backgroundColor="#2b2a82"
+        textColor="#fff"
+        onBackPress={() => navigation.goBack()}
+        leftComponent={
+          <View style={tw`flex-row items-center`}>
+            <TouchableOpacity 
+              onPress={() => navigation.goBack()}
+              style={tw`p-2 mr-2`}
             >
-              <Text style={tw`text-xs text-gray-800 font-semibold ${isSelected ? 'text-white' : ''}`}>
-                {label}, {date.getDate()} {date.toLocaleString('default', { month: 'short' })}
-              </Text>
-              <Text style={tw`text-[11px] text-gray-500`}>
-                {offset === 0 ? 'No slots' : `${Math.floor(Math.random() * 10 + 1)} slots available`}
-              </Text>
+              <ArrowLeft size={24} color="#fff" />
             </TouchableOpacity>
-          );
-        })}
-      </ScrollView>
+            <View style={tw`flex-row items-center`}> 
+              <Image source={{ uri: doctor.image }} style={tw`w-10 h-10 rounded-full border-2 border-white`} />
+              <View style={tw`ml-3`}> 
+                <Text style={tw`text-white font-bold text-base`}>{doctor.name}</Text>
+                <Text style={tw`text-white text-xs`} numberOfLines={2}>{doctor.clinic}</Text>
+              </View>
+            </View>
+          </View>
+        }
+      />
 
-      {/* Time Slots */}
-      <ScrollView contentContainerStyle={tw`pb-30`}>
-        <Text style={tw`text-center text-base font-semibold text-gray-800 mb-3`}>
-          {selectedDate.toDateString()}
-        </Text>
-
-        {slotsAvailable ? (
+      {/* Consultation Type Header */}
+      <View style={tw`bg-white mx-4 mt-6 mb-2 rounded-2xl shadow-lg p-4 z-10 flex-row items-center`}>
+        {consultationType === 'video' ? (
           <>
-            <Text style={tw`text-[15px] font-semibold ml-5 my-1.5 text-gray-800`}>Afternoon</Text>
-            <View style={tw`flex-row flex-wrap px-4 mb-2.5`}>
-              {afternoonSlots.map((slot) => (
-                <TouchableOpacity
-                  key={slot}
-                  style={tw`bg-gray-200 py-2.5 px-4 rounded-2.5xl m-1.25 ${selectedTime === slot ? 'bg-blue-600' : ''}`}
-                  onPress={() => setSelectedTime(slot)}
-                >
-                  <Text style={tw`text-sm text-gray-800 ${selectedTime === slot ? 'text-white font-semibold' : ''}`}>
-                    {slot}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-
-            <Text style={tw`text-[15px] font-semibold ml-5 my-1.5 text-gray-800`}>Evening</Text>
-            <View style={tw`flex-row flex-wrap px-4 mb-2.5`}>
-              {eveningSlots.map((slot) => (
-                <TouchableOpacity
-                  key={slot}
-                  style={tw`bg-gray-200 py-2.5 px-4 rounded-2.5xl m-1.25 ${selectedTime === slot ? 'bg-blue-600' : ''}`}
-                  onPress={() => setSelectedTime(slot)}
-                >
-                  <Text style={tw`text-sm text-gray-800 ${selectedTime === slot ? 'text-white font-semibold' : ''}`}>
-                    {slot}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
+            <Video size={24} color="#059669" />
+            <Text style={tw`ml-3 text-green-800 font-semibold text-base`}>Video Consultation Slots</Text>
           </>
         ) : (
-          <View style={tw`items-center my-7.5`}>
-            <Text style={tw`text-[15px] text-gray-500 mb-4`}>No slots available</Text>
-            <TouchableOpacity style={tw`bg-blue-600 py-3 px-5 rounded-3xl mb-2.5`}>
-              <Text style={tw`text-white font-semibold`}>Next availability on Wed, 24 Feb</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={tw`py-3 px-5 rounded-3xl border border-blue-600`}>
-              <Text style={tw`text-blue-600 font-semibold`}>Contact Clinic</Text>
-            </TouchableOpacity>
-          </View>
+          <>
+            <BriefcaseMedical size={24} color="#2563eb" />
+            <Text style={tw`ml-3 text-blue-900 font-semibold text-base`}>In-Clinic Visit Slots</Text>
+          </>
         )}
-      </ScrollView>
+      </View>
 
-      {/* Confirm Button */}
-      <TouchableOpacity
-        style={tw`absolute bottom-20 left-5 right-5 bg-blue-600 py-3.5 rounded-3xl items-center z-10 ${!selectedTime ? 'opacity-50' : ''}`}
-        onPress={() =>
-          selectedTime &&
-          Alert.alert('Appointment booked', `Appointment booked for ${doctor.name} on ${selectedDate.toDateString()} at ${selectedTime}`)
-        }
-        disabled={!selectedTime}
-      >
-        <Text style={tw`text-base text-white font-semibold`}>Confirm Appointment</Text>
-      </TouchableOpacity>
-    </KeyboardAvoidingView>
+      {/* Rest of the component */}
+      <ScrollView contentContainerStyle={tw`pt-6 pb-6 px-4`}>
+        {/* Date Picker Tabs */}
+        <View style={tw`flex-row justify-between mb-6`}>
+          {dateTabs.map(tab => (
+            <TouchableOpacity
+              key={tab.label}
+              style={[
+                tw`flex-1 px-2 py-2 rounded-lg mx-1 border`,
+                selectedDate === tab.label
+                  ? tw`border-blue-500 bg-blue-50`
+                  : tw`border-gray-300 bg-white`
+              ]}
+              onPress={() => setSelectedDate(tab.label)}
+              activeOpacity={0.85}
+            >
+              <Text style={tw`${selectedDate === tab.label ? 'text-blue-700 font-bold' : 'text-gray-700'} text-center text-sm`}>{tab.label}</Text>
+              <Text style={tw`text-center text-xs mt-1 ${tab.slots === 0 ? 'text-gray-400' : 'text-green-600'}`}>{tab.slots === 0 ? 'No slots available' : `${tab.slots} slots available`}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <Text style={tw`text-base font-semibold mb-4`}>{selectedDate}</Text>
+        {renderSlots('Morning', slots.Morning, <Sun size={18} color="#fbbf24" />)}
+        {renderSlots('Afternoon', slots.Afternoon, <CloudSun size={18} color="#f59e42" />)}
+        {renderSlots('Evening', slots.Evening, <Moon size={18} color="#6366f1" />)}
+      </ScrollView>
+    </View>
   );
-}
+};
+
+export default DoctorAvailabilityScreen;

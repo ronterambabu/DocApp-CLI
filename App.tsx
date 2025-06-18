@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { UserProvider } from './src/screens/contexts/UserContext';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Footer from './src/screens/(tabs)/Footer';
-import { StatusBar, View, Platform } from 'react-native';
+import { StatusBar, View, Platform, Keyboard } from 'react-native';
 import { LoadingProvider } from './src/components/LoadingOverlay';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 
@@ -55,18 +55,32 @@ import HelpCenterScreen from './src/screens/(tabs)/HelpCenter';
 import MyPaymentsScreen from '././src/screens/(tabs)/PaymentMethods';
 import WalletScreen from '././src/screens/(tabs)/wallet';
 import CartScreen from '././src/screens/(tabs)/CartScreen';
-// doctor dynamic screen
-import DoctorAvailbilityScreen from './src/screens/doctor availbility/[id]';
+import AppointmentBooking from './src/screens/(tabs)/AppointemntBooking';
+import DoctorProfileScreen from './src/screens/doctor profile/[id]';
 
 const Stack = createStackNavigator();
 
 const AUTH_SCREENS = [
-  'AuthLayout', 'Signup', 'Login', 'DoctorLogin', 'CompleteProfile'
+  'AuthLayout', 'Signup', 'Login', 'DoctorLogin', 'CompleteProfile', 'AppointmentBooking'
 ];
 
 export default function App() {
   const navigationRef = useRef<NavigationContainerRef<any>>(null);
   const [currentRoute, setCurrentRoute] = useState<string | undefined>(undefined);
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  React.useEffect(() => {
+    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardVisible(true);
+    });
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardVisible(false);
+    });
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
 
   const handleStateChange = () => {
     const route = navigationRef.current?.getCurrentRoute?.();
@@ -76,7 +90,8 @@ export default function App() {
   return (
     <UserProvider>
       <LoadingProvider>
-        <SafeAreaProvider>          <View style={{ flex: 1, backgroundColor: '#202b6d' }}>
+        <SafeAreaProvider>
+          <View style={{ flex: 1, backgroundColor: '#202b6d' }}>
             <StatusBar
               backgroundColor="#202b6d"
               barStyle="light-content"
@@ -145,10 +160,12 @@ export default function App() {
                 <Stack.Screen name="MyPayments" component={MyPaymentsScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="Wallet" component={WalletScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="Cart" component={CartScreen} options={{ headerShown: false }} />
+                <Stack.Screen name="AppointmentBooking" component={AppointmentBooking} />
+                <Stack.Screen name="DoctorProfile" component={DoctorProfileScreen} />
                 {/* doctor dynamic screen */}
                 {/* <Stack.Screen name="Doctor" component={DoctorScreen} /> */}
               </Stack.Navigator>
-              {currentRoute && !AUTH_SCREENS.includes(currentRoute) && <Footer />}
+              {currentRoute && !AUTH_SCREENS.includes(currentRoute) && !isKeyboardVisible && <Footer />}
             </NavigationContainer>
           </View>
         </SafeAreaProvider>

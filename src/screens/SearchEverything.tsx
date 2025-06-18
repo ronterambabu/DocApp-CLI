@@ -83,101 +83,115 @@ const SearchScreen = () => {
   };
 
   return (
-    <View style={tw`flex-1 bg-white pt-8 px-4`}> {/* Less padding for better safe area */}
-      {/* Header */}
-      <View style={tw`flex-row items-center mb-4`}> {/* Modern header */}
-        <Pressable onPress={() => navigation.goBack()} style={tw`p-2 bg-gray-100 rounded-full`}>
-          <ArrowLeft size={22} color="#202b6d" />
-        </Pressable>
-        <Pressable
-          onPress={() => setShowLocationModal(true)}
-          style={tw`flex-row items-center ml-2 px-2 py-1 bg-gray-100 rounded-full`}
-        >
-          <MapPin size={16} color="#202b6d" />
-          <Text style={tw`ml-1 font-semibold text-[#202b6d]`}>{selectedLocation}</Text>
-        </Pressable>
-      </View>
+    <View style={tw`flex-1 bg-white`}>
+      {/* Safe area and header container */}
+      <View style={tw`bg-white pt-12 px-4 shadow-sm`}>
+        {/* Header */}
+        <View style={tw`flex-row items-center justify-between mb-4`}>
+          <View style={tw`flex-row items-center flex-1`}>
+            <Pressable 
+              onPress={() => navigation.goBack()} 
+              style={tw`p-2 mr-3`}
+            >
+              <ArrowLeft size={24} color="#202b6d" />
+            </Pressable>
+            <Pressable
+              onPress={() => setShowLocationModal(true)}
+              style={tw`flex-row items-center bg-gray-50 px-3 py-1.5 rounded-full max-w-[140px]`}
+            >
+              <MapPin size={16} color="#202b6d" />
+              <Text style={tw`ml-1 font-medium text-[#202b6d] text-sm`} numberOfLines={1}>
+                {selectedLocation}
+              </Text>
+            </Pressable>
+          </View>
+        </View>
 
-      {/* Search Bar */}
-      <View style={tw`flex-row items-center bg-gray-100 rounded-full px-4 py-3 shadow-sm mb-2`}> {/* Larger, modern */}
-        <Search size={20} color="#202b6d" />
-        <TextInput
-          placeholder="Search for doctors, services, labs, pharmacy..."
-          placeholderTextColor="#888"
-          style={tw`ml-2 flex-1 text-base text-gray-800`}
-          value={searchText}
-          onChangeText={setSearchText}
-          returnKeyType="search"
-        />
+        {/* Search Bar */}
+        <View style={tw`mb-3`}>
+          <View style={tw`flex-row items-center bg-gray-50 rounded-lg px-3 py-2.5`}>
+            <Search size={18} color="#666" />
+            <TextInput
+              placeholder="Search for doctors, services, labs..."
+              placeholderTextColor="#666"
+              style={tw`ml-2 flex-1 text-sm text-gray-800`}
+              value={searchText}
+              onChangeText={setSearchText}
+              returnKeyType="search"
+            />
+          </View>
+        </View>
       </View>
 
       {/* Search Results / History */}
-      <View style={tw`mt-6`}> {/* Results section */}
-        {(searchText.length > 0 ? filteredResults : searchHistory).length > 0 && (
-          <>
-            <View style={tw`flex-row justify-between mb-2`}> {/* Section title */}
-              <Text style={tw`text-gray-700 font-semibold`}>{searchText.length > 0 ? 'Results' : 'Recent Searches'}</Text>
-              {searchText.length === 0 && (
-                <Pressable onPress={clearAll}>
-                  <Text style={tw`text-blue-500 text-sm font-semibold`}>CLEAR</Text>
-                </Pressable>
-              )}
-            </View>
+      <View style={tw`flex-1 px-4 bg-gray-50`}>
+        <View style={tw`mt-6`}> {/* Results section */}
+          {(searchText.length > 0 ? filteredResults : searchHistory).length > 0 && (
+            <>
+              <View style={tw`flex-row justify-between mb-2`}> {/* Section title */}
+                <Text style={tw`text-gray-700 font-semibold`}>{searchText.length > 0 ? 'Results' : 'Recent Searches'}</Text>
+                {searchText.length === 0 && (
+                  <Pressable onPress={clearAll}>
+                    <Text style={tw`text-blue-500 text-sm font-semibold`}>CLEAR</Text>
+                  </Pressable>
+                )}
+              </View>
 
-            <FlatList
-              data={searchText.length > 0 ? filteredResults : searchHistory}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item, index }) => (
-                <Pressable
-                  onPress={() => onResultSelect(item)}
-                  style={tw`flex-row items-center justify-between py-3 border-b border-gray-100 bg-white rounded-lg px-2 mb-1`}
-                >
-                  <View style={tw`flex-row items-start`}>
-                    {item.icon}
-                    <View style={tw`ml-3`}>
-                      <Text style={tw`text-gray-900 font-semibold text-base`}>{item.title}</Text>
-                      <Text style={tw`text-xs text-gray-500 mt-0.5`}>{item.type}</Text>
+              <FlatList
+                data={searchText.length > 0 ? filteredResults : searchHistory}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item, index }) => (
+                  <Pressable
+                    onPress={() => onResultSelect(item)}
+                    style={tw`flex-row items-center justify-between py-3 border-b border-gray-100 bg-white rounded-lg px-2 mb-1`}
+                  >
+                    <View style={tw`flex-row items-start`}>
+                      {item.icon}
+                      <View style={tw`ml-3`}>
+                        <Text style={tw`text-gray-900 font-semibold text-base`}>{item.title}</Text>
+                        <Text style={tw`text-xs text-gray-500 mt-0.5`}>{item.type}</Text>
+                      </View>
                     </View>
-                  </View>
-                  {searchText.length === 0 && (
-                    <Pressable onPress={() => removeItem(index)}>
-                      {/* You may want to use a Lucide icon here for consistency */}
-                      <Text style={tw`text-lg text-gray-400`}>×</Text>
-                    </Pressable>
-                  )}
-                </Pressable>
-              )}
-            />
-          </>
-        )}
-        {searchText.length > 0 && filteredResults.length === 0 && (
-          <Text style={tw`text-center text-gray-400 mt-10`}>No results found. Try another search.</Text>
-        )}
-      </View>
-
-      {/* Location Picker Modal */}
-      <Modal visible={showLocationModal} transparent animationType="slide">
-        <View style={tw`flex-1 justify-end bg-black/30`}>
-          <View style={tw`bg-white rounded-t-2xl p-4`}>
-            <Text style={tw`text-lg font-semibold mb-4`}>Select Location</Text>
-            {locations.map(loc => (
-              <TouchableOpacity
-                key={loc}
-                onPress={() => {
-                  setSelectedLocation(loc);
-                  setShowLocationModal(false);
-                }}
-                style={tw`py-2`}
-              >
-                <Text style={tw`text-base text-gray-800`}>{loc}</Text>
-              </TouchableOpacity>
-            ))}
-            <TouchableOpacity onPress={() => setShowLocationModal(false)} style={tw`mt-4`}>
-              <Text style={tw`text-center text-blue-500 font-semibold`}>Cancel</Text>
-            </TouchableOpacity>
-          </View>
+                    {searchText.length === 0 && (
+                      <Pressable onPress={() => removeItem(index)}>
+                        {/* You may want to use a Lucide icon here for consistency */}
+                        <Text style={tw`text-lg text-gray-400`}>×</Text>
+                      </Pressable>
+                    )}
+                  </Pressable>
+                )}
+              />
+            </>
+          )}
+          {searchText.length > 0 && filteredResults.length === 0 && (
+            <Text style={tw`text-center text-gray-400 mt-10`}>No results found. Try another search.</Text>
+          )}
         </View>
-      </Modal>
+
+        {/* Location Picker Modal */}
+        <Modal visible={showLocationModal} transparent animationType="slide">
+          <View style={tw`flex-1 justify-end bg-black/30`}>
+            <View style={tw`bg-white rounded-t-2xl p-4`}>
+              <Text style={tw`text-lg font-semibold mb-4`}>Select Location</Text>
+              {locations.map(loc => (
+                <TouchableOpacity
+                  key={loc}
+                  onPress={() => {
+                    setSelectedLocation(loc);
+                    setShowLocationModal(false);
+                  }}
+                  style={tw`py-2`}
+                >
+                  <Text style={tw`text-base text-gray-800`}>{loc}</Text>
+                </TouchableOpacity>
+              ))}
+              <TouchableOpacity onPress={() => setShowLocationModal(false)} style={tw`mt-4`}>
+                <Text style={tw`text-center text-blue-500 font-semibold`}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      </View>
     </View>
   );
 };

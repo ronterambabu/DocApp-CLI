@@ -12,7 +12,7 @@ import {
   ActivityIndicator,
   ImageSourcePropType,
 } from 'react-native';
-import { ArrowLeft, ShoppingCart, MapPin, Filter, Search, ChevronDown, X } from 'lucide-react-native';
+import { ArrowLeft, Plus, MapPin, Filter, Search, ChevronDown, X, ShoppingCart } from 'lucide-react-native';
 import { useNavigation, useRoute, RouteProp, NavigationProp } from '@react-navigation/native';
 import tw from 'twrnc';
 import PageHeader from '../../components/PageHeader';
@@ -276,7 +276,7 @@ export default function ProductListScreen() {
                     style={tw`bg-blue-600 rounded-full p-2`}
                     onPress={() => Alert.alert('Success', `${item.name} added to cart`)}
                   >
-                    <ShoppingCart size={18} color="white" />
+                    <Plus size={18} color="white" />
                   </TouchableOpacity>
                 </View>
               </View>
