@@ -57,11 +57,11 @@ import WalletScreen from '././src/screens/(tabs)/wallet';
 import CartScreen from '././src/screens/(tabs)/CartScreen';
 import AppointmentBooking from './src/screens/(tabs)/AppointemntBooking';
 import DoctorProfileScreen from './src/screens/doctor profile/[id]';
-
+import PaymentScreen from './src/screens/(tabs)/PaymentsScreen';
 const Stack = createStackNavigator();
 
 const AUTH_SCREENS = [
-  'AuthLayout', 'Signup', 'Login', 'DoctorLogin', 'CompleteProfile', 'AppointmentBooking'
+  'AuthLayout', 'Signup', 'Login', 'DoctorLogin', 'CompleteProfile', 'AppointmentBooking' , 'DoctorProfile'
 ];
 
 export default function App() {
@@ -90,36 +90,35 @@ export default function App() {
   return (
     <UserProvider>
       <LoadingProvider>
-        <SafeAreaProvider>
-          <View style={{ flex: 1, backgroundColor: '#202b6d' }}>
-            <StatusBar
-              backgroundColor="#202b6d"
-              barStyle="light-content"
-              translucent={true}
-            />
-            <NavigationContainer
-              ref={navigationRef}
-              onReady={handleStateChange}
-              onStateChange={handleStateChange}
+        <SafeAreaProvider>          <View style={{ flex: 1, backgroundColor: '#202b6d' }}>
+          <StatusBar
+            backgroundColor="#202b6d"
+            barStyle="light-content"
+            translucent={true}
+          />
+          <NavigationContainer
+            ref={navigationRef}
+            onReady={handleStateChange}
+            onStateChange={handleStateChange}
+          >
+            <Stack.Navigator
+              initialRouteName="Home"
+              screenOptions={{
+                headerShown: false,
+                headerLeft: () => null,
+                cardStyle: { backgroundColor: '#f3f4f6' },
+              }}
             >
-              <Stack.Navigator
-                initialRouteName="Home"
-                screenOptions={{
-                  headerShown: false,
-                  headerLeft: () => null,
-                  cardStyle: { backgroundColor: '#f3f4f6' },
-                }}
-              >
-                <Stack.Screen
-                  name="Home"
-                  component={HomeScreen}
-                />
-                <Stack.Screen name="AllHospitals" component={AllHospitalsScreen} />
-                <Stack.Screen name="AllPharmacies" component={AllPharmaciesScreen} />
-                <Stack.Screen name="Onboarding" component={OnboardingScreen} />
-                <Stack.Screen name="Searcheverything" component={SearchEverything} />
-                <Stack.Screen name="VideoCall" component={VideoCallScreen} />
-                <Stack.Screen name="Profile" component={ProfileScreen} />
+              <Stack.Screen
+                name="Home"
+                component={HomeScreen}
+              />
+              <Stack.Screen name="AllHospitals" component={AllHospitalsScreen} />
+              <Stack.Screen name="AllPharmacies" component={AllPharmaciesScreen} />
+              <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+              <Stack.Screen name="Searcheverything" component={SearchEverything} />
+              <Stack.Screen name="VideoCall" component={VideoCallScreen} />
+              <Stack.Screen name="Profile" component={ProfileScreen} />
 
                 <Stack.Screen name="Notification" component={NotificationScreen} />
                 <Stack.Screen name="AllSpecialtiesScreen" component={AllSpecialtiesScreen} />
