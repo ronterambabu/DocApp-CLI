@@ -118,6 +118,15 @@ const SettingsScreen = () => {
         <LogOut size={20} color="#fff" />
         <Text style={tw`text-white text-base ml-2`}>Logout</Text>
       </TouchableOpacity>
+
+      {/* Version and Developer Info */}      <View style={tw`items-center mt-6 mb-20 mx-4 pt-2 border-t border-gray-200`}>
+        <Text style={tw`font-normal text-xs text-gray-500 mb-2`}>App Version 1.0.0</Text>
+        <View style={tw`flex-row items-center justify-center`}>
+          <Text style={tw`font-normal text-[10px] text-gray-400`}>Developed by </Text>
+          <Text style={tw`font-semibold text-[10px] text-[#202b6d] mx-1`}>ZYNLOGIC</Text>
+          <Text style={tw`font-normal text-[10px] text-gray-400`}>• © {new Date().getFullYear()} All Rights Reserved</Text>
+        </View>
+      </View>
     </PageLayout>
   );
 };

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, Image, TouchableOpacity, ActivityIndicator, Platform } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
-import {
-  Settings, User, Folder, CreditCard, Bell, Shield, LogOut, ChevronRight, ArrowLeft, CalendarCheck, HelpCircle
+import {  Settings, User, Folder, CreditCard, Bell, Shield, LogOut, ChevronRight, ArrowLeft, CalendarCheck, HelpCircle
 } from 'lucide-react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -84,10 +83,24 @@ export default function ProfileScreen() {
           <ActivityIndicator size="large" color="#202b6d" />
         ) : (
           <>
-            <Image
-              source={{ uri: user?.profile_picture || 'https://placehold.co/200x200?text=Avatar' }}
-              style={tw`w-28 h-28 rounded-full mb-4 shadow-md`}
-            />
+            {user?.profile_picture ? (
+              <Image
+                source={{ uri: user.profile_picture }}
+                style={tw`w-28 h-28 rounded-full mb-4 shadow-md`}
+              />
+            ) : (
+              <View style={tw`w-28 h-28 rounded-full mb-4 shadow-md bg-[#DFE5F3] items-center justify-center overflow-hidden`}>
+                {user?.name ? (
+                  <Text style={tw`text-[#202b6d] text-4xl font-bold`}>
+                    {user.name.split(' ').map(part => part[0]).join('').toUpperCase().slice(0, 2)}
+                  </Text>
+                ) : (
+                  <View style={tw`-m-1`}>
+                    <User size={96} color="#202b6d" strokeWidth={1.2} />
+                  </View>
+                )}
+              </View>
+            )}
             <Text style={tw`font-semibold text-xl text-gray-800 mb-1`}>{user?.name || 'Unknown User'}</Text>
             <Text style={tw`font-normal text-sm text-gray-500 mb-4`}>{user?.email || 'No Email'}</Text>
             <View style={tw`flex-row justify-center gap-4`}>
@@ -107,8 +120,7 @@ export default function ProfileScreen() {
           </>
         )}
       </View>
-        
-      <View style={tw`px-4 mb-8`}>
+          <View style={tw`px-4 mb-4`}>
         <TouchableOpacity
           style={tw`flex-row items-center bg-white rounded-2xl p-4 mb-3 shadow-sm`}
           onPress={() => navigation.navigate('Appointments')}  // Update this route to your actual appointments screen if needed
@@ -239,15 +251,18 @@ export default function ProfileScreen() {
       </View>
 
       <TouchableOpacity
-        style={tw`flex-row items-center justify-center bg-red-200 mx-4 py-4 rounded-2xl mb-8 shadow-sm`}
+        style={tw`flex-row items-center justify-center bg-red-200 mx-4 py-4 rounded-2xl mb-4 shadow-sm`}
         onPress={handleLogout}
       >
         <LogOut size={20} color="#FF647C" />
         <Text style={tw`font-semibold text-base text-red-500 ml-2`}>Logout</Text>
-      </TouchableOpacity>
-
-      <View style={tw`items-center mb-8`}>
-        <Text style={tw`font-normal text-xs text-gray-500`}>App Version 1.0.0</Text>
+      </TouchableOpacity>      <View style={tw`items-center mb-20 pt-2 border-t border-gray-200`}>
+        <Text style={tw`font-normal text-xs text-gray-500 mb-2`}>App Version 1.0.0</Text>
+        <View style={tw`flex-row items-center justify-center`}>
+          <Text style={tw`font-normal text-[10px] text-gray-400`}>Developed by </Text>
+          <Text style={tw`font-semibold text-[10px] text-[#202b6d] mx-1`}>ZYNLOGIC</Text>
+          <Text style={tw`font-normal text-[10px] text-gray-400`}>• © {new Date().getFullYear()} All Rights Reserved</Text>
+        </View>
       </View>
     </PageLayout>
   );

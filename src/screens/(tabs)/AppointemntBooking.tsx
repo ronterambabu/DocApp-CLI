@@ -28,10 +28,25 @@ type RootStackParamList = {
     date: string;
     consultationType: 'video' | 'inclinic';
   };
+  AppointmentPaymentScreen: {
+    doctor: Doctor;
+    slot: string;
+    date: string;
+    consultationType: 'video' | 'inclinic';
+    amount: number;
+    bookingId: string;
+  };
+  AppointmentSuccess: {
+    doctor: Doctor;
+    slot: string;
+    date: string;
+    consultationType: 'video' | 'inclinic';
+    appointmentId: string;
+  };
 };
 
 export default function BookAppointmentScreen() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const route = useRoute<RouteProp<RootStackParamList, 'AppointmentBooking'>>();
   const insets = useSafeAreaInsets();
 
@@ -109,9 +124,19 @@ export default function BookAppointmentScreen() {
             <View style={tw`flex-row items-center`}>
               <Clock size={16} color="#6B7280" />
               <Text style={tw`ml-2 text-sm text-gray-500`}>Appointment time</Text>
-            </View>
-            <TouchableOpacity 
-              onPress={() => navigation.goBack()}
+            </View>            <TouchableOpacity 
+              onPress={() => navigation.navigate('DoctorAvailability', {
+                doctor: {
+                  name: doctor.name,
+                  specialty: doctor.specialty,
+                  clinic: doctor.clinic,
+                  image: doctor.image,
+                  fee: doctor.fee,
+                  experience: doctor.experience,
+                  rating: doctor.rating
+                },
+                consultationType
+              })}
               style={tw`py-1 px-3`}
             >
               <Text style={tw`text-blue-600 text-sm font-semibold`}>CHANGE</Text>
@@ -187,13 +212,23 @@ export default function BookAppointmentScreen() {
             <TouchableOpacity>
               <Text style={tw`text-sm text-[#00A0E3]`}>View Bill</Text>
             </TouchableOpacity>
-          </View>
-          <TouchableOpacity
+          </View>          <TouchableOpacity
             style={tw`bg-[#00A0E3] px-8 py-3 rounded-lg`}
             activeOpacity={0.9}
+            onPress={() => {
+              // Note: The route name needs to match exactly what's in App.tsx
+              navigation.navigate('AppoinmentPaymentScreen', {
+                doctor,
+                slot,
+                date,
+                consultationType,
+                amount: doctor.fee || 600,
+                bookingId: `BOOK${Math.random().toString(36).substring(7).toUpperCase()}`
+              });
+            }}
           >
             <Text style={tw`text-white font-semibold text-base`}>
-              {consultationType === 'video' ? 'Confirm Video Consultation' : 'Confirm Clinic Visit'}
+              Proceed to Payment
             </Text>
           </TouchableOpacity>
         </View>

@@ -254,8 +254,8 @@ const FindDoctorsScreen = () => {
 
   const insets = useSafeAreaInsets();
 
-  // Add button handlers
-  const handleInClinicPress = (doctor: any) => {
+  // Add button handlers  // Handler for when the entire card is clicked - goes to profile
+  const handleCardPress = (doctor: any) => {
     navigation.navigate('DoctorProfile', {
       doctor: {
         ...doctor,
@@ -274,22 +274,22 @@ const FindDoctorsScreen = () => {
     });
   };
 
-  const handleVideoPress = (doctor: any) => {
-    navigation.navigate('DoctorProfile', {
+  // Handler for booking button clicks - goes directly to availability
+  const handleBookingPress = (doctor: any, type: 'inclinic' | 'video') => {
+    navigation.navigate('DoctorAvailability', {
       doctor: {
-        ...doctor,
-        clinics: [{
-          name: doctor.clinic,
-          location: doctor.location,
-          fee: doctor.fee,
-          slots: [
-            {
-              date: 'tomorrow',
-              times: ['09:30 AM', '09:45 AM', '10:00 AM', '10:15 AM']
-            }
-          ]
-        }]
-      }
+        name: doctor.name,
+        specialty: doctor.specialty,
+        clinic: doctor.clinic,
+        image: doctor.image,
+        fee: doctor.fee,
+        experience: doctor.experience,
+        rating: doctor.rating,
+        location: doctor.location,
+        recommendation: doctor.recommendation,
+        patientStories: doctor.patientStories
+      },
+      consultationType: type
     });
   };
 
@@ -412,9 +412,8 @@ const FindDoctorsScreen = () => {
       <FlatList
         data={filteredDoctors}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            onPress={() => handleInClinicPress(item)}
+        renderItem={({ item }) => (          <TouchableOpacity
+            onPress={() => handleCardPress(item)}
             style={tw`bg-white p-4 mb-4 rounded-xl shadow-sm mx-4`}
           >
             <View style={tw`flex-row`}>
@@ -461,7 +460,7 @@ const FindDoctorsScreen = () => {
                 <Text style={tw`text-[#25a9e1] text-center font-medium`}>Contact Clinic</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => item.type === 'inclinic' ? handleInClinicPress(item) : handleVideoPress(item)}
+                onPress={() => handleBookingPress(item, item.type)}
                 style={tw`flex-1 bg-[#25a9e1] py-2 rounded-lg ml-2`}
               >
                 <Text style={tw`text-white text-center font-medium`}>

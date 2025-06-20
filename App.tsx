@@ -57,11 +57,18 @@ import WalletScreen from '././src/screens/(tabs)/wallet';
 import CartScreen from '././src/screens/(tabs)/CartScreen';
 import AppointmentBooking from './src/screens/(tabs)/AppointemntBooking';
 import DoctorProfileScreen from './src/screens/doctor profile/[id]';
-import PaymentScreen from './src/screens/(tabs)/PaymentsScreen';
+import AppoinmentPaymentScreen from './src/screens/(tabs)/AppoinmentPaymentScreen';
+import DoctorNavigator from './src/Doctor/navigation/DoctorNavigator';
+import DoctorDashboardScreen from './src/Doctor/screens/DoctorDashboardScreen';
+import DoctorReachScreen from './src/Doctor/screens/DoctorReachScreen';
+import PatientStoriesScreen from './src/Doctor/screens/PatientStoriesScreen';
+import DoctorSettingsScreen from './src/Doctor/screens/DoctorSettingsScreen';
+import DoctorNotificationsScreen from './src/Doctor/screens/DoctorNotificationsScreen';
 const Stack = createStackNavigator();
 
 const AUTH_SCREENS = [
-  'AuthLayout', 'Signup', 'Login', 'DoctorLogin', 'CompleteProfile', 'AppointmentBooking' , 'DoctorProfile'
+  'AuthLayout', 'Signup', 'Login', 'DoctorLogin', 'CompleteProfile', 'AppointmentBooking', 'DoctorProfile', 'AppoinmentPaymentScreen',
+  'DoctorDashboard', 'DoctorReach', 'PatientStories', // Adding doctor screens to auth screens to hide footer
 ];
 
 export default function App() {
@@ -161,8 +168,14 @@ export default function App() {
                 <Stack.Screen name="Cart" component={CartScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="AppointmentBooking" component={AppointmentBooking} />
                 <Stack.Screen name="DoctorProfile" component={DoctorProfileScreen} />
+                <Stack.Screen name="AppoinmentPaymentScreen" component={AppoinmentPaymentScreen} />
+                {/* doctor screens */}
+                <Stack.Screen name="DoctorDashboard" component={DoctorDashboardScreen} />
+                <Stack.Screen name="DoctorReach" component={DoctorReachScreen} />
+                <Stack.Screen name="PatientStories" component={PatientStoriesScreen} />
                 {/* doctor dynamic screen */}
                 {/* <Stack.Screen name="Doctor" component={DoctorScreen} /> */}
+                <Stack.Screen name="DoctorNavigator" component={DoctorNavigator} />
               </Stack.Navigator>
               {currentRoute && !AUTH_SCREENS.includes(currentRoute) && !isKeyboardVisible && <Footer />}
             </NavigationContainer>

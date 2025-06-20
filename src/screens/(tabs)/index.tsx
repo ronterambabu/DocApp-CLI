@@ -86,8 +86,20 @@ export type RootStackParamList = {
 
 const HomeScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
   const profileImageUri = 'https://randomuser.me/api/portraits/men/4.jpg';
+  const [selectedLanguage, setSelectedLanguage] = useState('English');
+  const [showLanguageModal, setShowLanguageModal] = useState(false);
+
+  const languages = [
+    { name: 'English', code: 'en' },
+    { name: 'हिंदी', code: 'hi' },
+    { name: 'తెలుగు', code: 'te' },
+    { name: 'தமிழ்', code: 'ta' },
+    { name: 'ಕನ್ನಡ', code: 'kn' },
+    { name: 'മലയാളം', code: 'ml' },
+    { name: 'বাংলা', code: 'bn' },
+    { name: 'ગુજરાતી', code: 'gu' }
+  ];
 
   const banners = [
     require('../Images/Banner1.jpg'),
@@ -291,12 +303,14 @@ const [showLocationModal, setShowLocationModal] = useState(false);
             <Text style={tw`text-blue-600 font-bold`}>Close</Text>
           </TouchableOpacity>
         </View>
-      </Modal>
-
-      {/* Language & Notification */}
+      </Modal>      {/* Language & Notification */}
       <View style={tw`flex-row items-center`}>
-        <TouchableOpacity onPress={() => navigation.navigate('Language')}>
+        <TouchableOpacity 
+          onPress={() => setShowLanguageModal(true)} 
+          style={tw`flex-row items-center`}
+        >
           <Globe size={18} color="white" />
+          <Text style={tw`ml-1 text-white text-xs`}>{selectedLanguage.slice(0, 2)}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('Notification')} style={tw`ml-3`}>
           <View>
@@ -305,6 +319,47 @@ const [showLocationModal, setShowLocationModal] = useState(false);
           </View>
         </TouchableOpacity>
       </View>
+
+      {/* Language Selection Modal */}
+      <Modal 
+        isVisible={showLanguageModal} 
+        onBackdropPress={() => setShowLanguageModal(false)}
+        style={tw`m-0 justify-end`}
+      >
+        <View style={tw`bg-white rounded-t-3xl`}>
+          <View style={tw`p-4 border-b border-gray-200`}>
+            <View style={tw`w-12 h-1 bg-gray-300 rounded-full mx-auto mb-4`} />
+            <Text style={tw`text-xl font-bold text-center`}>Select Language</Text>
+          </View>
+          <ScrollView style={tw`max-h-[70%]`}>
+            {languages.map((lang) => (
+              <TouchableOpacity
+                key={lang.code}
+                style={tw`flex-row items-center justify-between px-6 py-4 border-b border-gray-100`}
+                onPress={() => {
+                  setSelectedLanguage(lang.name);
+                  setShowLanguageModal(false);
+                }}
+              >
+                <Text style={tw`text-base ${selectedLanguage === lang.name ? 'text-blue-600 font-bold' : 'text-gray-700'}`}>
+                  {lang.name}
+                </Text>
+                {selectedLanguage === lang.name && (
+                  <View style={tw`w-6 h-6 rounded-full bg-blue-600 items-center justify-center`}>
+                    <Text style={tw`text-white font-bold text-sm`}>✓</Text>
+                  </View>
+                )}
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+          <TouchableOpacity
+            style={tw`p-4 border-t border-gray-200`}
+            onPress={() => setShowLanguageModal(false)}
+          >
+            <Text style={tw`text-center text-blue-600 font-bold text-lg`}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </View>
 
     {/* Search Bar */}

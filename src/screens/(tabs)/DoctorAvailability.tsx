@@ -76,14 +76,23 @@ const DoctorAvailabilityScreen = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<any>();
   const route = useRoute<RouteProp<RootStackParamList, 'DoctorAvailability'>>();
-  const doctor = route.params?.doctor || doctorDefault;
-  const consultationType = route.params?.consultationType || 'inclinic';  const dates = getDates();
+  const doctor = route.params?.doctor || doctorDefault;  const consultationType = route.params?.consultationType || 'inclinic';
+  const dates = getDates();
   const [selectedDate, setSelectedDate] = useState(dates[1].full); // Default to tomorrow
 
-  const handleSlotSelection = (slot: string) => {
+  const handleSlotSelection = (timeSlot: string) => {
+    // Navigate to appointment booking with all required data
     navigation.navigate('AppointmentBooking', {
-      doctor,
-      slot,
+      doctor: {
+        name: doctor.name,
+        specialty: doctor.specialty,
+        clinic: doctor.clinic,
+        image: doctor.image,
+        fee: doctor.fee,
+        experience: doctor.experience,
+        rating: doctor.rating
+      },
+      slot: timeSlot,
       date: selectedDate,
       consultationType
     });
@@ -174,12 +183,16 @@ const DoctorAvailabilityScreen = () => {
         {consultationType === 'video' ? (
           <>
             <Video size={24} color="#059669" />
-            <Text style={tw`ml-3 text-green-800 font-semibold text-base`}>Video Consultation Slots</Text>
+            <Text style={tw`ml-3 text-green-800 font-semibold text-base`}>
+              Available Video Consultation Slots
+            </Text>
           </>
         ) : (
           <>
             <BriefcaseMedical size={24} color="#2563eb" />
-            <Text style={tw`ml-3 text-blue-900 font-semibold text-base`}>In-Clinic Visit Slots</Text>
+            <Text style={tw`ml-3 text-blue-900 font-semibold text-base`}>
+              Available In-Clinic Visit Slots
+            </Text>
           </>
         )}
       </View>

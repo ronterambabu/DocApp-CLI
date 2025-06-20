@@ -74,7 +74,7 @@ export default function Login() {
       console.log('Stored Token:', token);
       console.log('User Context:', user);
 
-      navigation.replace('(tabs)');
+      navigation.replace('DoctorDashboard');
     } catch (error: any) {
       console.error('Login Error:', error.message);
       Alert.alert('Login Failed', error.message || 'Something went wrong');

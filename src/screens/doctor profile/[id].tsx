@@ -70,9 +70,8 @@ const DoctorProfileScreen: React.FC = () => {  const navigation = useNavigation<
   const route = useRoute<RouteProp<DoctorProfileParams, 'params'>>();
   const { doctor } = route.params;
 
-  const tomorrowSlots = ['09:30 AM', '09:45 AM', '10:00 AM', '10:15 AM'];
-  const handleBooking = (time: string) => {
-    navigation.navigate('DoctorAvailability', {
+  const tomorrowSlots = ['09:30 AM', '09:45 AM', '10:00 AM', '10:15 AM'];  const handleBooking = (time: string) => {
+    navigation.navigate('AppointmentBooking', {
       doctor: {
         name: doctor.name,
         specialty: doctor.specialty,
@@ -82,6 +81,8 @@ const DoctorProfileScreen: React.FC = () => {  const navigation = useNavigation<
         experience: doctor.experience,
         rating: doctor.rating
       },
+      slot: time,
+      date: 'Tomorrow, 19 Jun',
       consultationType: doctor.type
     });
   };
@@ -207,9 +208,21 @@ const DoctorProfileScreen: React.FC = () => {  const navigation = useNavigation<
                       <TimeSlot key={idx} time={time} onPress={() => handleBooking(time)} />
                     ))}
                   </View>
-                </ScrollView>
-
-                <TouchableOpacity style={tw`mt-3`}>
+                </ScrollView>                <TouchableOpacity 
+                  style={tw`mt-3`}
+                  onPress={() => navigation.navigate('DoctorAvailability', {
+                    doctor: {
+                      name: doctor.name,
+                      specialty: doctor.specialty,
+                      clinic: doctor.clinics[0].name,
+                      image: doctor.image,
+                      fee: doctor.clinics[0].fee,
+                      experience: doctor.experience,
+                      rating: doctor.rating,
+                    },
+                    consultationType: doctor.type,
+                  })}
+                >
                   <Text style={tw`text-[#25a9e1] text-center font-medium`}>View all slots</Text>
                 </TouchableOpacity>
               </View>
@@ -241,21 +254,26 @@ const DoctorProfileScreen: React.FC = () => {  const navigation = useNavigation<
           onPress={() => Linking.openURL('tel:+1234567890')}
         >
           <Text style={tw`text-[#25a9e1] text-center font-bold`}>Call Clinic</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
+        </TouchableOpacity>        <TouchableOpacity
           style={tw`flex-1 bg-[#25a9e1] py-3 rounded-xl ml-2`}
-          onPress={() => navigation.navigate('DoctorAvailability', {
-            doctor: {
-              name: doctor.name,
-              specialty: doctor.specialty,
-              clinic: doctor.clinics[0].name,
-              image: doctor.image,
-              fee: doctor.clinics[0].fee,
-              experience: doctor.experience,
-              rating: doctor.rating,
-            },
-            consultationType: doctor.type,
-          })}
+          onPress={() => {
+            // Navigate to DoctorAvailability with all required data
+            navigation.navigate('DoctorAvailability', {
+              doctor: {
+                name: doctor.name,
+                specialty: doctor.specialty,
+                clinic: doctor.clinics[0].name,
+                image: doctor.image,
+                fee: doctor.clinics[0].fee,
+                experience: doctor.experience,
+                rating: doctor.rating,
+                location: doctor.location, // Include location for clinic info
+                recommendation: doctor.recommendation, // Include rating info
+                patientStories: doctor.patientStories // Include stories count
+              },
+              consultationType: doctor.type
+            });
+          }}
         >
           <Text style={tw`text-white text-center font-bold`}>
             {doctor.type === 'inclinic' ? 'Book Clinic Visit' : 'Book Video Consult'}

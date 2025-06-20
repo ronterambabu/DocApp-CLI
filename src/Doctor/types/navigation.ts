@@ -1,0 +1,27 @@
+export type DoctorStackParamList = {
+  DoctorDashboard: undefined;
+  DoctorProfile: undefined;
+  DoctorReach: undefined;
+  PatientStories: undefined;
+  DoctorConsult: undefined;
+  Healthfeed: undefined;
+  DoctorEarnings: undefined;
+  DoctorPrime: undefined;
+  DoctorReports: undefined;
+  DoctorCalendar: undefined;
+  DoctorPatients: undefined;
+  DoctorSettings: undefined;
+  DoctorNotifications: undefined;
+  EditDoctorProfile: undefined;
+  PersonalInfo: undefined;
+  Specializations: undefined;
+  Availability: undefined;
+  Certifications: undefined;
+  ConsultationFees: undefined;
+  Ray: undefined;
+  Account: undefined;
+  CashlessSettings: undefined;
+  PrivacyPolicy: undefined;
+  OpenSourceLicenses: undefined;
+  Login: undefined;
+};
