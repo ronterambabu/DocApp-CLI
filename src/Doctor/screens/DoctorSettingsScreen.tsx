@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DoctorStackParamList } from '../types/navigation';
+import DoctorHeader from '../components/DoctorHeader';
 
 const DoctorSettingsScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<DoctorStackParamList>>();
@@ -101,54 +102,53 @@ const DoctorSettingsScreen = () => {
   ];
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>SETTINGS</Text>
-      </View>
-
-      <View style={styles.menuContainer}>
-        {menuItems.map((item, index) => (
-          <TouchableOpacity
-            key={index}
-            style={[
-              styles.menuItem,
-              index === menuItems.length - 1 && styles.lastMenuItem,
-            ]}
-            onPress={item.action}
-          >
-            <View style={styles.menuItemLeft}>
-              <Icon name={item.icon} size={24} color="#202b6d" />
-              <View style={styles.menuItemTextContainer}>
-                <Text style={[
-                  styles.menuItemTitle,
-                  item.textColor && { color: item.textColor }
-                ]}>
-                  {item.title}
-                </Text>
-                {item.subtitle && (
-                  <Text style={styles.menuItemSubtitle}>{item.subtitle}</Text>
-                )}
+    <View style={{ flex: 1, backgroundColor: '#fff' }}>
+      <DoctorHeader title="Settings" showSettings showNotifications />
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.menuContainer}>
+          {menuItems.map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              style={[
+                styles.menuItem,
+                index === menuItems.length - 1 && styles.lastMenuItem,
+              ]}
+              onPress={item.action}
+            >
+              <View style={styles.menuItemLeft}>
+                <Icon name={item.icon} size={24} color="#202b6d" />
+                <View style={styles.menuItemTextContainer}>
+                  <Text style={[
+                    styles.menuItemTitle,
+                    item.textColor && { color: item.textColor }
+                  ]}>
+                    {item.title}
+                  </Text>
+                  {item.subtitle && (
+                    <Text style={styles.menuItemSubtitle}>{item.subtitle}</Text>
+                  )}
+                </View>
               </View>
-            </View>
-            {item.isSwitch ? (
-              <Switch
-                value={false}
-                onValueChange={() => {}}
-                trackColor={{ false: '#767577', true: '#1d9be3' }}
-                thumbColor="#f4f3f4"
-              />
-            ) : item.rightIcon && (
-              <Icon name={item.rightIcon} size={24} color="#666" />
-            )}
-          </TouchableOpacity>
-        ))}
-      </View>
+              {item.isSwitch ? (
+                <Switch
+                  value={false}
+                  onValueChange={() => {}}
+                  trackColor={{ false: '#767577', true: '#1d9be3' }}
+                  thumbColor="#f4f3f4"
+                />
+              ) : item.rightIcon && (
+                <Icon name={item.rightIcon} size={24} color="#666" />
+              )}
+            </TouchableOpacity>
+          ))}
+        </View>
 
-      {/* Alert Message */}
-      <Text style={styles.alertText}>
-        We use full screen alerts and permission to alert you if a patient is waiting for your response
-      </Text>
-    </ScrollView>
+        {/* Alert Message */}
+        <Text style={styles.alertText}>
+          We use full screen alerts and permission to alert you if a patient is waiting for your response
+        </Text>
+      </ScrollView>
+    </View>
   );
 };
 

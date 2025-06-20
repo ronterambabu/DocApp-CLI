@@ -24,6 +24,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import tw from 'twrnc';
 import { DoctorStackParamList } from '../types/navigation';
+import DoctorHeader from '../components/DoctorHeader';
 
 type DoctorNavigationProp = NativeStackNavigationProp<DoctorStackParamList>;
 
@@ -62,26 +63,9 @@ const DoctorProfileScreen = () => {
   ];
 
   return (
-    <SafeAreaView style={tw`flex-1 bg-gray-50`}>
-      {/* Header */}
-      <View style={tw`bg-[#202b6d] px-4 py-3`}>
-        <View style={tw`flex-row items-center`}>
-          <TouchableOpacity 
-            onPress={() => navigation.goBack()}
-            style={tw`mr-4`}
-          >
-            <ArrowLeft size={24} color="white" />
-          </TouchableOpacity>
-          <Text style={tw`text-white text-xl font-bold flex-1`}>Doctor Profile</Text>
-          <TouchableOpacity 
-            onPress={() => navigation.navigate('EditDoctorProfile')}
-          >
-            <Edit size={24} color="white" />
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <ScrollView showsVerticalScrollIndicator={false}>
+    <View style={{ flex: 1, backgroundColor: '#fff' }}>
+      <DoctorHeader title="Profile" showSettings showNotifications />
+      <ScrollView contentContainerStyle={tw`flex-1`}>
         {/* Profile Card */}
         <View style={tw`bg-white p-4 shadow-sm`}>
           <View style={tw`flex-row`}>
@@ -151,7 +135,7 @@ const DoctorProfileScreen = () => {
 
         <View style={tw`h-6`} />
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

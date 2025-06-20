@@ -3,6 +3,7 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import { Text } from 'react-native-paper';
 import { BadgeDollarSign } from 'lucide-react-native';
 import tw from 'twrnc';
+import DoctorHeader from '../components/DoctorHeader';
 
 const DoctorEarningsScreen = () => {
   const earnings = {
@@ -13,12 +14,10 @@ const DoctorEarningsScreen = () => {
   };
 
   return (
-    <View style={tw`flex-1 bg-gray-50`}>
-      <View style={tw`bg-[#202b6d] p-4`}>
-        <Text style={tw`text-white text-xl font-bold`}>Earnings</Text>
-      </View>
+    <View style={{ flex: 1, backgroundColor: '#fff' }}>
+      <DoctorHeader title="Earnings" showSettings showNotifications />
 
-      <ScrollView style={tw`p-4`}>
+      <ScrollView contentContainerStyle={styles.container}>
         <View style={tw`bg-white rounded-xl p-4 shadow-sm mb-4`}>
           <Text style={tw`text-lg font-bold text-[#202b6d] mb-2`}>Overview</Text>
           <View style={tw`flex-row justify-between items-center`}>
@@ -66,5 +65,12 @@ const DoctorEarningsScreen = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 16,
+    paddingBottom: 32,
+  },
+});
 
 export default DoctorEarningsScreen;

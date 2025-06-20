@@ -26,6 +26,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import tw from 'twrnc';
 import { DoctorStackParamList } from '../types/navigation';
+import DoctorHeader from '../components/DoctorHeader';
 
 type DoctorNavigationProp = NativeStackNavigationProp<DoctorStackParamList>;
 
@@ -100,48 +101,7 @@ const DoctorDashboardScreen = () => {
   return (
     <SafeAreaView style={tw`flex-1 bg-white`}>
       <StatusBar backgroundColor="#202b6d" barStyle="light-content" />
-      
-      {/* Header */}
-      <View style={tw`bg-[#202b6d] px-4 py-3`}>
-        <View style={tw`flex-row items-center justify-between`}>
-          <View style={tw`flex-row items-center`}>
-            <Text style={tw`text-white text-xl font-bold`}>DOCTO</Text>
-          </View>
-          <View style={tw`flex-row items-center`}>
-            <TouchableOpacity 
-              style={tw`mr-4`}
-              onPress={() => navigation.navigate('DoctorSettings')}
-            >
-              <Settings size={24} color="white" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('DoctorNotifications')}
-            >
-              <View>
-                <Bell size={24} color="white" />
-                <View style={tw`absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full`} />
-              </View>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* Doctor Info */}
-        <View style={tw`mt-4 flex-row items-center`}>
-          <Image
-            source={{ uri: 'https://randomuser.me/api/portraits/men/1.jpg' }}
-            style={tw`w-12 h-12 rounded-full`}
-          />
-          <View style={tw`ml-3`}>
-            <Text style={tw`text-white text-lg font-bold`}>Dr. John Doe</Text>
-            <Text style={tw`text-[#1d9be3]`}>Cardiologist</Text>
-          </View>
-        </View>
-
-        <View style={tw`mt-4`}>
-          <Text style={tw`text-white text-lg font-semibold`}>DASHBOARD</Text>
-        </View>
-      </View>
-
+      <DoctorHeader title="DASHBOARD" showDoctorInfo />
       {/* Dashboard Grid */}
       <ScrollView 
         style={tw`flex-1 bg-gray-50`}

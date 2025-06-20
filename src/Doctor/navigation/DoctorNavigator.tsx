@@ -10,20 +10,25 @@ import PatientStoriesScreen from '../screens/PatientStoriesScreen';
 import DoctorConsultScreen from '../screens/DoctorConsultScreen';
 import HealthfeedScreen from '../screens/HealthfeedScreen';
 import DoctorEarningsScreen from '../screens/DoctorEarningsScreen';
+import DoctorHeader from '../components/DoctorHeader';
+import DoctorsPrimeScreen from '../screens/DoctorsPrimeScreen';
+import DoctorReportsScreen from '../screens/DoctorReportsScreen';
+import DoctorCalendarScreen from '../screens/DoctorCalendarScreen';
+import DoctorPatientsScreen from '../screens/DoctorPatientsScreen';
 
 import { View, Text } from 'react-native';
 
 // Placeholder screen component while we create the real ones
 const createPlaceholderScreen = (title: string) => () => (
-  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
-    <Text style={{ fontSize: 18, color: '#202b6d' }}>{title}</Text>
+  <View style={{ flex: 1, backgroundColor: 'white' }}>
+    <DoctorHeader title={title} />
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text style={{ fontSize: 18, color: '#202b6d' }}>{title}</Text>
+    </View>
   </View>
 );
 
 const DoctorPrimeScreen = createPlaceholderScreen('Doctor Prime');
-const DoctorReportsScreen = createPlaceholderScreen('Reports');
-const DoctorCalendarScreen = createPlaceholderScreen('Calendar');
-const DoctorPatientsScreen = createPlaceholderScreen('Patients');
 const EditDoctorProfileScreen = createPlaceholderScreen('Edit Profile');
 const PersonalInfoScreen = createPlaceholderScreen('Personal Info');
 const SpecializationsScreen = createPlaceholderScreen('Specializations');
@@ -41,11 +46,13 @@ const Stack = createNativeStackNavigator<DoctorStackParamList>();
 const DoctorNavigator = () => {
   return (
     <Stack.Navigator
+      initialRouteName="DoctorDashboard"
       screenOptions={{
         headerShown: false,
         contentStyle: { backgroundColor: 'white' },
       }}
-    >      <Stack.Screen name="DoctorDashboard" component={DoctorDashboardScreen} />
+    >
+      <Stack.Screen name="DoctorDashboard" component={DoctorDashboardScreen} />
       <Stack.Screen name="DoctorProfile" component={DoctorProfileScreen} />
       <Stack.Screen name="DoctorSettings" component={DoctorSettingsScreen} />
       <Stack.Screen name="DoctorNotifications" component={DoctorNotificationsScreen} />
@@ -54,7 +61,7 @@ const DoctorNavigator = () => {
       <Stack.Screen name="DoctorConsult" component={DoctorConsultScreen} />
       <Stack.Screen name="Healthfeed" component={HealthfeedScreen} />
       <Stack.Screen name="DoctorEarnings" component={DoctorEarningsScreen} />
-      <Stack.Screen name="DoctorPrime" component={DoctorPrimeScreen} />
+      <Stack.Screen name="DoctorPrime" component={DoctorsPrimeScreen} />
       <Stack.Screen name="DoctorReports" component={DoctorReportsScreen} />
       <Stack.Screen name="DoctorCalendar" component={DoctorCalendarScreen} />
       <Stack.Screen name="DoctorPatients" component={DoctorPatientsScreen} />

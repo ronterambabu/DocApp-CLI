@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet, ScrollView, Image } from 'react-native';
 import { Text } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import DoctorHeader from '../components/DoctorHeader';
 
 const PatientStoriesScreen = () => {
   const stories = [
@@ -37,45 +38,48 @@ const PatientStoriesScreen = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Patient Stories</Text>
-        <View style={styles.statsContainer}>
-          <View style={styles.statItem}>
-            <Text style={styles.statNumber}>4.8</Text>
-            <Text style={styles.statLabel}>Average Rating</Text>
-          </View>
-          <View style={styles.statItem}>
-            <Text style={styles.statNumber}>156</Text>
-            <Text style={styles.statLabel}>Total Reviews</Text>
+    <View style={{ flex: 1, backgroundColor: '#fff' }}>
+      <DoctorHeader title="Patient Stories" showSettings showNotifications />
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Patient Stories</Text>
+          <View style={styles.statsContainer}>
+            <View style={styles.statItem}>
+              <Text style={styles.statNumber}>4.8</Text>
+              <Text style={styles.statLabel}>Average Rating</Text>
+            </View>
+            <View style={styles.statItem}>
+              <Text style={styles.statNumber}>156</Text>
+              <Text style={styles.statLabel}>Total Reviews</Text>
+            </View>
           </View>
         </View>
-      </View>
 
-      <View style={styles.storiesContainer}>
-        {stories.map((story) => (
-          <View key={story.id} style={styles.storyCard}>
-            <View style={styles.storyHeader}>
-              <Image
-                source={{ uri: story.image }}
-                style={styles.patientImage}
-              />
-              <View style={styles.patientInfo}>
-                <Text style={styles.patientName}>{story.patientName}</Text>
-                <Text style={styles.condition}>{story.condition}</Text>
+        <View style={styles.storiesContainer}>
+          {stories.map((story) => (
+            <View key={story.id} style={styles.storyCard}>
+              <View style={styles.storyHeader}>
+                <Image
+                  source={{ uri: story.image }}
+                  style={styles.patientImage}
+                />
+                <View style={styles.patientInfo}>
+                  <Text style={styles.patientName}>{story.patientName}</Text>
+                  <Text style={styles.condition}>{story.condition}</Text>
+                </View>
+                <Text style={styles.date}>{story.date}</Text>
               </View>
-              <Text style={styles.date}>{story.date}</Text>
+              
+              <View style={styles.ratingContainer}>
+                {renderStars(story.rating)}
+              </View>
+              
+              <Text style={styles.review}>{story.review}</Text>
             </View>
-            
-            <View style={styles.ratingContainer}>
-              {renderStars(story.rating)}
-            </View>
-            
-            <Text style={styles.review}>{story.review}</Text>
-          </View>
-        ))}
-      </View>
-    </ScrollView>
+          ))}
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 

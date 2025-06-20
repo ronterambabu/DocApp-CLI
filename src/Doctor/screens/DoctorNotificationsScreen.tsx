@@ -1,70 +1,50 @@
 import React from 'react';
-import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Text } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useNavigation } from '@react-navigation/native';
+import DoctorHeader from '../components/DoctorHeader';
 
 const DoctorNotificationsScreen = () => {
-  const navigation = useNavigation();
+  const notifications = [
+    {
+      id: 1,
+      title: 'Appointment Confirmed',
+      message: 'Your appointment with Jane Smith is confirmed for 2025-06-22 at 10:00 AM.'
+    },
+    {
+      id: 2,
+      title: 'New Message',
+      message: 'You have received a new message from John Appleseed.'
+    }
+    // To test empty state, set notifications = []
+  ];
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Icon name="arrow-left" size={24} color="white" />
-        </TouchableOpacity>
-        <Text style={styles.headerText}>NOTIFICATIONS</Text>
-      </View>
-
-      <View style={styles.content}>
-        <Image
-          source={require('../../assets/images/empty-notifications.png')}
-          style={styles.emptyImage}
-          defaultSource={require('../../assets/images/empty-notifications.png')}
-        />
-        <Text style={styles.emptyText}>No Notifications</Text>
+    <View style={{ flex: 1, backgroundColor: '#f8fafc' }}>
+      <DoctorHeader title="Notifications" showSettings showNotifications />
+      <View style={{ flex: 1, paddingHorizontal: 16, paddingTop: 24 }}>
+        <Text style={{ fontSize: 24, color: '#202b6d', fontWeight: 'bold', marginBottom: 16, textAlign: 'center' }}>Recent Notifications</Text>
+        <View style={{ width: '100%', maxWidth: 480, alignSelf: 'center' }}>
+          {notifications.length === 0 ? (
+            <View style={{ alignItems: 'center', marginTop: 48 }}>
+              <Text style={{ color: '#bbb', fontSize: 18, fontWeight: 'bold' }}>No Notifications</Text>
+              <Text style={{ color: '#999', marginTop: 8, fontSize: 15 }}>You have no new notifications at the moment.</Text>
+            </View>
+          ) : (
+            notifications.map((item) => (
+              <View key={item.id} style={{ backgroundColor: '#eaf1fb', borderRadius: 18, padding: 20, marginBottom: 18, flexDirection: 'row', alignItems: 'center', shadowColor: '#202b6d', shadowOpacity: 0.10, shadowRadius: 8, elevation: 3 }}>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ color: '#202b6d', fontWeight: 'bold', fontSize: 17, marginBottom: 4 }}>{item.title}</Text>
+                  <Text style={{ color: '#666', marginBottom: 2 }}>{item.message}</Text>
+                </View>
+              </View>
+            ))
+          )}
+        </View>
       </View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  header: {
-    backgroundColor: '#202b6d',
-    padding: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  backButton: {
-    marginRight: 16,
-  },
-  headerText: {
-    color: 'white',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  emptyImage: {
-    width: 120,
-    height: 120,
-    marginBottom: 20,
-  },
-  emptyText: {
-    fontSize: 16,
-    color: '#666',
-  },
-});
+const styles = StyleSheet.create({});
 
 export default DoctorNotificationsScreen;

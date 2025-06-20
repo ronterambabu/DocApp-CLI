@@ -59,16 +59,12 @@ import AppointmentBooking from './src/screens/(tabs)/AppointemntBooking';
 import DoctorProfileScreen from './src/screens/doctor profile/[id]';
 import AppoinmentPaymentScreen from './src/screens/(tabs)/AppoinmentPaymentScreen';
 import DoctorNavigator from './src/Doctor/navigation/DoctorNavigator';
-import DoctorDashboardScreen from './src/Doctor/screens/DoctorDashboardScreen';
-import DoctorReachScreen from './src/Doctor/screens/DoctorReachScreen';
-import PatientStoriesScreen from './src/Doctor/screens/PatientStoriesScreen';
-import DoctorSettingsScreen from './src/Doctor/screens/DoctorSettingsScreen';
-import DoctorNotificationsScreen from './src/Doctor/screens/DoctorNotificationsScreen';
+
 const Stack = createStackNavigator();
 
 const AUTH_SCREENS = [
   'AuthLayout', 'Signup', 'Login', 'DoctorLogin', 'CompleteProfile', 'AppointmentBooking', 'DoctorProfile', 'AppoinmentPaymentScreen',
-  'DoctorDashboard', 'DoctorReach', 'PatientStories', // Adding doctor screens to auth screens to hide footer
+  'DoctorNavigator', // Only DoctorNavigator, not individual doctor screens
 ];
 
 export default function App() {
@@ -92,6 +88,20 @@ export default function App() {
   const handleStateChange = () => {
     const route = navigationRef.current?.getCurrentRoute?.();
     setCurrentRoute(route?.name);
+  };
+
+  // Helper to check if current route is inside DoctorNavigator
+  const isDoctorNavigatorActive = () => {
+    const nav = navigationRef.current?.getRootState?.();
+    function findDoctorNavigator(route: any) {
+      if (!route) return false;
+      if (route.name === 'DoctorNavigator') return true;
+      if (route.state && typeof route.state === 'object' && 'routes' in route.state) {
+        return route.state.routes.some(findDoctorNavigator);
+      }
+      return false;
+    }
+    return nav ? nav.routes.some(findDoctorNavigator) : false;
   };
 
   return (
@@ -169,15 +179,12 @@ export default function App() {
                 <Stack.Screen name="AppointmentBooking" component={AppointmentBooking} />
                 <Stack.Screen name="DoctorProfile" component={DoctorProfileScreen} />
                 <Stack.Screen name="AppoinmentPaymentScreen" component={AppoinmentPaymentScreen} />
-                {/* doctor screens */}
-                <Stack.Screen name="DoctorDashboard" component={DoctorDashboardScreen} />
-                <Stack.Screen name="DoctorReach" component={DoctorReachScreen} />
-                <Stack.Screen name="PatientStories" component={PatientStoriesScreen} />
-                {/* doctor dynamic screen */}
-                {/* <Stack.Screen name="Doctor" component={DoctorScreen} /> */}
+                {/* doctor screens - only use DoctorNavigator */}
                 <Stack.Screen name="DoctorNavigator" component={DoctorNavigator} />
+
               </Stack.Navigator>
-              {currentRoute && !AUTH_SCREENS.includes(currentRoute) && !isKeyboardVisible && <Footer />}
+              {/* Footer only if not in DoctorNavigator and not in auth screens */}
+              {currentRoute && !isDoctorNavigatorActive() && !AUTH_SCREENS.includes(currentRoute) && !isKeyboardVisible && <Footer />}
             </NavigationContainer>
           </View>
         </SafeAreaProvider>

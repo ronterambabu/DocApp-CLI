@@ -3,6 +3,7 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import { Text } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import PageLayout from '../../components/PageLayout';
+import DoctorHeader from '../components/DoctorHeader';
 
 const DoctorReachScreen = () => {
   const stats = [
@@ -13,8 +14,9 @@ const DoctorReachScreen = () => {
   ];
 
   return (
-    <PageLayout title="Online Reach">
-      <ScrollView style={styles.container}>
+    <View style={{ flex: 1, backgroundColor: '#fff' }}>
+      <DoctorHeader title="Online Reach" showSettings showNotifications />
+      <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.header}>
           <Text style={styles.title}>Your Online Reach</Text>
           <Text style={styles.subtitle}>Monitor and improve your online presence</Text>
@@ -54,7 +56,7 @@ const DoctorReachScreen = () => {
           </View>
         </View>
       </ScrollView>
-    </PageLayout>
+    </View>
   );
 };
 

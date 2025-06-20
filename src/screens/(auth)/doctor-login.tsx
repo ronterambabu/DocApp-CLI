@@ -9,16 +9,15 @@ import {
   Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { StackNavigationProp } from '@react-navigation/stack';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react-native';
 import { useUser } from '../contexts/UserContext';
-import apiConfig from '../../../apiConfig'; // Adjust the import path as necessary
-import { jwtDecode } from 'jwt-decode';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ArrowLeft } from 'lucide-react-native'; // Importing the back arrow icon
+import { DoctorStackParamList } from '../../Doctor/types/navigation';
 
 export default function Login() {
-  const navigation = useNavigation<NativeStackNavigationProp<any>>();
+  const navigation = useNavigation<StackNavigationProp<any>>();
   const { setUser } = useUser();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -30,53 +29,25 @@ export default function Login() {
       Alert.alert('Error', 'Please enter both email and password');
       return;
     }
-
     setLoading(true);
     try {
-      const response = await fetch(apiConfig.API_ENDPOINTS.loginUser, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({ email, password, role: 'doctor' }),
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error('Login failed: ' + errorText);
-      }
-
-      const cookie = response.headers.get('set-cookie');
-      if (!cookie) throw new Error('No cookie received from server');
-
-      const tokenMatch = cookie.match(/token=([^;]+)/);
-      const token = tokenMatch?.[1];
-      if (!token) throw new Error('Token not found in cookie');
-
-      const decoded: any = jwtDecode(token);
-
-      // Store token in AsyncStorage
-      await AsyncStorage.setItem('authToken', token);
-
-      // Save user to context
+      // MOCK LOGIN: set a fake user and redirect
       const user = {
-        id: decoded.id,
-        email: decoded.email,
-        name: '',
+        id: 'mock-id',
+        email,
+        name: 'Dr. Mock',
         profileImage: '',
-        token,
+        token: 'mock-token',
       };
       setUser(user);
-
-      console.log('✅ Login successful');
-      console.log('Decoded Token:', decoded);
-      console.log('Stored Token:', token);
-      console.log('User Context:', user);
-
-      navigation.replace('DoctorDashboard');
+      await AsyncStorage.setItem('authToken', 'mock-token');
+      navigation.reset({
+        index: 0,
+        routes: [
+          { name: 'DoctorNavigator' },
+        ],
+      });
     } catch (error: any) {
-      console.error('Login Error:', error.message);
       Alert.alert('Login Failed', error.message || 'Something went wrong');
     } finally {
       setLoading(false);
