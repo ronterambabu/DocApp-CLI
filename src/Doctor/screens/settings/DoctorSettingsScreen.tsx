@@ -5,8 +5,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { DoctorStackParamList } from '../types/navigation';
-import DoctorHeader from '../components/DoctorHeader';
+import { DoctorStackParamList } from '../../types/navigation';
+import DoctorHeader from '../../components/DoctorHeader';
 
 const DoctorSettingsScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<DoctorStackParamList>>();
@@ -15,8 +15,7 @@ const DoctorSettingsScreen = () => {
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem('authToken');
-      // Navigate to the root stack's Login screen
-      navigation.getParent()?.reset({
+      navigation.reset({
         index: 0,
         routes: [{ name: 'Login' }],
       });

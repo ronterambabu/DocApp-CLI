@@ -15,10 +15,21 @@ import DoctorsPrimeScreen from '../screens/DoctorsPrimeScreen';
 import DoctorReportsScreen from '../screens/DoctorReportsScreen';
 import DoctorCalendarScreen from '../screens/DoctorCalendarScreen';
 import DoctorPatientsScreen from '../screens/DoctorPatientsScreen';
-
+import PersonalInfoScreen from '../screens/PersonalInfoScreen';
+import SpecializationsScreen from '../screens/SpecializationsScreen';
+import AvailabilityScreen from '../screens/AvailabilitySetScreen';
+import ConsultationFeesScreen from '../screens/ConsultationFeesScreen';
+import EditDoctorProfile from '../screens/EditDoctorProfileScreen';
+import AddSpecialization from '../screens/AddSpecializationScreen';
+import AddTimeSlotScreen from '../screens/AddTimeSlotScreen';
+import RayScreen from '../screens/RayScreen';
+import AccountScreen from '../screens/AccountScreen';
+import CashlessSettingsScreen from '../screens/CashlessSettingsScreen';
+import PrivacyPolicyScreen from '../screens/PrivacyPolicyScreen';
+import OpenSourceLicensesScreen from '../screens/OpenSourceLicensesScreen';
 import { View, Text } from 'react-native';
 
-// Placeholder screen component while we create the real ones
+// Placeholder screen component for screens that don't exist yet
 const createPlaceholderScreen = (title: string) => () => (
   <View style={{ flex: 1, backgroundColor: 'white' }}>
     <DoctorHeader title={title} />
@@ -28,18 +39,7 @@ const createPlaceholderScreen = (title: string) => () => (
   </View>
 );
 
-const DoctorPrimeScreen = createPlaceholderScreen('Doctor Prime');
-const EditDoctorProfileScreen = createPlaceholderScreen('Edit Profile');
-const PersonalInfoScreen = createPlaceholderScreen('Personal Info');
-const SpecializationsScreen = createPlaceholderScreen('Specializations');
-const AvailabilityScreen = createPlaceholderScreen('Availability');
 const CertificationsScreen = createPlaceholderScreen('Certifications');
-const ConsultationFeesScreen = createPlaceholderScreen('Consultation Fees');
-const RayScreen = createPlaceholderScreen('Ray');
-const AccountScreen = createPlaceholderScreen('Account');
-const CashlessSettingsScreen = createPlaceholderScreen('Cashless Settings');
-const PrivacyPolicyScreen = createPlaceholderScreen('Privacy Policy');
-const OpenSourceLicensesScreen = createPlaceholderScreen('Open Source Licenses');
 
 const Stack = createNativeStackNavigator<DoctorStackParamList>();
 
@@ -65,7 +65,7 @@ const DoctorNavigator = () => {
       <Stack.Screen name="DoctorReports" component={DoctorReportsScreen} />
       <Stack.Screen name="DoctorCalendar" component={DoctorCalendarScreen} />
       <Stack.Screen name="DoctorPatients" component={DoctorPatientsScreen} />
-      <Stack.Screen name="EditDoctorProfile" component={EditDoctorProfileScreen} />
+      <Stack.Screen name="EditDoctorProfile" component={EditDoctorProfile} />
       <Stack.Screen name="PersonalInfo" component={PersonalInfoScreen} />
       <Stack.Screen name="Specializations" component={SpecializationsScreen} />
       <Stack.Screen name="Availability" component={AvailabilityScreen} />
@@ -76,6 +76,8 @@ const DoctorNavigator = () => {
       <Stack.Screen name="CashlessSettings" component={CashlessSettingsScreen} />
       <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
       <Stack.Screen name="OpenSourceLicenses" component={OpenSourceLicensesScreen} />
+      <Stack.Screen name="AddSpecialization" component={AddSpecialization} />
+      <Stack.Screen name="AddTimeSlot" component={AddTimeSlotScreen} />
     </Stack.Navigator>
   );
 };

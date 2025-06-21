@@ -16,11 +16,9 @@ const DoctorNotificationsScreen = () => {
       message: 'You have received a new message from John Appleseed.'
     }
     // To test empty state, set notifications = []
-  ];
-
-  return (
+  ];  return (
     <View style={{ flex: 1, backgroundColor: '#f8fafc' }}>
-      <DoctorHeader title="Notifications" showSettings showNotifications />
+      <DoctorHeader title="Notifications" />
       <View style={{ flex: 1, paddingHorizontal: 16, paddingTop: 24 }}>
         <Text style={{ fontSize: 24, color: '#202b6d', fontWeight: 'bold', marginBottom: 16, textAlign: 'center' }}>Recent Notifications</Text>
         <View style={{ width: '100%', maxWidth: 480, alignSelf: 'center' }}>
