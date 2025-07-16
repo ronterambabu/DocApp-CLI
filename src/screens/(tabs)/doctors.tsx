@@ -11,12 +11,10 @@ import {
   Linking,
 } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import tw from 'twrnc';
 import {
   ArrowLeft,
-  Share2,
-  ThumbsUp,
-  MessageSquare,
   MapPin,
   Video,
   Hospital,
@@ -25,10 +23,10 @@ import {
   Clock,
   Users,
   Star,
+  ThumbsUp,
   LucideSearch,
   X,
 } from 'lucide-react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import PageHeader from '../../components/PageHeader';
 
 const doctors = [
@@ -72,7 +70,6 @@ type RootStackParamList = {
   Doctors: { specialty?: string; mode?: string };
 };
 
-// Add filter types
 interface Filters {
   gender: string;
   experience: string;
@@ -88,14 +85,6 @@ const FindDoctorsScreen = () => {
 
   const [search, setSearch] = useState(initialSpecialty);
   const [activeTab, setActiveTab] = useState(initialMode);
-
-  // Ensure tab switches when navigating from ConsultOptions
-  useEffect(() => {
-    if (route.params?.mode) {
-      setActiveTab(route.params.mode);
-    }
-  }, [route.params?.mode]);
-
   const [location, setLocation] = useState('Hyderabad');
   const [locationModalVisible, setLocationModalVisible] = useState(false);
   const [filterModalVisible, setFilterModalVisible] = useState(false);
@@ -107,6 +96,12 @@ const FindDoctorsScreen = () => {
     availability: 'All',
   });
   const [sortBy, setSortBy] = useState('Relevance');
+
+  useEffect(() => {
+    if (route.params?.mode) {
+      setActiveTab(route.params.mode);
+    }
+  }, [route.params?.mode]);
 
   const sortOptions = [
     { label: 'Relevance', value: 'relevance' },
@@ -125,20 +120,15 @@ const FindDoctorsScreen = () => {
 
   const applyFilters = (doctors: any[]) => {
     return doctors.filter((doctor) => {
-      let matchesFilters = true;
-
-      if (filters.gender !== 'All' && doctor.gender !== filters.gender) {
-        matchesFilters = false;
-      }
-
+      let matches = true;
+      if (filters.gender !== 'All' && doctor.gender !== filters.gender) matches = false;
       if (filters.experience !== 'All') {
         const years = parseInt(doctor.experience);
-        if (filters.experience === '0-5 years' && years > 5) matchesFilters = false;
-        if (filters.experience === '5-10 years' && (years <= 5 || years > 10)) matchesFilters = false;
-        if (filters.experience === '10+ years' && years <= 10) matchesFilters = false;
+        if (filters.experience === '0-5 years' && years > 5) matches = false;
+        if (filters.experience === '5-10 years' && (years <= 5 || years > 10)) matches = false;
+        if (filters.experience === '10+ years' && years <= 10) matches = false;
       }
-
-      return matchesFilters;
+      return matches;
     });
   };
 
@@ -172,6 +162,63 @@ const FindDoctorsScreen = () => {
     )
   );
 
+  const handleCardPress = (doctor: any) => {
+    navigation.navigate('DoctorProfile', {
+      doctor: {
+        ...doctor,
+        clinics: [
+          {
+            name: doctor.clinic,
+            location: doctor.location,
+            fee: doctor.fee,
+            slots: [
+              {
+                date: 'tomorrow',
+                times: ['09:30 AM', '10:00 AM'],
+              },
+            ],
+          },
+        ],
+      },
+    });
+  };
+
+  const handleBookingPress = (doctor: any, type: 'inclinic' | 'video') => {
+    navigation.navigate('DoctorAvailability', {
+      doctor,
+      consultationType: type,
+    });
+  };
+
+  const renderModalList = (title: string, data: string[], onSelect: (val: string) => void) => (
+    <Modal visible={locationModalVisible} transparent animationType="slide">
+      <View style={tw`flex-1 bg-black/50 justify-end`}>
+        <View style={tw`bg-white rounded-t-3xl pt-6 pb-8 px-4`}>
+          <View style={tw`flex-row justify-between items-center mb-6`}>
+            <Text style={tw`text-xl font-bold`}>{title}</Text>
+            <TouchableOpacity onPress={() => setLocationModalVisible(false)}>
+              <Text style={tw`text-green-600`}>Done</Text>
+            </TouchableOpacity>
+          </View>
+          {data.map((item) => (
+            <TouchableOpacity
+              key={item}
+              onPress={() => {
+                onSelect(item);
+                setLocationModalVisible(false);
+              }}
+              style={tw`py-4 border-b border-gray-100`}
+            >
+              <Text style={tw`${location === item ? 'text-green-600 font-semibold' : 'text-gray-700'}`}>
+                {item}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+    </Modal>
+  );
+
   const renderFilterModal = () => (
     <Modal visible={filterModalVisible} transparent animationType="slide">
       <View style={tw`flex-1 bg-black/50 justify-end`}>
@@ -179,10 +226,9 @@ const FindDoctorsScreen = () => {
           <View style={tw`flex-row justify-between items-center mb-6`}>
             <Text style={tw`text-xl font-bold`}>Filters</Text>
             <TouchableOpacity onPress={() => setFilterModalVisible(false)}>
-              <Text style={tw`text-blue-600`}>Done</Text>
+              <Text style={tw`text-green-600`}>Done</Text>
             </TouchableOpacity>
           </View>
-
           {Object.entries(filterOptions).map(([key, options]) => (
             <View key={key} style={tw`mb-6`}>
               <Text style={tw`text-lg font-semibold mb-3 capitalize`}>{key}</Text>
@@ -193,7 +239,7 @@ const FindDoctorsScreen = () => {
                     onPress={() => setFilters((prev) => ({ ...prev, [key]: option }))}
                     style={tw`px-4 py-2 rounded-full border ${
                       filters[key as keyof Filters] === option
-                        ? 'bg-blue-600 border-blue-600'
+                        ? 'bg-green-600 border-green-600'
                         : 'border-gray-300'
                     }`}
                   >
@@ -223,10 +269,9 @@ const FindDoctorsScreen = () => {
           <View style={tw`flex-row justify-between items-center mb-6`}>
             <Text style={tw`text-xl font-bold`}>Sort By</Text>
             <TouchableOpacity onPress={() => setSortModalVisible(false)}>
-              <Text style={tw`text-blue-600`}>Done</Text>
+              <Text style={tw`text-green-600`}>Done</Text>
             </TouchableOpacity>
           </View>
-
           {sortOptions.map((option) => (
             <TouchableOpacity
               key={option.value}
@@ -238,9 +283,7 @@ const FindDoctorsScreen = () => {
             >
               <Text
                 style={tw`${
-                  sortBy === option.value
-                    ? 'text-blue-600 font-semibold'
-                    : 'text-gray-700'
+                  sortBy === option.value ? 'text-green-600 font-semibold' : 'text-gray-700'
                 }`}
               >
                 {option.label}
@@ -252,52 +295,11 @@ const FindDoctorsScreen = () => {
     </Modal>
   );
 
-  const insets = useSafeAreaInsets();
-
-  // Add button handlers  // Handler for when the entire card is clicked - goes to profile
-  const handleCardPress = (doctor: any) => {
-    navigation.navigate('DoctorProfile', {
-      doctor: {
-        ...doctor,
-        clinics: [{
-          name: doctor.clinic,
-          location: doctor.location,
-          fee: doctor.fee,
-          slots: [
-            {
-              date: 'tomorrow',
-              times: ['09:30 AM', '09:45 AM', '10:00 AM', '10:15 AM']
-            }
-          ]
-        }]
-      }
-    });
-  };
-
-  // Handler for booking button clicks - goes directly to availability
-  const handleBookingPress = (doctor: any, type: 'inclinic' | 'video') => {
-    navigation.navigate('DoctorAvailability', {
-      doctor: {
-        name: doctor.name,
-        specialty: doctor.specialty,
-        clinic: doctor.clinic,
-        image: doctor.image,
-        fee: doctor.fee,
-        experience: doctor.experience,
-        rating: doctor.rating,
-        location: doctor.location,
-        recommendation: doctor.recommendation,
-        patientStories: doctor.patientStories
-      },
-      consultationType: type
-    });
-  };
-
   return (
     <View style={tw`flex-1 bg-white`}>
       <PageHeader
         title="Find Doctors"
-        backgroundColor="#202b6d"
+        backgroundColor="#166534"
         textColor="#fff"
         leftComponent={
           <TouchableOpacity onPress={() => navigation.goBack()} style={tw`p-2`}>
@@ -310,8 +312,9 @@ const FindDoctorsScreen = () => {
           </TouchableOpacity>
         }
       />
-      {/* Header with search and specialty chip */}
-      <View style={tw`px-4 pb-2 pt-2`}>
+
+      {/* Search Input */}
+      <View style={tw`px-4 pt-2`}>
         <View style={tw`flex-row items-center bg-gray-100 rounded-xl px-3 py-2`}>
           <LucideSearch size={20} color="#888" />
           <TextInput
@@ -321,7 +324,7 @@ const FindDoctorsScreen = () => {
             value={search}
             onChangeText={setSearch}
           />
-          {(search || initialSpecialty) ? (
+          {search ? (
             <TouchableOpacity onPress={() => setSearch('')} style={tw`ml-2`}>
               <X size={20} color="#888" />
             </TouchableOpacity>
@@ -329,98 +332,63 @@ const FindDoctorsScreen = () => {
         </View>
       </View>
 
-      {/* Tabs and Filters */}
-      <View style={tw`px-4`}>
+      {/* Tabs */}
+      <View style={tw`px-4 mt-2`}>
         <View style={tw`flex-row justify-between mb-3`}>
           <TouchableOpacity
             onPress={() => setActiveTab('inclinic')}
             style={tw`flex-1 flex-row items-center justify-center py-3 rounded-l-xl ${
-              activeTab === 'inclinic' ? 'bg-purple-600 shadow-lg' : 'bg-white border border-gray-300'
+              activeTab === 'inclinic' ? 'bg-green-700 shadow-lg' : 'bg-white border border-gray-300'
             }`}
           >
-            <Hospital size={20} color={activeTab === 'inclinic' ? '#fff' : '#7c3aed'} />
-            <Text
-              style={tw`${
-                activeTab === 'inclinic' ? 'text-white font-bold ml-2' : 'text-gray-700 ml-2'
-              }`}
-            >
+            <Hospital size={20} color={activeTab === 'inclinic' ? '#fff' : '#166534'} />
+            <Text style={tw`${activeTab === 'inclinic' ? 'text-white font-bold ml-2' : 'text-gray-700 ml-2'}`}>
               In-Clinic
             </Text>
           </TouchableOpacity>
-
           <TouchableOpacity
             onPress={() => setActiveTab('video')}
             style={tw`flex-1 flex-row items-center justify-center py-3 rounded-r-xl ${
-              activeTab === 'video' ? 'bg-green-600 shadow-lg' : 'bg-white border border-gray-300'
+              activeTab === 'video' ? 'bg-green-700 shadow-lg' : 'bg-white border border-gray-300'
             }`}
           >
-            <Video size={20} color={activeTab === 'video' ? '#fff' : '#059669'} />
-            <Text
-              style={tw`${
-                activeTab === 'video' ? 'text-white font-bold ml-2' : 'text-gray-700 ml-2'
-              }`}
-            >
+            <Video size={20} color={activeTab === 'video' ? '#fff' : '#166534'} />
+            <Text style={tw`${activeTab === 'video' ? 'text-white font-bold ml-2' : 'text-gray-700 ml-2'}`}>
               Video Consult
             </Text>
           </TouchableOpacity>
         </View>
-
-        {/* Filter Pills */}
-        <View style={tw`flex-row justify-between items-center mb-4`}>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={tw`-mx-4 px-4`}>
-            <TouchableOpacity
-              onPress={() => setFilterModalVisible(true)}
-              style={tw`flex-row items-center bg-gray-100 rounded-full px-4 py-2 mr-2`}
-            >
-              <Filter size={16} color="#666" />
-              <Text style={tw`ml-2 text-gray-700`}>Filters</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => setSortModalVisible(true)}
-              style={tw`flex-row items-center bg-gray-100 rounded-full px-4 py-2 mr-2`}
-            >
-              <SlidersHorizontal size={16} color="#666" />
-              <Text style={tw`ml-2 text-gray-700`}>Sort</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={tw`flex-row items-center bg-gray-100 rounded-full px-4 py-2 mr-2`}
-            >
-              <Clock size={16} color="#666" />
-              <Text style={tw`ml-2 text-gray-700`}>Availability</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={tw`flex-row items-center bg-gray-100 rounded-full px-4 py-2 mr-2`}
-            >
-              <Users size={16} color="#666" />
-              <Text style={tw`ml-2 text-gray-700`}>Gender</Text>
-            </TouchableOpacity>
-          </ScrollView>
-        </View>
       </View>
 
-      {/* Results Count */}
+      {/* Filters Row */}
       <View style={tw`px-4 mb-2`}>
-        <Text style={tw`text-gray-600`}>
-          {filteredDoctors.length} {filteredDoctors.length === 1 ? 'Doctor' : 'Doctors'} found
-        </Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <TouchableOpacity
+            onPress={() => setFilterModalVisible(true)}
+            style={tw`flex-row items-center bg-gray-100 rounded-full px-4 py-2 mr-2`}
+          >
+            <Filter size={16} color="#666" />
+            <Text style={tw`ml-2 text-gray-700`}>Filters</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => setSortModalVisible(true)}
+            style={tw`flex-row items-center bg-gray-100 rounded-full px-4 py-2 mr-2`}
+          >
+            <SlidersHorizontal size={16} color="#666" />
+            <Text style={tw`ml-2 text-gray-700`}>Sort</Text>
+          </TouchableOpacity>
+        </ScrollView>
       </View>
 
-      {/* Doctor List */}
+      {/* Doctors List */}
       <FlatList
         data={filteredDoctors}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (          <TouchableOpacity
-            onPress={() => handleCardPress(item)}
-            style={tw`bg-white p-4 mb-4 rounded-xl shadow-sm mx-4`}
-          >
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => handleCardPress(item)} style={tw`bg-white p-4 mb-4 rounded-xl shadow-sm mx-4`}>
             <View style={tw`flex-row`}>
-              <Image
-                source={{ uri: item.image }}
-                style={tw`w-20 h-20 rounded-lg`}
-              />
+              <Image source={{ uri: item.image }} style={tw`w-20 h-20 rounded-lg`} />
               <View style={tw`flex-1 ml-3`}>
                 <Text style={tw`text-lg font-bold text-gray-800`}>{item.name}</Text>
                 <Text style={tw`text-gray-600`}>{item.specialty}</Text>
@@ -434,35 +402,25 @@ const FindDoctorsScreen = () => {
                 </View>
               </View>
             </View>
-
             <View style={tw`flex-row justify-between items-center mt-3 pt-3 border-t border-gray-100`}>
               <View style={tw`flex-row items-center`}>
                 {item.rating && (
                   <View style={tw`flex-row items-center mr-4`}>
-                    <Star size={16} color="#FFD700" fill="#FFD700" />
+                    <Star size={16} color="#22c55e" fill="#22c55e" />
                     <Text style={tw`ml-1 font-medium`}>{item.rating}</Text>
                   </View>
                 )}
-                <View style={tw`flex-row items-center`}>
-                  <ThumbsUp size={14} color="#22c55e" />
-                  <Text style={tw`ml-1 font-medium`}>{item.recommendation}</Text>
-                  <Text style={tw`text-gray-600 ml-1`}>• {item.patientStories} Stories</Text>
-                </View>
+                <ThumbsUp size={14} color="#22c55e" />
+                <Text style={tw`ml-1 font-medium`}>{item.recommendation}</Text>
+                <Text style={tw`text-gray-600 ml-1`}>• {item.patientStories} Stories</Text>
               </View>
-              <Text style={tw`text-[#202b6d] font-bold`}>₹{item.fee}</Text>
+              <Text style={tw`text-[#166534] font-bold`}>₹{item.fee}</Text>
             </View>
-
             <View style={tw`flex-row mt-3`}>
-              <TouchableOpacity
-                onPress={() => Linking.openURL('tel:+1234567890')}
-                style={tw`flex-1 border border-[#25a9e1] py-2 rounded-lg mr-2`}
-              >
-                <Text style={tw`text-[#25a9e1] text-center font-medium`}>Contact Clinic</Text>
+              <TouchableOpacity onPress={() => Linking.openURL('tel:+1234567890')} style={tw`flex-1 border border-[#166534] py-2 rounded-lg mr-2`}>
+                <Text style={tw`text-[#166534] text-center font-medium`}>Contact Clinic</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => handleBookingPress(item, item.type)}
-                style={tw`flex-1 bg-[#25a9e1] py-2 rounded-lg ml-2`}
-              >
+              <TouchableOpacity onPress={() => handleBookingPress(item, item.type)} style={tw`flex-1 bg-[#166534] py-2 rounded-lg ml-2`}>
                 <Text style={tw`text-white text-center font-medium`}>
                   {item.type === 'inclinic' ? 'Book Clinic Visit' : 'Book Video Consult'}
                 </Text>
@@ -474,41 +432,7 @@ const FindDoctorsScreen = () => {
 
       {renderFilterModal()}
       {renderSortModal()}
-
-      {/* Location Modal */}
-      <Modal visible={locationModalVisible} transparent animationType="slide">
-        <View style={tw`flex-1 bg-black/50 justify-end`}>
-          <View style={tw`bg-white rounded-t-3xl pt-6 pb-8 px-4`}>
-            <View style={tw`flex-row justify-between items-center mb-6`}>
-              <Text style={tw`text-xl font-bold`}>Select Location</Text>
-              <TouchableOpacity onPress={() => setLocationModalVisible(false)}>
-                <Text style={tw`text-blue-600`}>Done</Text>
-              </TouchableOpacity>
-            </View>
-
-            {locations.map((loc) => (
-              <TouchableOpacity
-                key={loc}
-                onPress={() => {
-                  setLocation(loc);
-                  setLocationModalVisible(false);
-                }}
-                style={tw`py-4 border-b border-gray-100`}
-              >
-                <Text
-                  style={tw`${
-                    location === loc
-                      ? 'text-blue-600 font-semibold'
-                      : 'text-gray-700'
-                  }`}
-                >
-                  {loc}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
-      </Modal>
+      {renderModalList('Select Location', locations, setLocation)}
     </View>
   );
 };
