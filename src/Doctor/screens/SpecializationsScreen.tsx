@@ -22,18 +22,18 @@ const SpecializationsScreen = () => {
   const specializations: Specialization[] = [
     {
       title: 'Cardiology',
-      icon: <Heart size={24} color="#202b6d" />,
+      icon: <Heart size={24} color="#16a34a" />,
       years: 10,
       expertise: ['Interventional Cardiology', 'Heart Failure Management'],
     },
     {
       title: 'Internal Medicine',
-      icon: <Stethoscope size={24} color="#202b6d" />,
+      icon: <Stethoscope size={24} color="#16a34a" />,
       years: 12,
       expertise: ['General Medicine', 'Preventive Care'],
     },    {
       title: 'Critical Care',
-      icon: <Activity size={24} color="#202b6d" />,
+      icon: <Activity size={24} color="#16a34a" />,
       years: 8,
       expertise: ['ICU Management', 'Emergency Medicine'],
     },
@@ -53,11 +53,11 @@ const SpecializationsScreen = () => {
     }]);
   };
   return (
-    <View style={tw`flex-1 bg-[#f8fafc]`}>
+    <View style={tw`flex-1 bg-green-50`}>
       <DoctorHeader title="Specializations" showSettings showNotifications />
-      <View style={tw`flex-row justify-end px-4 py-2 bg-white border-b border-gray-200`}>
+      <View style={tw`flex-row justify-end px-4 py-2 bg-white border-b border-green-100`}>
         <TouchableOpacity 
-          style={tw`bg-[#1d9be3] p-2 rounded-full`} 
+          style={tw`bg-emerald-500 p-2 rounded-full`} 
           activeOpacity={0.85}
           onPress={() => navigation.navigate('AddSpecialization')}
         >
@@ -65,19 +65,19 @@ const SpecializationsScreen = () => {
         </TouchableOpacity>
       </View>
 
-          <ScrollView contentContainerStyle={tw`p-5 pb-10`}>
-        <Text style={tw`text-2xl font-bold text-[#202b6d] mb-2 text-center`}>Your Expertise</Text>
-        <Text style={tw`text-base text-gray-600 mb-6 text-center`}>Manage your specializations and expertise areas</Text>
+      <ScrollView contentContainerStyle={tw`p-5 pb-10`}>
+        <Text style={tw`text-2xl font-bold text-green-700 mb-2 text-center`}>Your Expertise</Text>
+        <Text style={tw`text-base text-green-600 mb-6 text-center`}>Manage your specializations and expertise areas</Text>
 
         {specializations.map((spec, idx) => (
           <View key={idx} style={tw`bg-white rounded-2xl p-5 shadow-sm mb-5`}>
             <View style={tw`flex-row items-center mb-3`}>
               {spec.icon}
               <View style={tw`ml-3 flex-1`}>
-                <Text style={tw`text-[#202b6d] font-bold text-lg`}>{spec.title}</Text>
-                <Text style={tw`text-gray-500 text-sm`}>{spec.years} Years Experience</Text>
+                <Text style={tw`text-green-700 font-bold text-lg`}>{spec.title}</Text>
+                <Text style={tw`text-green-600 text-sm`}>{spec.years} Years Experience</Text>
               </View>              <TouchableOpacity 
-                style={tw`bg-[#eaf1fb] p-2 rounded-full`}
+                style={tw`bg-green-100 p-2 rounded-full`}
                 onPress={() => Alert.alert('Primary Specialization', 'Mark this as your primary specialization?', [
                   { text: 'Cancel', style: 'cancel' },
                   { text: 'Set as Primary', style: 'default' }

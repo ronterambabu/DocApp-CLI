@@ -57,7 +57,7 @@ export default function PharmacyCategoriesScreen() {
       {/* Header */}
       <PageHeader
         title="Pharmacy"
-        backgroundColor="#202b6d"
+        backgroundColor="#16a34a"
         textColor="#fff"
         leftComponent={
           <TouchableOpacity onPress={() => navigation.goBack()} style={tw`p-2`}>
@@ -73,17 +73,17 @@ export default function PharmacyCategoriesScreen() {
 
       {/* Location Selector */}
       <View style={tw`flex-row items-center px-4 py-2`}>
-        <Text style={tw`text-sm text-gray-700`}>Deliver to - </Text>
+        <Text style={tw`text-sm text-green-800`}>Deliver to - </Text>
         <TouchableOpacity onPress={() => setShowLocationModal(true)}>
-          <Text style={tw`text-sm text-blue-600 font-semibold`}>{location}</Text>
+          <Text style={tw`text-sm text-green-600 font-semibold`}>{location}</Text>
         </TouchableOpacity>
         <ChevronDown size={18} color="gray" style={tw`ml-1`} />
       </View>
 
       {/* Location Modal */}
       <Modal visible={showLocationModal} transparent animationType="slide">
-        <View style={tw`flex-1 justify-end bg-black bg-opacity-40`}>
-          <View style={tw`bg-white rounded-t-xl p-4`}>
+        <View style={tw`flex-1 justify-end bg-green-900/10`}>
+          <View style={tw`bg-green-50 rounded-t-xl p-4`}>
             <Text style={tw`text-lg font-semibold mb-2`}>Choose Location</Text>
             {locations.map((loc) => (
               <TouchableOpacity
@@ -92,13 +92,13 @@ export default function PharmacyCategoriesScreen() {
                   setLocation(loc);
                   setShowLocationModal(false);
                 }}
-                style={tw`py-2 border-b border-gray-200`}
+                style={tw`py-2 border-b border-green-100`}
               >
                 <Text style={tw`text-base`}>{loc}</Text>
               </TouchableOpacity>
             ))}
             <TouchableOpacity onPress={() => setShowLocationModal(false)} style={tw`py-3`}>
-              <Text style={tw`text-center text-red-500`}>Cancel</Text>
+              <Text style={tw`text-center text-green-600`}>Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -106,7 +106,7 @@ export default function PharmacyCategoriesScreen() {
 
       {/* Search Bar */}
       <View style={tw`px-4 pt-2 pb-1`}>
-        <View style={tw`flex-row items-center bg-white rounded-full px-4 py-2 shadow-sm`}>
+        <View style={tw`flex-row items-center bg-green-50 rounded-full px-4 py-2 shadow-sm`}>
           <Search size={20} color="gray" />
           <TextInput
             placeholder="Search Medicines & Health Products"
@@ -119,7 +119,7 @@ export default function PharmacyCategoriesScreen() {
       </View>
 
       {/* Section Title */}
-      <Text style={tw`px-4 pt-4 pb-2 font-bold text-lg text-gray-900`}>Shop Health Products By Categories</Text>
+      <Text style={tw`px-4 pt-4 pb-2 font-bold text-lg text-green-900`}>Shop Health Products By Categories</Text>
 
       {/* Image Grid with glassmorphism and gradient overlay */}
       <FlatList

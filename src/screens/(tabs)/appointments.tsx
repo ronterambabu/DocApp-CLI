@@ -1,205 +1,202 @@
-import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  Image,
-  TouchableOpacity,
-  ActivityIndicator,
-  Alert,
-} from 'react-native';
-import api from '../../../apiConfig';
-import {
-  Calendar,
-  Clock,
-  MapPin,
-  Video,
-  Phone,
-} from 'lucide-react-native';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
-import axios from 'axios';
-import tw from 'twrnc';
-import PageLayout from '../../components/PageLayout';
+// import React, { useEffect, useState } from 'react';
+// import {
+//   View,
+//   Text,
+//   ScrollView,
+//   TouchableOpacity,
+//   ActivityIndicator,
+//   Alert,
+// } from 'react-native';
+// import tw from 'twrnc';
+// import PageLayout from '../../components/PageLayout';
 
-const BASE_URL = 'http://3.108.233.123:5000';
+// type Appointment = {
+//   id: number;
+//   doctor_id: number;
+//   appointment_date: string;
+//   appointment_start_time: string;
+//   appointment_end_time: string;
+//   appointment_status: string;
+//   appointment_type: string;
+// };
 
-type Appointment = {
-  id: string;
-  doctorName: string;
-  specialty: string;
-  image: string;
-  type: 'video' | 'phone' | 'in-person';
-  status: 'upcoming' | 'completed' | 'cancelled';
-  date: string;
-  time: string;
-  location: string;
-};
+// const tabs = ['Upcoming', 'Cancelled', 'Completed'];
 
-export type RootStackParamList = {
-  AppointmentsScreen: undefined;
-  'book-appointment': undefined;
-};
+// export default function AppointmentsScreen() {
+//   const [appointments, setAppointments] = useState<Appointment[]>([]);
+//   const [loading, setLoading] = useState(true);
+//   const [selectedTab, setSelectedTab] = useState('Upcoming');
 
-export default function AppointmentsScreen() {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const [activeTab, setActiveTab] = useState<'upcoming' | 'completed' | 'cancelled'>('upcoming');
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+//   const fetchAppointments = async () => {
+//     try {
+//       const response = await fetch(
+//         'https://landing.docapp.co.in/api/appointment/list-appointments',
+//         {
+//           credentials: 'include',
+//         }
+//       );
+//       const data = await response.json();
+//       setAppointments(data.appointments || []);
+//     } catch (err) {
+//       console.error('Fetch error:', err);
+//       Alert.alert('Error', 'Failed to fetch appointments');
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
 
-  useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        const res = await axios.get(api.API_ENDPOINTS.listAppointments, {
-          withCredentials: true,
-        });
-        setAppointments(res.data);
-      } catch (error) {
-        console.error('Error fetching appointments:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchAppointments();
-  }, []);
+//   useEffect(() => {
+//     fetchAppointments();
+//   }, []);
 
-  const filteredAppointments = appointments.filter((a) => a.status === activeTab);
+//   const handleDelete = async (id: number) => {
+//     try {
+//       const response = await fetch(
+//         'https://landing.docapp.co.in/api/appointment/delete-appointment',
+//         {
+//           method: 'DELETE',
+//           headers: {
+//             'Content-Type': 'application/json',
+//           },
+//           credentials: 'include',
+//           body: JSON.stringify({ appointment_id: id }),
+//         }
+//       );
 
-  const renderItem = ({ item }: { item: Appointment }) => (
-    <View
-      style={tw`bg-white rounded-2xl p-4 mb-4 shadow-md border border-gray-100 mx-4`}
-      accessible
-      accessibilityLabel={`Appointment with ${item.doctorName}`}
-    >
-      <View style={tw`flex-row items-center`}>
-        <Image
-          source={{ uri: item.image }}
-          style={tw`w-16 h-16 rounded-full border border-gray-200`}
-        />
-        <View style={tw`ml-4 flex-1`}>
-          <Text style={tw`text-base font-semibold text-gray-900`}>{item.doctorName}</Text>
-          <Text style={tw`text-sm text-gray-500 mt-0.5`}>{item.specialty}</Text>
-        </View>
-        <View
-          style={tw`flex-row items-center px-3 py-1.5 rounded-full ${
-            item.type === 'video' ? 'bg-blue-50' : item.type === 'phone' ? 'bg-green-50' : 'bg-red-50'
-          }`}
-        >
-          {item.type === 'video' && <Video size={16} color="#1A73E8" />}
-          {item.type === 'phone' && <Phone size={16} color="#00C48C" />}
-          {item.type === 'in-person' && <MapPin size={16} color="#FF647C" />}
-          <Text style={tw`ml-1.5 text-xs font-medium text-gray-800 capitalize`}>
-            {item.type.replace('-', ' ')}
-          </Text>
-        </View>
-      </View>
+//       const data = await response.json();
+//       if (data.message?.toLowerCase().includes('deleted')) {
+//         Alert.alert('Success', 'Appointment deleted successfully');
+//         fetchAppointments();
+//       } else {
+//         throw new Error(data.message || 'Delete failed');
+//       }
+//     } catch (err: any) {
+//       Alert.alert('Error', err.message || 'Something went wrong');
+//     }
+//   };
 
-      <View style={tw`flex-row mt-4 items-center`}>
-        <View style={tw`flex-row items-center mr-6`}>
-          <Calendar size={16} color="#6B7280" />
-          <Text style={tw`ml-1.5 text-sm text-gray-600`}>{item.date}</Text>
-        </View>
-        <View style={tw`flex-row items-center`}>
-          <Clock size={16} color="#6B7280" />
-          <Text style={tw`ml-1.5 text-sm text-gray-600`}>{item.time}</Text>
-        </View>
-      </View>
+//   const filteredAppointments = appointments.filter((appt) => {
+//     if (selectedTab === 'Upcoming') return appt.appointment_status === 'pending';
+//     if (selectedTab === 'Cancelled') return appt.appointment_status === 'cancelled';
+//     if (selectedTab === 'Completed') return appt.appointment_status === 'completed';
+//     return true;
+//   });
 
-      <View style={tw`flex-row items-center mt-2`}>
-        <MapPin size={16} color="#6B7280" />
-        <Text style={tw`ml-1.5 text-sm text-gray-600`}>{item.location}</Text>
-      </View>
+//   if (loading) return <ActivityIndicator size="large" style={tw`mt-10`} />;
 
-      {item.status === 'upcoming' && (
-        <View style={tw`flex-row mt-4 gap-3`}>
-          <TouchableOpacity
-            style={tw`flex-1 bg-blue-600 py-3 rounded-xl items-center shadow-sm`}
-            onPress={() => Alert.alert('Reschedule appointment')}
-            accessible
-            accessibilityLabel={`Reschedule appointment with ${item.doctorName}`}
-            accessibilityRole="button"
-          >
-            <Text style={tw`text-white font-medium text-sm`}>Reschedule</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={tw`flex-1 bg-red-500 py-3 rounded-xl items-center shadow-sm`}
-            onPress={() => Alert.alert('Cancel appointment')}
-            accessible
-            accessibilityLabel={`Cancel appointment with ${item.doctorName}`}
-            accessibilityRole="button"
-          >
-            <Text style={tw`text-white font-medium text-sm`}>Cancel</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-    </View>
-  );
+//   return (
+//     <PageLayout
+//       title="My Appointments"
+//       headerBackgroundColor="#16a34a"
+//       scrollable={true}
+//     >
+//       {/* Tabs */}
+//       <View style={tw`flex-row bg-white px-4 py-3 border-b justify-between`}>
+//         {tabs.map((tab) => (
+//           <TouchableOpacity
+//             key={tab}
+//             onPress={() => setSelectedTab(tab)}
+//             style={tw`px-4 py-2 rounded-full ${
+//               selectedTab === tab ? 'bg-green-600' : 'bg-gray-200'
+//             }`}
+//           >
+//             <Text
+//               style={tw`text-sm font-semibold ${
+//                 selectedTab === tab ? 'text-white' : 'text-gray-700'
+//               }`}
+//             >
+//               {tab}
+//             </Text>
+//           </TouchableOpacity>
+//         ))}
+//       </View>
 
-  const TabBar = () => (
-    <View style={tw`flex-row mx-4 mt-3 mb-4 bg-gray-100 rounded-xl p-1`}>
-      {['upcoming', 'completed', 'cancelled'].map((tab) => (
-        <TouchableOpacity
-          key={tab}
-          style={tw`flex-1 py-2.5 items-center rounded-lg relative ${
-            activeTab === tab ? 'bg-white shadow-sm' : 'bg-transparent'
-          }`}
-          onPress={() => setActiveTab(tab as 'upcoming' | 'completed' | 'cancelled')}
-          accessible
-          accessibilityLabel={`${tab} appointments`}
-          accessibilityRole="tab"
-          accessibilityState={{ selected: activeTab === tab }}
-        >
-          <Text
-            style={tw`${
-              activeTab === tab ? 'text-[#1A73E8] font-semibold' : 'text-gray-500'
-            } text-sm`}
-          >
-            {tab.charAt(0).toUpperCase() + tab.slice(1)}
-          </Text>
-          {activeTab === tab && (
-            <View style={tw`absolute bottom-0 left-1/2 w-1/3 h-0.5 bg-[#1A73E8] rounded-full -translate-x-1/2`} />
-          )}
-        </TouchableOpacity>
-      ))}
-    </View>
-  );
+//       {/* Appointment List */}
+//       <ScrollView style={tw`p-4`}>
+//         {filteredAppointments.length === 0 ? (
+//           <Text style={tw`text-center mt-10 text-gray-500`}>
+//             No {selectedTab.toLowerCase()} appointments found
+//           </Text>
+//         ) : (
+//           filteredAppointments.map((item) => (
+//             <View
+//               key={item.id}
+//               style={tw`bg-white p-4 mb-4 rounded-xl shadow-sm border border-gray-200`}
+//             >
+//               <Text style={tw`text-lg font-bold text-green-700`}>
+//                 Doctor ID: #{item.doctor_id}
+//               </Text>
+//               <Text style={tw`text-gray-800`}>
+//                 Date: {new Date(item.appointment_date).toDateString()}
+//               </Text>
+//               <Text style={tw`text-gray-800`}>
+//                 Time: {item.appointment_start_time} - {item.appointment_end_time}
+//               </Text>
+//               <Text style={tw`text-gray-800 capitalize`}>
+//                 Type: {item.appointment_type}
+//               </Text>
+//               <Text style={tw`text-gray-800 capitalize`}>
+//                 Status: {item.appointment_status}
+//               </Text>
+
+//               <TouchableOpacity
+//                 onPress={() => handleDelete(item.id)}
+//                 style={tw`mt-3 bg-red-500 py-2 px-4 rounded-full`}
+//               >
+//                 <Text style={tw`text-white text-center font-semibold`}>
+//                   Delete Appointment
+//                 </Text>
+//               </TouchableOpacity>
+//             </View>
+//           ))
+//         )}
+//       </ScrollView>
+//     </PageLayout>
+//   );
+// }
+
+import React, { useEffect, useState } from 'react';
+import { View, Button, Text, TextInput } from 'react-native';
+import { RTCView } from 'react-native-webrtc';
+import { useCall } from 'D:/CRMTOOL/DOCAPP/DocApp-CLI/src/Doctor/screens/CallContext.tsx';
+
+export default function ReceiverScreen() {
+  const { startLocalStream, createPeerConnection, pc, localStream, remoteStream } = useCall();
+  const [callId, setCallId] = useState('');
+
+  const answerCall = async () => {
+    const response = await fetch(`https://landing.docapp.co.in/api/call/get-offer?call_id=${callId}`);
+    const data = await response.json();
+    const offer = data.offer;
+
+    const stream = await startLocalStream();
+    const connection = createPeerConnection();
+    connection.addStream(stream);
+
+    await connection.setRemoteDescription(offer);
+    const answer = await connection.createAnswer();
+    await connection.setLocalDescription(answer);
+
+    await fetch('https://landing.docapp.co.in/api/call/recieve-call', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ call_id: callId, answer }),
+    });
+  };
 
   return (
-    <PageLayout
-      title="My Appointments"
-      headerBackgroundColor="#2E3192"
-      scrollable={false}
-    >
-      <TabBar />
-      
-      {isLoading ? (
-        <View style={tw`flex-1 items-center justify-center`}>
-          <ActivityIndicator size="large" color="#1A73E8" />
-          <Text style={tw`mt-2 text-gray-500`}>Loading appointments...</Text>
-        </View>
-      ) : (
-        <FlatList
-          data={filteredAppointments}
-          keyExtractor={(item) => item.id}
-          renderItem={renderItem}
-          contentContainerStyle={tw`pt-2 pb-6`}
-          ListEmptyComponent={
-            <View style={tw`items-center justify-center mt-20`}>
-              <Text style={tw`text-gray-400 text-sm`}>No {activeTab} appointments</Text>
-              {activeTab === 'upcoming' && (
-                <TouchableOpacity
-                  style={tw`mt-4 bg-[#1A73E8] px-6 py-2 rounded-xl`}
-                  onPress={() => navigation.navigate('book-appointment')}
-                  accessible
-                  accessibilityLabel="Book a new appointment"
-                  accessibilityRole="button"
-                >
-                  <Text style={tw`text-white font-medium`}>Book Appointment</Text>
-                </TouchableOpacity>
-              )}
-            </View>
-          }
-        />
-      )}
-    </PageLayout>
+    <View>
+      <Text>Receiver View</Text>
+      <TextInput
+        placeholder="Enter Call ID"
+        onChangeText={(text) => setCallId(text)}
+        value={callId}
+        style={{ borderWidth: 1, margin: 8, padding: 6 }}
+      />
+      <Button title="Answer Call" onPress={answerCall} />
+      {localStream && <RTCView streamURL={localStream.toURL()} style={{ height: 200, width: '100%' }} />}
+      {remoteStream && <RTCView streamURL={remoteStream.toURL()} style={{ height: 200, width: '100%' }} />}
+    </View>
   );
 }
+

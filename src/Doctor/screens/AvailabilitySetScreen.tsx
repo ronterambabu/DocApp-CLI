@@ -24,6 +24,16 @@ const AvailabilityScreen = () => {
   const slotModes = ['In-Clinic', 'Video Consultation'];
 
   const weekDays: WeekDay[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+  // ...existing code...
+
+  return (
+    <ScrollView contentContainerStyle={tw`p-4 pb-10`}>
+      <Text style={tw`text-2xl font-bold text-green-700 mb-2 text-center`}>Schedule</Text>
+      <Text style={tw`text-base text-green-600 mb-6 text-center`}>Manage your availability</Text>
+      {/* ...rest of the component... */}
+    </ScrollView>
+  );
   
   const schedules: Record<WeekDay, SlotType[]> = {
     Monday: [

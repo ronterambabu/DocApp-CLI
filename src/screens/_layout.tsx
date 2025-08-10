@@ -26,7 +26,7 @@ export default function RootLayout() {
     <UserProvider>
       <SafeAreaProvider>
         <View style={styles.gradient}>
-          <NavigationContainer>
+          <NavigationContainer className="bg-green-500">
             <Stack.Navigator screenOptions={{ headerShown: false }}>
               {/* Replace these with your actual components */}
               {/* <Stack.Screen name="Tabs" component={TabsScreen} /> */}

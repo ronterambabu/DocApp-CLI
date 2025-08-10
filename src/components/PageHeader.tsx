@@ -11,16 +11,16 @@ interface PageHeaderProps {
   textColor?: string;
   onBackPress?: () => void;
   rightComponent?: React.ReactNode;
-  leftComponent?: React.ReactNode; // NEW
+  leftComponent?: React.ReactNode;
 }
 
 const PageHeader: React.FC<PageHeaderProps> = ({
   title,
-  backgroundColor = '#202b6d',
-  textColor = '#fff',
+  backgroundColor = '#1b5e20', // Dark green
+  textColor = '#ffffff',        // White
   onBackPress,
   rightComponent,
-  leftComponent, // NEW
+  leftComponent,
 }) => {
   const navigation = useNavigation();
   const statusBarHeight = getStatusBarHeight(true);
@@ -34,20 +34,20 @@ const PageHeader: React.FC<PageHeaderProps> = ({
   };
 
   return (
-    <View style={{ backgroundColor: '#202b6d' }}>
-      <View style={{ height: statusBarHeight + 12 }} /> {/* Extra padding after status bar */}
-      <View 
+    <View style={{ backgroundColor }}>
+      <View style={{ height: statusBarHeight + 12 }} />
+      <View
         style={[
           tw`px-4 flex-row items-center`,
-          { 
-            height:90, // Fixed header content height
-          }
+          {
+            height: 90,
+          },
         ]}
       >
         {leftComponent ? (
           leftComponent
         ) : (
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={handleBackPress}
             style={tw`p-2 -ml-2`}
             accessibilityLabel="Go back"
@@ -56,7 +56,13 @@ const PageHeader: React.FC<PageHeaderProps> = ({
             <ArrowLeft size={24} color={textColor} />
           </TouchableOpacity>
         )}
-        <Text style={[tw`text-lg font-semibold flex-1 ml-3`, { color: textColor }]} numberOfLines={1}>
+        <Text
+          style={[
+            tw`text-lg font-semibold flex-1 ml-3`,
+            { color: textColor },
+          ]}
+          numberOfLines={1}
+        >
           {title}
         </Text>
         {rightComponent && <View style={tw`ml-2`}>{rightComponent}</View>}

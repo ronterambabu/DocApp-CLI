@@ -7,6 +7,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DoctorStackParamList } from '../types/navigation';
 import DoctorHeader from '../components/DoctorHeader';
+import tw from 'twrnc';
 
 const DoctorSettingsScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<DoctorStackParamList>>();
@@ -103,30 +104,22 @@ const DoctorSettingsScreen = () => {
     },
   ];
   return (
-    <View style={{ flex: 1, backgroundColor: '#fff' }}>
+    <View style={tw`flex-1 bg-green-50`}>
       <DoctorHeader title="Settings" showNotifications />
-      <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.menuContainer}>
+      <ScrollView contentContainerStyle={tw`pb-6`}>
+        <View style={tw`bg-white mt-4 rounded-xl`}>
           {menuItems.map((item, index) => (
             <TouchableOpacity
               key={index}
-              style={[
-                styles.menuItem,
-                index === menuItems.length - 1 && styles.lastMenuItem,
-              ]}
+              style={tw`flex-row items-center justify-between p-4 border-b border-green-100`}
               onPress={item.action}
             >
-              <View style={styles.menuItemLeft}>
-                <Icon name={item.icon} size={24} color="#202b6d" />
-                <View style={styles.menuItemTextContainer}>
-                  <Text style={[
-                    styles.menuItemTitle,
-                    item.textColor && { color: item.textColor }
-                  ]}>
-                    {item.title}
-                  </Text>
+              <View style={tw`flex-row items-center`}>
+                <Icon name={item.icon} size={24} color="#16a34a" />
+                <View style={tw`ml-3`}> 
+                  <Text style={tw`text-green-700 font-bold`}>{item.title}</Text>
                   {item.subtitle && (
-                    <Text style={styles.menuItemSubtitle}>{item.subtitle}</Text>
+                    <Text style={tw`text-green-600 text-xs`}>{item.subtitle}</Text>
                   )}
                 </View>
               </View>
@@ -134,20 +127,18 @@ const DoctorSettingsScreen = () => {
                 <Switch
                   value={false}
                   onValueChange={() => {}}
-                  trackColor={{ false: '#767577', true: '#1d9be3' }}
+                  trackColor={{ false: '#a7f3d0', true: '#059669' }}
                   thumbColor="#f4f3f4"
                 />
               ) : item.rightIcon && (
-                <Icon name={item.rightIcon} size={24} color="#666" />
+                <Icon name={item.rightIcon} size={24} color="#16a34a" />
               )}
             </TouchableOpacity>
           ))}
         </View>
 
         {/* Alert Message */}
-        <Text style={styles.alertText}>
-          We use full screen alerts and permission to alert you if a patient is waiting for your response
-        </Text>
+        <Text style={tw`text-green-600 text-center mt-6 mb-2`}>We use full screen alerts and permission to alert you if a patient is waiting for your response</Text>
       </ScrollView>
     </View>
   );

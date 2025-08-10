@@ -1,285 +1,328 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
   Image,
-  TouchableOpacity,
   ScrollView,
-  Linking,
+  TouchableOpacity,
+  ActivityIndicator,
+  FlatList,
+  Alert,
 } from 'react-native';
-import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { Briefcase, IndianRupee, ShieldCheck } from 'lucide-react-native';
 import tw from 'twrnc';
-import { ArrowLeft, Share2, ThumbsUp, MessageSquare, MapPin, Star, Home, Video } from 'lucide-react-native';
 import PageHeader from '../../components/PageHeader';
 
-type DoctorProfileParams = {
-  params: {
-    doctor: {
-      id: string;
-      name: string;
-      specialty: string;
-      experience: number;
-      rating: string | null;
-      recommendation: string;
-      patientStories: number;
-      clinic: string;
-      location: string;
-      fee: number;
-      type: 'inclinic' | 'video';
-      image: string;
-      clinics: Array<{
-        name: string;
-        location: string;
-        fee: number;
-        slots: Array<{
-          date: string;
-          times: string[];
-        }>;
-      }>;
+const DoctorProfileScreen = () => {
+  const route = useRoute();
+  const navigation = useNavigation();
+  const { doctor, consultationMode: initialMode } = route.params as any;
+
+  const [selectedMode, setSelectedMode] = useState<string>(initialMode || 'online');
+  const [slotsByDate, setSlotsByDate] = useState<{ [date: string]: string[] }>({});
+  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [loadingSlots, setLoadingSlots] = useState(true);
+  const [selectedTab, setSelectedTab] = useState<'Availability' | 'Reviews' | 'About'>('Availability');
+  const [selectedSlot, setSelectedSlot] = useState<string>('');
+  const [selectedConsultType, setSelectedConsultType] = useState<'online_video' | 'online_audio' | null>(null);
+  const [reviews, setReviews] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchSlots = async () => {
+      try {
+        const response = await fetch(`https://landing.docapp.co.in/api/auth/show-slots/${doctor.user_id}`);
+        const data = await response.json();
+        let parsedSlots: any[] = [];
+
+        if (data.slots && Array.isArray(data.slots)) {
+          data.slots.forEach((slotObj: any) => {
+            try {
+              const innerSlots = JSON.parse(slotObj.slots);
+              if (Array.isArray(innerSlots)) {
+                parsedSlots = parsedSlots.concat(innerSlots);
+              }
+            } catch (err) {
+              console.error('Slot parsing error:', err);
+            }
+          });
+        }
+
+        const filtered = parsedSlots.filter((slot) =>
+          slot.mode?.toLowerCase() === selectedMode.toLowerCase() ||
+          slot.mode === '' || slot.mode?.toLowerCase() === 'hybrid'
+        );
+
+        const grouped: { [key: string]: string[] } = {};
+        filtered.forEach((slot) => {
+          if (slot.date && Array.isArray(slot.slots)) {
+            slot.slots.forEach((timeSlot: any) => {
+              const timeRange = `${timeSlot.start}-${timeSlot.end}`;
+              if (!grouped[slot.date]) grouped[slot.date] = [];
+              grouped[slot.date].push(timeRange);
+            });
+          }
+        });
+
+        const sortedDates = Object.keys(grouped).sort();
+        setSlotsByDate(grouped);
+        setSelectedDate(sortedDates[0] || '');
+      } catch (error) {
+        console.error('Slot fetch error:', error);
+      } finally {
+        setLoadingSlots(false);
+      }
     };
+
+    fetchSlots();
+  }, [doctor.user_id, selectedMode]);
+
+  useEffect(() => {
+    setReviews([
+      { name: 'Rohit Sharma', rating: 5, comment: 'Excellent doctor.' },
+      { name: 'Priya Verma', rating: 4, comment: 'Good experience.' },
+      { name: 'Amit Joshi', rating: 5, comment: 'Very professional.' },
+    ]);
+  }, []);
+
+const handleBookAppointment = () => {
+  const selectedSlotObj = {
+    time: selectedSlot,
+    date: selectedDate,
+    mode: selectedMode === 'online' ? selectedConsultType : 'offline',
   };
-};
 
-type TimeSlotProps = {
-  time: string;
-  onPress: () => void;
-  isAvailable?: boolean;
-};
-
-const TimeSlot: React.FC<TimeSlotProps> = ({ time, onPress, isAvailable = true }) => (
-  <TouchableOpacity
-    style={[
-      tw`py-2 px-4 rounded-lg mr-2`,
-      isAvailable ? tw`bg-[#25a9e1]` : tw`bg-gray-100`
-    ]}
-    onPress={onPress}
-    disabled={!isAvailable}
-  >
-    <Text 
-      style={[
-        tw`font-medium`,
-        isAvailable ? tw`text-white` : tw`text-gray-400`
-      ]}
-    >
-      {time}
-    </Text>
-  </TouchableOpacity>
-);
-
-const DoctorProfileScreen: React.FC = () => {  const navigation = useNavigation<any>();
-  const route = useRoute<RouteProp<DoctorProfileParams, 'params'>>();
-  const { doctor } = route.params;
-
-  const tomorrowSlots = ['09:30 AM', '09:45 AM', '10:00 AM', '10:15 AM'];  const handleBooking = (time: string) => {
+  if (selectedMode === 'offline') {
     navigation.navigate('AppointmentBooking', {
-      doctor: {
-        name: doctor.name,
-        specialty: doctor.specialty,
-        clinic: doctor.clinics[0].name,
-        image: doctor.image,
-        fee: doctor.clinics[0].fee,
-        experience: doctor.experience,
-        rating: doctor.rating
-      },
-      slot: time,
-      date: 'Tomorrow, 19 Jun',
-      consultationType: doctor.type
+      doctor,
+      selectedSlot: selectedSlotObj,
+      mode: selectedMode,
     });
-  };
+  } else {
+    navigation.navigate('AppoinmentPaymentScreen', {
+      doctor,
+      slot: selectedSlot,
+      date: selectedDate,
+      consultationType: selectedConsultType, // e.g. 'online_video'
+      amount: doctor.consultation_fee,
+    });
+  }
+};
+
+
+
 
   return (
-    <View style={tw`flex-1 bg-white`}>
-      <PageHeader
-        title=""
-        backgroundColor="#202b6d"
-        textColor="#fff"
-        leftComponent={
-          <TouchableOpacity onPress={() => navigation.goBack()} style={tw`p-2`}>
-            <ArrowLeft size={24} color="#fff" />
-          </TouchableOpacity>
-        }
-        rightComponent={
-          <View style={tw`flex-row`}>
-            <TouchableOpacity style={tw`p-2 mr-2`}>
-              <Star size={24} color="#fff" fill="#fff" />
-            </TouchableOpacity>
-            <TouchableOpacity style={tw`p-2`}>
-              <Share2 size={24} color="#fff" />
-            </TouchableOpacity>
-          </View>
-        }
-      />
-
-      <ScrollView>
-        {/* Doctor Info Section */}
-        <View style={tw`p-4`}>
-          <View style={tw`flex-row items-start`}>
+    <View style={tw`flex-1 bg-green-50`}>
+      <PageHeader title="Doctor Profile" backgroundColor="#16a34a" textColor="#fff" />
+      <ScrollView contentContainerStyle={tw`p-5 pb-32`}>
+        {/* Doctor Card */}
+        <View style={tw`bg-green-50 rounded-2xl shadow-md p-5 mb-6`}>
+          <View style={tw`flex-row items-center mb-4`}>
             <Image
-              source={{ uri: doctor.image }}
-              style={tw`w-24 h-24 rounded-full`}
+              source={{ uri: doctor.profile_picture || 'https://via.placeholder.com/150' }}
+              style={tw`w-24 h-24 rounded-full border-4 border-green-200 mr-4`}
             />
-            <View style={tw`ml-4 flex-1`}>
-              <Text style={tw`text-2xl font-bold text-gray-800`}>{doctor.name}</Text>
-              <Text style={tw`text-lg text-gray-600 mt-1`}>{doctor.specialty}</Text>              {doctor.rating && (
-                <View style={tw`flex-row items-center mt-1`}>
-                  <Star size={16} color="#FFD700" fill="#FFD700" />
-                  <Text style={tw`text-base text-gray-600 ml-1`}>{doctor.rating}</Text>
-                </View>
-              )}
-              <Text style={tw`text-base text-gray-600 mt-1`}>
-                {doctor.experience} Years overall experience
-              </Text>
-              <View style={tw`flex-row items-center mt-1`}>
-                <MapPin size={16} color="#202b6d" />
-                <Text style={tw`text-base text-gray-600 ml-1`}>{doctor.location}</Text>
+            <View style={tw`flex-1`}>
+              <Text style={tw`text-xl font-bold text-green-900`}>{doctor.user?.username}</Text>
+              <Text style={tw`text-base text-green-600 font-semibold mt-1`}>{doctor.specialization}</Text>
+              <View style={tw`flex-row items-center mt-2`}>
+                <Briefcase size={16} color="#6b7280" />
+                <Text style={tw`text-sm text-green-600 ml-2`}>
+                  {doctor.experience_years} years experience
+                </Text>
               </View>
             </View>
           </View>
 
-          {/* Recommendation Stats */}
-          <View style={tw`flex-row items-center mt-4`}>
+          <View style={tw`flex-row justify-between bg-green-50 rounded-xl px-4 py-3`}>
             <View style={tw`flex-row items-center`}>
-              <ThumbsUp size={20} color="#22c55e" />
-              <Text style={tw`ml-2 text-lg font-bold text-gray-800`}>
-                {doctor.recommendation}
+              <IndianRupee size={16} color="#059669" />
+              <Text style={tw`text-sm font-semibold text-green-700 ml-2`}>
+                ₹{doctor.consultation_fee}
               </Text>
             </View>
-            <TouchableOpacity 
-              style={tw`flex-row items-center ml-6`}
-              onPress={() => navigation.navigate('PatientStories' as never)}
-            >
-              <MessageSquare size={20} color="#202b6d" />
-              <Text style={tw`ml-2 text-base underline text-[#202b6d]`}>
-                {doctor.patientStories} Patient Stories
+            <View style={tw`flex-row items-center`}>
+              <ShieldCheck size={16} color="#059669" />
+              <Text style={tw`text-sm font-semibold text-green-700 ml-2`}>
+                {doctor.license_number}
               </Text>
-            </TouchableOpacity>
+            </View>
           </View>
         </View>
 
-        {/* Clinic Visit Section */}
-        {doctor.clinics.map((clinic, index) => (
-          <View key={index} style={tw`bg-blue-50/50 p-4`}>
-            <View style={tw`bg-white rounded-xl p-4`}>              <View style={tw`flex-row items-center mb-2`}>
-                {doctor.type === 'inclinic' ? (
-                  <>
-                    <Home size={20} color="#202b6d" />
-                    <Text style={tw`text-lg font-bold text-[#202b6d] ml-2`}>Book Clinic Visit</Text>
-                  </>
-                ) : (
-                  <>
-                    <Video size={20} color="#202b6d" />
-                    <Text style={tw`text-lg font-bold text-[#202b6d] ml-2`}>Book Video Consultation</Text>
-                  </>
-                )}
-              </View>
+ {selectedMode === 'offline' && Array.isArray(doctor?.user?.address) && doctor.user.address.length > 0 && (
+  <View style={tw`mt-4 bg-green-50 p-4 rounded-xl`}>
+    <Text style={tw`text-green-800 font-semibold mb-1`}>Clinic Address:</Text>
+    <Text style={tw`text-green-700`}>
+      {[
+        doctor.user.address[0]?.house_no,
+        doctor.user.address[0]?.street,
+        doctor.user.address[0]?.landmark,
+        doctor.user.address[0]?.city,
+        doctor.user.address[0]?.state,
+        doctor.user.address[0]?.pincode,
+      ]
+        .filter((item) => item && item.trim() !== '')
+        .join(', ')}
+    </Text>
+  </View>
+)}
 
-              <View style={tw`mt-2`}>
-                <Text style={tw`text-base text-gray-800`}>{clinic.name}</Text>
-                <View style={tw`flex-row items-center mt-1`}>
-                  <Text style={tw`text-base text-gray-500`}>KPHB</Text>
-                  <TouchableOpacity>
-                    <Text style={tw`text-[#25a9e1] ml-2`}>+2 more clinics</Text>
-                  </TouchableOpacity>
-                </View>
-                <Text style={tw`text-xl font-bold text-[#202b6d] mt-2`}>₹{clinic.fee} fee</Text>
-              </View>
 
-              {/* Availability Section */}
-              <View style={tw`mt-4`}>
-                <View style={tw`flex-row justify-between mb-3`}>
-                  <View style={tw`items-center px-4 py-2`}>
-                    <Text style={tw`text-gray-500`}>Today</Text>
-                    <Text style={tw`text-base font-medium text-red-500`}>No slots</Text>
-                  </View>
-                  <View style={tw`items-center px-4 py-2 border-b-2 border-[#25a9e1]`}>
-                    <Text style={tw`text-[#25a9e1] font-medium`}>Tomorrow</Text>
-                    <Text style={tw`text-base font-medium text-[#25a9e1]`}>22 slots</Text>
-                  </View>
-                  <View style={tw`items-center px-4 py-2`}>
-                    <Text style={tw`text-gray-500`}>20 Jun - 21 Jun</Text>
-                    <Text style={tw`text-base font-medium text-red-500`}>No slots</Text>
-                  </View>
-                </View>
 
-                {/* Time Slots */}
-                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                  <View style={tw`flex-row mt-2`}>
-                    {tomorrowSlots.map((time, idx) => (
-                      <TimeSlot key={idx} time={time} onPress={() => handleBooking(time)} />
-                    ))}
-                  </View>
-                </ScrollView>                <TouchableOpacity 
-                  style={tw`mt-3`}
-                  onPress={() => navigation.navigate('DoctorAvailability', {
-                    doctor: {
-                      name: doctor.name,
-                      specialty: doctor.specialty,
-                      clinic: doctor.clinics[0].name,
-                      image: doctor.image,
-                      fee: doctor.clinics[0].fee,
-                      experience: doctor.experience,
-                      rating: doctor.rating,
-                    },
-                    consultationType: doctor.type,
-                  })}
-                >
-                  <Text style={tw`text-[#25a9e1] text-center font-medium`}>View all slots</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
+        {/* Mode Selector */}
+        {!initialMode && (
+          <View style={tw`flex-row bg-green-100 rounded-xl p-2 mb-4`}>
+            {['online', 'offline'].map((mode) => (
+              <TouchableOpacity
+                key={mode}
+                style={tw`flex-1 py-2 rounded-lg ${selectedMode === mode ? 'bg-green-600' : 'bg-transparent'}`}
+                onPress={() => {
+                  setSelectedMode(mode);
+                  setSelectedConsultType(null);
+                  setSelectedSlot('');
+                }}
+              >
+                <Text style={tw`text-center font-semibold ${selectedMode === mode ? 'text-white' : 'text-green-800'}`}>
+                  {mode === 'online' ? 'Online' : 'Offline'}
+                </Text>
+              </TouchableOpacity>
+            ))}
           </View>
-        ))}
+        )}
 
-        {/* Patient Stories Section */}
-        <View style={tw`p-4`}>
-          <Text style={tw`text-2xl font-bold text-gray-800 mb-2`}>Patient Stories</Text>
-          <Text style={tw`text-gray-600 mb-4`}>
-            These stories represent patient opinions and experiences. They do not reflect the doctor's medical capabilities.
-          </Text>
-          
-          <View style={tw`bg-green-50 p-4 rounded-xl mb-4`}>
-            <View style={tw`flex-row items-center`}>
-              <ThumbsUp size={24} color="#22c55e" />
-              <Text style={tw`text-2xl font-bold ml-2 text-gray-800`}>{doctor.recommendation}</Text>
-            </View>
-            <Text style={tw`text-gray-600 mt-2`}>
-              Out of all patients who were surveyed, {doctor.recommendation} of them recommend visiting this doctor
+        {/* Tab Selector */}
+        <View style={tw`flex-row bg-green-50 rounded-2xl shadow-md p-2 mb-6`}>
+          {['Availability', 'Reviews', 'About'].map((tab) => (
+            <TouchableOpacity
+              key={tab}
+              style={tw`flex-1 py-3 rounded-xl ${selectedTab === tab ? 'bg-green-600' : 'bg-transparent'}`}
+              onPress={() => setSelectedTab(tab as typeof selectedTab)}
+            >
+              <Text style={tw`text-center text-base font-semibold ${selectedTab === tab ? 'text-white' : 'text-green-700'}`}>
+                {tab}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        {/* Availability Tab */}
+        {selectedTab === 'Availability' && (
+          <View style={tw`bg-green-50 rounded-2xl shadow-md p-5 mb-6`}>
+            <Text style={tw`text-lg font-bold text-green-700 mb-3`}>Available Dates</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={tw`mb-4`}>
+              {Object.keys(slotsByDate).map((date) => (
+                <TouchableOpacity
+                  key={date}
+                  style={tw`px-5 py-3 mr-3 rounded-xl ${selectedDate === date ? 'bg-green-600' : 'bg-green-100'}`}
+                  onPress={() => {
+                    setSelectedDate(date);
+                    setSelectedSlot('');
+                    setSelectedConsultType(null);
+                  }}
+                >
+                  <Text style={tw`text-base font-semibold ${selectedDate === date ? 'text-white' : 'text-green-800'}`}>
+                    {new Date(date).toLocaleDateString('en-US', {
+                      weekday: 'short',
+                      month: 'short',
+                      day: 'numeric',
+                    })}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+
+            <Text style={tw`text-lg font-bold text-green-700 mb-3`}>Available Slots</Text>
+            {loadingSlots ? (
+              <ActivityIndicator size="large" color="#16a34a" />
+            ) : slotsByDate[selectedDate]?.length > 0 ? (
+              <FlatList
+                data={slotsByDate[selectedDate]}
+                keyExtractor={(item, index) => `${item}_${index}`}
+                numColumns={3}
+                scrollEnabled={false}
+                columnWrapperStyle={tw`justify-between mb-2`}
+                renderItem={({ item }) => {
+                  const isSelected = selectedSlot === item;
+                  return (
+                    <TouchableOpacity
+                      onPress={() => {
+                        setSelectedSlot(item);
+                        setSelectedConsultType(null);
+                      }}
+                      style={tw`px-3 py-2 rounded-xl flex-1 mx-1 border ${
+                        isSelected ? 'bg-green-600 border-green-700' : 'bg-green-100 border-green-300'
+                      }`}
+                    >
+                      <Text style={tw`${isSelected ? 'text-white' : 'text-green-800'} font-semibold text-xs text-center`}>
+                        {item}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                }}
+              />
+            ) : (
+              <Text style={tw`text-green-400 text-base`}>No slots available for this date.</Text>
+            )}
+
+            {/* Online consult type selection */}
+            {selectedSlot && selectedMode === 'online' && (
+              <View style={tw`flex-row justify-center mt-4`}>
+                {['online_video', 'online_audio'].map((type) => (
+                  <TouchableOpacity
+                    key={type}
+                    onPress={() => setSelectedConsultType(type as any)}
+                    style={tw`px-4 py-2 mx-2 rounded-xl border ${
+                      selectedConsultType === type ? 'bg-green-600 border-green-700' : 'bg-green-100 border-green-300'
+                    }`}
+                  >
+                    <Text
+                      style={tw`${selectedConsultType === type ? 'text-white' : 'text-green-800'} font-semibold text-sm`}
+                    >
+                      {type === 'online_video' ? 'Video Call' : 'Audio Call'}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
+
+            {selectedSlot && (selectedMode === 'offline' || selectedConsultType) && (
+              <TouchableOpacity
+                style={tw`bg-green-600 py-4 px-8 rounded-xl items-center shadow-md mt-6`}
+                onPress={handleBookAppointment}
+              >
+                <Text style={tw`text-white text-lg font-bold`}>Book Appointment</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
+
+        {/* Reviews */}
+        {selectedTab === 'Reviews' && (
+          <View style={tw`bg-green-50 rounded-2xl shadow-md p-5 mb-6`}>
+            <Text style={tw`text-lg font-bold text-green-700 mb-3`}>Patient Reviews</Text>
+            {reviews.map((review, index) => (
+              <View key={index} style={tw`border-b border-green-100 py-4`}>
+                <Text style={tw`text-base font-bold text-green-900`}>{review.name}</Text>
+                <Text style={tw`text-yellow-500 text-lg my-1`}>{'★'.repeat(review.rating)}</Text>
+                <Text style={tw`text-green-600`}>{review.comment}</Text>
+              </View>
+            ))}
+          </View>
+        )}
+
+        {/* About */}
+        {selectedTab === 'About' && (
+          <View style={tw`bg-green-50 rounded-2xl shadow-md p-5 mb-6`}>
+            <Text style={tw`text-lg font-bold text-green-700 mb-3`}>About {doctor.name}</Text>
+            <Text style={tw`text-green-600 text-base`}>
+              Dr. {doctor.name} is a skilled {doctor.specialization} with over {doctor.experience_years} years of experience.
+              He/she is known for providing compassionate and personalized care.
             </Text>
           </View>
-        </View>
-      </ScrollView>      {/* Bottom Buttons */}
-      <View style={tw`flex-row p-4 border-t border-gray-200 bg-white`}>
-        <TouchableOpacity
-          style={tw`flex-1 border border-[#25a9e1] py-3 rounded-xl mr-2`}
-          onPress={() => Linking.openURL('tel:+1234567890')}
-        >
-          <Text style={tw`text-[#25a9e1] text-center font-bold`}>Call Clinic</Text>
-        </TouchableOpacity>        <TouchableOpacity
-          style={tw`flex-1 bg-[#25a9e1] py-3 rounded-xl ml-2`}
-          onPress={() => {
-            // Navigate to DoctorAvailability with all required data
-            navigation.navigate('DoctorAvailability', {
-              doctor: {
-                name: doctor.name,
-                specialty: doctor.specialty,
-                clinic: doctor.clinics[0].name,
-                image: doctor.image,
-                fee: doctor.clinics[0].fee,
-                experience: doctor.experience,
-                rating: doctor.rating,
-                location: doctor.location, // Include location for clinic info
-                recommendation: doctor.recommendation, // Include rating info
-                patientStories: doctor.patientStories // Include stories count
-              },
-              consultationType: doctor.type
-            });
-          }}
-        >
-          <Text style={tw`text-white text-center font-bold`}>
-            {doctor.type === 'inclinic' ? 'Book Clinic Visit' : 'Book Video Consult'}
-          </Text>
-        </TouchableOpacity>
-      </View>
+        )}
+      </ScrollView>
     </View>
   );
 };

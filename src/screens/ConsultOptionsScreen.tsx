@@ -5,13 +5,11 @@ import { Home, Video } from 'lucide-react-native';
 import tw from 'twrnc';
 import PageLayout from '../components/PageLayout';
 
-// Define your stack param list for navigation typing
 export type RootStackParamList = {
   ConsultOptionsScreen: { specialty?: string };
   Doctors: { specialty: string; mode: string };
 };
 
-// Constants
 const FALLBACK_SPECIALTY = 'General Consultation';
 const CARD_HEIGHT = 180;
 
@@ -29,55 +27,65 @@ const ConsultOptionsScreen = () => {
   };
 
   return (
-    <PageLayout title="Consultation Options" headerBackgroundColor="#2E3192">
+    <PageLayout title="Consultation Options" headerBackgroundColor="#219F4D">
       <View style={tw`flex-1 px-4 py-8 justify-center`}>
-        {/* Specialty Title */}
-        <Text style={tw`text-2xl font-bold text-[#202b6d] mb-7 text-center`}>{specialty}</Text>
-        {/* In-clinic Option */}
+        <Text style={tw`text-2xl font-bold text-green-900 mb-7 text-center`}>
+          {specialty}
+        </Text>
+
+        {/* In-Clinic */}
         <TouchableOpacity
           style={[
-            tw`bg-[#E0F2FE] border border-[#BAE6FD] rounded-[28px] flex-row items-center px-8 mb-7`,
-            { height: CARD_HEIGHT, shadowColor: '#38BDF8', shadowOpacity: 0.13, shadowRadius: 8, shadowOffset: { width: 0, height: 4 }, elevation: 4 }
+            tw`bg-green-100 border border-green-300 rounded-[28px] flex-row items-center px-8 mb-7`,
+            {
+              height: CARD_HEIGHT,
+              shadowColor: '#22C55E',
+              shadowOpacity: 0.15,
+              shadowRadius: 8,
+              shadowOffset: { width: 0, height: 4 },
+              elevation: 5,
+            },
           ]}
           onPress={() => handleOptionPress('Clinic')}
-          activeOpacity={0.8}
-          accessible
-          accessibilityLabel="Book a clinic visit"
-          accessibilityRole="button"
+          activeOpacity={0.9}
         >
-          <View style={tw`bg-white rounded-full w-16 h-16 items-center justify-center mr-7 shadow-sm`}>
-            <Home size={32} color="#0EA5E9" strokeWidth={2} />
+          <View style={tw`bg-green-200 rounded-full w-16 h-16 items-center justify-center mr-7`}>
+            <Home size={30} color="#15803D" strokeWidth={2} />
           </View>
           <View style={tw`flex-1`}>
-            <Text style={tw`text-[22px] font-bold text-gray-900 mb-1`}>
+            <Text style={tw`text-[22px] font-bold text-green-900 mb-1`}>
               Book In-clinic Appointment
             </Text>
-            <Text style={tw`text-base text-gray-500`}>
-              Book an appointment with a top {specialty.toLowerCase()} in Hyderabad
+            <Text style={tw`text-base text-green-700`}>
+              Book a {specialty.toLowerCase()} in person in Hyderabad
             </Text>
           </View>
         </TouchableOpacity>
 
-        {/* Video Consultation Option */}
+        {/* Video Consultation */}
         <TouchableOpacity
           style={[
-            tw`bg-[#F3E8FF] border border-[#D8B4FE] rounded-[28px] flex-row items-center px-8`,
-            { height: CARD_HEIGHT, shadowColor: '#A78BFA', shadowOpacity: 0.13, shadowRadius: 8, shadowOffset: { width: 0, height: 4 }, elevation: 4 }
+            tw`bg-green-100 border border-green-300 rounded-[28px] flex-row items-center px-8`,
+            {
+              height: CARD_HEIGHT,
+              shadowColor: '#22C55E',
+              shadowOpacity: 0.15,
+              shadowRadius: 8,
+              shadowOffset: { width: 0, height: 4 },
+              elevation: 5,
+            },
           ]}
           onPress={() => handleOptionPress('Video')}
-          activeOpacity={0.8}
-          accessible
-          accessibilityLabel="Book a video consultation"
-          accessibilityRole="button"
+          activeOpacity={0.9}
         >
-          <View style={tw`bg-white rounded-full w-16 h-16 items-center justify-center mr-7 shadow-sm`}>
-            <Video size={32} color="#8B5CF6" strokeWidth={2} />
+          <View style={tw`bg-green-200 rounded-full w-16 h-16 items-center justify-center mr-7`}>
+            <Video size={30} color="#15803D" strokeWidth={2} />
           </View>
           <View style={tw`flex-1`}>
-            <Text style={tw`text-[22px] font-bold text-gray-900 mb-1`}>
+            <Text style={tw`text-[22px] font-bold text-green-900 mb-1`}>
               Book Video Consultation
             </Text>
-            <Text style={tw`text-base text-gray-500`}>
+            <Text style={tw`text-base text-green-700`}>
               Consult with a {specialty.toLowerCase()} online now!
             </Text>
           </View>

@@ -34,27 +34,27 @@ const patients = [
 ];
 
 const DoctorPatientsScreen = () => (
-  <View style={tw`flex-1 bg-[#f8fafc]`}>
+  <View style={tw`flex-1 bg-green-50`}>
     <DoctorHeader title="Patients" showSettings showNotifications />
     <ScrollView contentContainerStyle={tw`p-5 pb-10`}>
-      <Text style={tw`text-2xl font-bold text-[#202b6d] mb-4 text-center`}>Your Patients</Text>
-      <Text style={tw`text-base text-gray-600 mb-6 text-center`}>View and manage your patient list and recent visits.</Text>
+      <Text style={tw`text-2xl font-bold text-green-700 mb-4 text-center`}>Your Patients</Text>
+      <Text style={tw`text-base text-green-600 mb-6 text-center`}>View and manage your patient list and recent visits.</Text>
       {patients.map((patient) => (
         <View key={patient.id} style={tw`bg-white rounded-2xl p-5 mb-5 shadow-sm flex-row items-center`}>
           <Image source={{ uri: patient.avatar }} style={tw`w-16 h-16 rounded-full mr-4`} />
           <View style={tw`flex-1`}>
-            <Text style={tw`text-[#202b6d] font-semibold text-lg`}>{patient.name}</Text>
-            <Text style={tw`text-gray-500 text-sm mt-1`}>Age: {patient.age} | {patient.gender}</Text>
-            <Text style={tw`text-gray-400 text-xs mt-1`}>Last Visit: {patient.lastVisit}</Text>
-            <Text style={tw`text-gray-500 text-xs mt-1`}>Notes: {patient.notes}</Text>
+            <Text style={tw`text-green-700 font-semibold text-lg`}>{patient.name}</Text>
+            <Text style={tw`text-green-600 text-sm mt-1`}>Age: {patient.age} | {patient.gender}</Text>
+            <Text style={tw`text-green-400 text-xs mt-1`}>Last Visit: {patient.lastVisit}</Text>
+            <Text style={tw`text-green-600 text-xs mt-1`}>Notes: {patient.notes}</Text>
           </View>
-          <TouchableOpacity style={tw`ml-2 bg-[#1d9be3] rounded-full px-4 py-2`} activeOpacity={0.7}>
+          <TouchableOpacity style={tw`ml-2 bg-emerald-500 rounded-full px-4 py-2`} activeOpacity={0.7}>
             <Text style={tw`text-white font-bold text-xs`}>View</Text>
           </TouchableOpacity>
         </View>
       ))}
       <View style={tw`mt-8 items-center`}>
-        <Text style={tw`text-gray-400 text-sm`}>More patient features coming soon.</Text>
+        <Text style={tw`text-green-400 text-sm`}>More patient features coming soon.</Text>
       </View>
     </ScrollView>
   </View>

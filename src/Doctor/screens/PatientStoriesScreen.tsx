@@ -3,6 +3,7 @@ import { View, StyleSheet, ScrollView, Image } from 'react-native';
 import { Text } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import DoctorHeader from '../components/DoctorHeader';
+import tw from 'twrnc';
 
 const PatientStoriesScreen = () => {
   const stories = [
@@ -32,49 +33,42 @@ const PatientStoriesScreen = () => {
         key={index}
         name={index < rating ? 'star' : 'star-outline'}
         size={16}
-        color="#1d9be3"
+        color="#16a34a"
       />
     ));
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#fff' }}>
+    <View style={tw`flex-1 bg-green-50`}>
       <DoctorHeader title="Patient Stories" showSettings showNotifications />
-      <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Patient Stories</Text>
-          <View style={styles.statsContainer}>
-            <View style={styles.statItem}>
-              <Text style={styles.statNumber}>4.8</Text>
-              <Text style={styles.statLabel}>Average Rating</Text>
+      <ScrollView contentContainerStyle={tw`pb-6`}> 
+        <View style={tw`p-5 bg-green-100 rounded-b-2xl mb-4`}> 
+          <Text style={tw`text-2xl font-bold text-green-700 mb-2`}>Patient Stories</Text>
+          <View style={tw`flex-row justify-between mt-2`}> 
+            <View style={tw`items-center`}> 
+              <Text style={tw`text-2xl font-bold text-green-700`}>4.8</Text>
+              <Text style={tw`text-green-600`}>Average Rating</Text>
             </View>
-            <View style={styles.statItem}>
-              <Text style={styles.statNumber}>156</Text>
-              <Text style={styles.statLabel}>Total Reviews</Text>
+            <View style={tw`items-center`}> 
+              <Text style={tw`text-2xl font-bold text-green-700`}>156</Text>
+              <Text style={tw`text-green-600`}>Total Reviews</Text>
             </View>
           </View>
         </View>
 
-        <View style={styles.storiesContainer}>
+        <View style={tw`px-4`}> 
           {stories.map((story) => (
-            <View key={story.id} style={styles.storyCard}>
-              <View style={styles.storyHeader}>
-                <Image
-                  source={{ uri: story.image }}
-                  style={styles.patientImage}
-                />
-                <View style={styles.patientInfo}>
-                  <Text style={styles.patientName}>{story.patientName}</Text>
-                  <Text style={styles.condition}>{story.condition}</Text>
+            <View key={story.id} style={tw`bg-white rounded-2xl p-4 mb-4 shadow-sm`}> 
+              <View style={tw`flex-row items-center mb-2`}> 
+                <Image source={{ uri: story.image }} style={tw`w-12 h-12 rounded-full mr-3`} />
+                <View style={tw`flex-1`}> 
+                  <Text style={tw`text-green-700 font-bold`}>{story.patientName}</Text>
+                  <Text style={tw`text-green-400 text-xs`}>{story.condition}</Text>
                 </View>
-                <Text style={styles.date}>{story.date}</Text>
+                <Text style={tw`text-green-400 text-xs`}>{story.date}</Text>
               </View>
-              
-              <View style={styles.ratingContainer}>
-                {renderStars(story.rating)}
-              </View>
-              
-              <Text style={styles.review}>{story.review}</Text>
+              <View style={tw`flex-row items-center mb-2`}>{renderStars(story.rating)}</View>
+              <Text style={tw`text-green-600`}>{story.review}</Text>
             </View>
           ))}
         </View>

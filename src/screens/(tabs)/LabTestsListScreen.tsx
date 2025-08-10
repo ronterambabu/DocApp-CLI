@@ -157,7 +157,7 @@ const LabTestsListScreen = () => {
     <TouchableOpacity onPress={() => setCartVisible(true)} style={tw`relative`} accessibilityLabel="View cart">
       <ShoppingCart size={26} color="#fff" />
       {cart.length > 0 && (
-        <View style={tw`absolute -top-1 -right-1 bg-red-500 rounded-full w-5 h-5 items-center justify-center`}>
+        <View style={tw`absolute -top-1 -right-1 bg-green-600 rounded-full w-5 h-5 items-center justify-center`}>
           <Text style={tw`text-xs text-white font-bold`}>{cart.length}</Text>
         </View>
       )}
@@ -197,7 +197,7 @@ const LabTestsListScreen = () => {
       {features.map((feature, index) => (
         <View key={index} style={tw`flex-row items-center mb-1`}>
           <View style={tw`w-1.5 h-1.5 rounded-full bg-[#1d9be3] mr-2`} />
-          <Text style={tw`text-gray-600 text-sm`}>{feature}</Text>
+          <Text style={tw`text-green-700 text-sm`}>{feature}</Text>
         </View>
       ))}
       <TouchableOpacity 
@@ -217,7 +217,7 @@ const LabTestsListScreen = () => {
       }`}
     >
       <Text style={tw`${
-        isSelected ? 'text-white' : 'text-[#202b6d]'
+        isSelected ? 'text-white' : 'text-green-800'
       } font-medium`}>
         {label}
       </Text>
@@ -228,25 +228,25 @@ const LabTestsListScreen = () => {
   const TestCard = ({ test, inCart, onAddToCart, onRemoveFromCart, onPress }: TestCardProps) => (
     <TouchableOpacity
       onPress={onPress}
-      style={tw`bg-white rounded-2xl shadow-sm mb-4 overflow-hidden`}
+      style={tw`bg-green-50 rounded-2xl shadow-sm mb-4 overflow-hidden`}
     >
       <View style={tw`p-4`}>
         <Text style={tw`text-[#202b6d] text-lg font-bold mb-1`}>{test.name}</Text>
-        <Text style={tw`text-gray-600 text-sm mb-3`}>{test.description}</Text>
+        <Text style={tw`text-green-700 text-sm mb-3`}>{test.description}</Text>
         
         <View style={tw`flex-row items-center justify-between`}>
           <View style={tw`flex-row items-baseline`}>
             <Text style={tw`text-[#1d9be3] text-lg font-bold`}>{test.price}</Text>
-            <Text style={tw`text-gray-400 text-xs ml-1`}>onwards</Text>
+            <Text style={tw`text-green-400 text-xs ml-1`}>onwards</Text>
           </View>
           <TouchableOpacity
             onPress={() => inCart ? onRemoveFromCart(test.id) : onAddToCart(test)}
             style={tw`${
-              inCart ? 'bg-red-50' : 'bg-[#202b6d]'
+              inCart ? 'bg-green-100' : 'bg-green-600'
             } px-4 py-2 rounded-lg`}
           >
             <Text style={tw`${
-              inCart ? 'text-red-600' : 'text-white'
+              inCart ? 'text-green-700' : 'text-white'
             } font-medium`}>
               {inCart ? 'Remove' : 'Add'}
             </Text>
@@ -342,7 +342,7 @@ const LabTestsListScreen = () => {
           </View>
           <Text style={tw`text-[#202b6d] font-bold`}>100% Safe & Hygienic</Text>
         </View>
-        <Text style={tw`text-gray-600 text-sm`}>
+        <Text style={tw`text-green-700 text-sm`}>
           All safety measures are followed while collecting samples
         </Text>
       </View>
@@ -358,7 +358,7 @@ const LabTestsListScreen = () => {
       <Text style={tw`text-lg font-semibold text-[#202b6d] mb-1 text-center`}>
         No tests found
       </Text>
-      <Text style={tw`text-gray-500 text-center mb-4`}>        {selectedCategory ? `No tests available in "${selectedCategory}"` : ''}
+      <Text style={tw`text-green-400 text-center mb-4`}>        {selectedCategory ? `No tests available in "${selectedCategory}"` : ''}
         {search ? `No results matching "${search}"` : ''}
       </Text>
       {(selectedCategory || search) && (
@@ -377,9 +377,10 @@ const LabTestsListScreen = () => {
 
   // Main render
   return (
-    <View style={tw`flex-1 bg-gray-50`}>      <PageHeader
+    <View style={tw`flex-1 bg-green-50`}>
+      <PageHeader
         title="Lab Tests"
-        backgroundColor="#202b6d"
+        backgroundColor="#16a34a"
         textColor="#fff"
         onBackPress={() => navigation.goBack()}
         rightComponent={CartIcon}
@@ -387,11 +388,11 @@ const LabTestsListScreen = () => {
 
       {/* Search Bar */}
       <View style={tw`mx-4 mt-4 mb-2`}>
-        <View style={tw`flex-row items-center bg-white rounded-3xl px-4 py-2.5 shadow-sm elevation-3`}>
+        <View style={tw`flex-row items-center bg-green-50 rounded-3xl px-4 py-2.5 shadow-sm elevation-3`}>
           <Search size={20} color="#999" style={tw`mr-2`} />
           <TextInput
             placeholder="Search for tests, packages..."
-            style={tw`flex-1 text-base text-gray-800`}
+            style={tw`flex-1 text-base text-green-800`}
             value={search}
             onChangeText={setSearch}
             onFocus={handleSearchFocus}
@@ -429,12 +430,12 @@ const LabTestsListScreen = () => {
 
       {/* Cart Modal */}
       <Modal visible={cartVisible} animationType="slide" transparent onRequestClose={() => setCartVisible(false)}>
-        <View style={tw`flex-1 bg-black/40 justify-end`}>
-          <View style={tw`bg-white rounded-t-3xl pt-6 pb-8`}>
+        <View style={tw`flex-1 bg-green-900/10 justify-end`}>
+          <View style={tw`bg-green-50 rounded-t-3xl pt-6 pb-8`}>
             <View style={tw`px-6 flex-row justify-between items-center mb-4`}>
               <View>
                 <Text style={tw`text-2xl font-bold text-[#202b6d]`}>Your Cart</Text>
-                <Text style={tw`text-sm text-gray-500`}>{cart.length} tests selected</Text>
+                <Text style={tw`text-sm text-green-600`}>{cart.length} tests selected</Text>
               </View>
               <TouchableOpacity 
                 onPress={() => setCartVisible(false)}
@@ -450,7 +451,7 @@ const LabTestsListScreen = () => {
                   <ShoppingCart size={32} color="#202b6d" />
                 </View>
                 <Text style={tw`text-lg font-semibold text-[#202b6d] mb-1`}>Your cart is empty</Text>
-                <Text style={tw`text-gray-500 text-center mb-4`}>
+                <Text style={tw`text-green-400 text-center mb-4`}>
                   Add tests to your cart and they will appear here
                 </Text>
                 <TouchableOpacity 
@@ -468,7 +469,7 @@ const LabTestsListScreen = () => {
                       <View style={tw`flex-row justify-between items-start`}>
                         <View style={tw`flex-1 mr-3`}>
                           <Text style={tw`font-bold text-[#202b6d] mb-1`}>{test.name}</Text>
-                          <Text style={tw`text-sm text-gray-600`}>{test.description}</Text>
+                          <Text style={tw`text-sm text-green-700`}>{test.description}</Text>
                         </View>
                         <TouchableOpacity 
                           onPress={() => removeFromCart(test.id)}
@@ -481,9 +482,9 @@ const LabTestsListScreen = () => {
                     </View>
                   ))}
                 </ScrollView>
-                <View style={tw`px-6 pt-4 border-t border-gray-100`}>
+                <View style={tw`px-6 pt-4 border-t border-green-100`}>
                   <View style={tw`flex-row justify-between items-center mb-4`}>
-                    <Text style={tw`text-gray-600`}>Total Amount</Text>
+                    <Text style={tw`text-green-700`}>Total Amount</Text>
                     <Text style={tw`text-xl font-bold text-[#202b6d]`}>
                       ₹{cart.reduce((total, item) => total + parseInt(item.price.replace('₹', '')), 0)}
                     </Text>

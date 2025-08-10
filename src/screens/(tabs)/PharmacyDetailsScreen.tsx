@@ -43,7 +43,7 @@ const PharmacyDetailsScreen = () => {
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Pharmacy logo at the very top with subtle gradient bg */}
         <View style={tw`items-center mb-2`}>
-          <View style={tw`w-32 h-32 rounded-full bg-gradient-to-br from-[#202b6d] to-[#4f5bd5] items-center justify-center shadow-2xl`}>
+          <View style={tw`w-32 h-32 rounded-full bg-green-600 items-center justify-center shadow-2xl`}>
             <Image source={require('../Images/medpluse1.jpg')} style={tw`w-28 h-28 rounded-full border-4 border-white`} />
           </View>
         </View>
@@ -62,7 +62,7 @@ const PharmacyDetailsScreen = () => {
         <View style={tw`bg-white/90 mx-4 rounded-3xl shadow-2xl p-8 mb-12 border border-gray-100`}>
           <View style={tw`flex-row items-center mb-6`}>
             <Clock size={24} color="#202b6d" />
-            <Text style={tw`text-blue-700 font-semibold ml-4 text-lg`}>Timings: {pharmacy.timings}</Text>
+            <Text style={tw`text-green-700 font-semibold ml-4 text-lg`}>Timings: {pharmacy.timings}</Text>
           </View>
           <Text style={tw`text-base text-gray-700 mb-7 leading-7`}>{pharmacy.description}</Text>
           <View style={tw`flex-row items-center mb-4`}>

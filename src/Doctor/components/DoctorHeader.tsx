@@ -24,7 +24,7 @@ const DoctorHeader: React.FC<DoctorHeaderProps> = ({
   const normalizedTitle = title?.toString().trim().toLowerCase();
   const showBack = normalizedTitle !== 'dashboard' && normalizedTitle !== 'home';
   return (
-    <View style={tw`bg-[#202b6d] px-4 pt-12 pb-3`}> {/* Increased pt-12 for more space at the top */}
+    <View style={tw`bg-[#059669] px-4 pt-12 pb-3`}> {/* Increased pt-12 for more space at the top */}
       <View style={tw`flex-row items-center justify-between`}>
         <View style={tw`flex-row items-center`}>
           {showBack && (

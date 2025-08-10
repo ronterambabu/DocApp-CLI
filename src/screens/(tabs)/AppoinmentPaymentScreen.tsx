@@ -36,15 +36,12 @@ const PaymentScreen = () => {
   const navigation = useNavigation<any>();
   const route = useRoute<RouteProp<RootStackParamList, 'AppoinmentPaymentScreen'>>();
   const { doctor, slot, date, consultationType, amount, bookingId } = route.params;
-  const [language, setLanguage] = useState('English');
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // For UX, we'll simulate a quick payment process
   const handlePayment = () => {
     if (isProcessing) return;
     setIsProcessing(true);
 
-    // Simulate payment processing
     setTimeout(() => {
       setIsProcessing(false);
       navigation.navigate('AppointmentSuccess', {
@@ -52,12 +49,10 @@ const PaymentScreen = () => {
         slot,
         date,
         consultationType,
-        appointmentId: bookingId
+        appointmentId: bookingId,
       });
     }, 1500);
   };
-
-  const languages = ['English', 'हिंदी', 'ಕನ್ನಡ', 'తెలుగు'];
 
   return (
     <SafeAreaView style={tw`flex-1 bg-white`}>
@@ -72,32 +67,59 @@ const PaymentScreen = () => {
 
         {/* Appointment Summary */}
         <View style={tw`bg-white rounded-lg p-4 shadow-sm mb-4`}>
-          <Text style={tw`text-lg font-bold text-gray-900 mb-3`}>
-            {consultationType === 'video' ? 'Video Consultation' : 'In-Clinic Visit'}
-          </Text>
-          
+        
+
           {/* Doctor Info */}
           <View style={tw`flex-row items-center mb-4`}>
             <Image
-              source={{ uri: doctor.image }}
+              source={{ uri: doctor.profile_picture }}
               style={tw`w-16 h-16 rounded-full mr-3`}
             />
             <View style={tw`flex-1`}>
-              <Text style={tw`font-bold text-gray-900`}>{doctor.name}</Text>
-              <Text style={tw`text-gray-600`}>{doctor.specialty}</Text>
-              <Text style={tw`text-gray-600`}>{doctor.clinic}</Text>
+              <Text style={tw`font-bold text-gray-900`}>{doctor.user.username}</Text>
+              {doctor.specialization && <Text style={tw`text-gray-600`}>{doctor.specialization}</Text>}
+              <Text style={tw`text-green-700`}>
+                {[
+                  doctor.user.address[0]?.house_no,
+                  doctor.user.address[0]?.street,
+                  doctor.user.address[0]?.landmark,
+                  doctor.user.address[0]?.city,
+                  doctor.user.address[0]?.state,
+                  doctor.user.address[0]?.pincode,
+                ]
+                  .filter((item) => item && item.trim() !== '')
+                  .join(', ')}
+              </Text>
+                  {doctor?.address && (
+                    <Text style={tw`text-gray-500 text-sm`}>{doctor.address}</Text>
+                  )}
+              {doctor.consultation_fee && (
+                <Text style={tw`text-green-700 mt-1`}>
+                  Fee: ₹{doctor.consultation_fee}
+                </Text>
+              )}
+              {doctor.experience_years !== undefined && (
+                <Text style={tw`text-gray-500 text-sm`}>{doctor.experience_years} years experience</Text>
+              )}
             </View>
           </View>
 
           {/* Appointment Time */}
-          <View style={tw`flex-row items-center mb-2`}>
-            <Calendar size={18} color="#4B5563" />
-            <Text style={tw`ml-2 text-gray-700`}>{date}</Text>
-          </View>
-          <View style={tw`flex-row items-center`}>
-            <Clock size={18} color="#4B5563" />
-            <Text style={tw`ml-2 text-gray-700`}>{slot}</Text>
-          </View>
+          {/* Appointment Time */}
+<View style={tw`flex-row items-center mb-2`}>
+  <Calendar size={18} color="#4B5563" />
+  <Text style={tw`ml-2 text-gray-700 font-medium`}>
+    {date || 'Not available'}
+  </Text>
+</View>
+<View style={tw`flex-row items-center`}>
+  <Clock size={18} color="#4B5563" />
+  <Text style={tw`ml-2 text-gray-700 font-medium`}>
+    {slot || 'Not available'}
+  </Text>
+</View>
+
+
         </View>
 
         {/* Booking ID */}
@@ -106,29 +128,15 @@ const PaymentScreen = () => {
           <Text style={tw`text-gray-900 font-medium`}>{bookingId}</Text>
         </View>
 
-        {/* Language Selection */}
-        <Text style={tw`mt-5 font-medium text-base mb-2`}>Choose your preferred language</Text>
-        <View style={tw`flex-row flex-wrap gap-2`}>
-          {languages.map((lang, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => setLanguage(lang)}
-              style={tw`px-4 py-2 rounded-full border ${
-                language === lang ? 'bg-blue-100 border-blue-500' : 'border-gray-300'
-              }`}
-            >
-              <Text style={tw`text-sm`}>{lang}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>        {/* Payment Details */}
+        {/* Payment Summary */}
         <View style={tw`mt-4 bg-white p-4 rounded-lg shadow-sm`}>
           <Text style={tw`text-lg font-bold text-gray-900 mb-4`}>Bill Details</Text>
-          
+
           <View style={tw`flex-row justify-between mb-3`}>
             <Text style={tw`text-gray-600`}>
               {consultationType === 'video' ? 'Video Consultation Fee' : 'Consultation Fee'}
             </Text>
-            <Text style={tw`text-gray-900 font-medium`}>₹{amount}</Text>
+            <Text style={tw`text-gray-900 font-medium`}>₹{doctor.consultation_fee}</Text>
           </View>
 
           <View style={tw`flex-row justify-between mb-3`}>
@@ -142,7 +150,7 @@ const PaymentScreen = () => {
           <View style={tw`mt-3 pt-3 border-t border-gray-200`}>
             <View style={tw`flex-row justify-between`}>
               <Text style={tw`text-gray-900 font-bold`}>Total Amount</Text>
-              <Text style={tw`text-gray-900 font-bold`}>₹{amount}</Text>
+              <Text style={tw`text-gray-900 font-bold`}>₹{doctor.consultation_fee}</Text>
             </View>
           </View>
         </View>
@@ -150,7 +158,7 @@ const PaymentScreen = () => {
         {/* Payment Methods */}
         <View style={tw`mt-6 bg-white p-4 rounded-lg shadow-sm`}>
           <Text style={tw`text-lg font-bold text-gray-900 mb-4`}>Payment Methods</Text>
-          
+
           {/* UPI */}
           <TouchableOpacity style={tw`flex-row items-center justify-between p-3 border border-gray-200 rounded-lg mb-3`}>
             <View style={tw`flex-row items-center`}>

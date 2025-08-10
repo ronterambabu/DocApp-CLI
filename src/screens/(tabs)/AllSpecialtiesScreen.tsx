@@ -65,34 +65,34 @@ const AllSpecialtiesScreen = () => {
   const renderItem = ({ item }: { item: typeof specialties[0] }) => (
     <TouchableOpacity
       style={[
-        tw`bg-white rounded-3xl py-4 px-2 items-center justify-center shadow-sm elevation-3`,
+        tw`bg-green-50 rounded-3xl py-4 px-2 items-center justify-center shadow-sm elevation-3`,
         { width: '31%', marginHorizontal: '1%', marginBottom: 12 }
       ]}
       activeOpacity={0.85}
       onPress={() => handleSpecialtyPress(item.name)}
     >
-      <View style={[tw`w-12 h-12 rounded-2xl mb-2`, { backgroundColor: '#becfe8', overflow: 'hidden' }]}>
+      <View style={[tw`w-12 h-12 rounded-2xl mb-2 bg-green-100`, { overflow: 'hidden' }]}> 
         <Image
           source={item.image}
           style={{ width: '100%', height: '100%' }}
           resizeMode="contain"
         />
       </View>
-      <Text style={[tw`text-[12px] font-medium text-center`, { color: '#202b6d' }]} numberOfLines={2}>
+      <Text style={tw`text-[12px] font-medium text-center text-green-800`} numberOfLines={2}> 
         {item.name}
       </Text>
     </TouchableOpacity>
   );
 
   return (
-    <View style={tw`flex-1 bg-blue-50`}>
-      <PageHeader title="All Specialties" backgroundColor="#202b6d" textColor="#fff" onBackPress={() => navigation.goBack()} />
+    <View style={tw`flex-1 bg-green-50`}>
+      <PageHeader title="All Specialties" backgroundColor="#16a34a" textColor="#fff" onBackPress={() => navigation.goBack()} />
       {/* Search Bar */}
-      <View style={tw`flex-row items-center bg-white rounded-3.5xl px-3 py-2.5 mb-5 shadow-sm elevation-3 mx-4 mt-4`}>
+      <View style={tw`flex-row items-center bg-green-50 rounded-3.5xl px-3 py-2.5 mb-5 shadow-sm elevation-3 mx-4 mt-4`}>
         <Search size={20} color="#999" style={tw`mr-2`} />
         <TextInput
           placeholder="Search specialties"
-          style={tw`text-base text-gray-800 flex-1`}
+          style={tw`text-base text-green-800 flex-1`}
           value={searchQuery}
           onChangeText={setSearchQuery}
           placeholderTextColor="#aaa"
@@ -107,7 +107,7 @@ const AllSpecialtiesScreen = () => {
         columnWrapperStyle={tw`justify-center`}
         style={tw`flex-1`}
         ListEmptyComponent={
-          <Text style={tw`text-center mt-12 text-base text-gray-500`}>
+          <Text style={tw`text-center mt-12 text-base text-green-400`}>
             No specialties found.
           </Text>
         }

@@ -134,15 +134,15 @@ export default function ProductListScreen() {
 
   const renderEmptyState = () => (
     <View style={tw`flex-1 justify-center items-center p-4`}>
-      <Text style={tw`text-xl font-semibold text-gray-800 mb-2`}>No Products Found</Text>
-      <Text style={tw`text-base text-gray-600 text-center`}>
+      <Text style={tw`text-xl font-semibold text-green-800 mb-2`}>No Products Found</Text>
+      <Text style={tw`text-base text-green-600 text-center`}>
         {searchQuery 
           ? `No products match "${searchQuery}"`
           : "No products available in this category"}
       </Text>
       {(searchQuery || priceFilter || category) && (
         <TouchableOpacity
-          style={tw`mt-4 py-2 px-4 bg-blue-50 rounded-lg`}
+          style={tw`mt-4 py-2 px-4 bg-green-50 rounded-lg`}
           onPress={() => {
             setSearchQuery('');
             setPriceFilter(null);
@@ -151,17 +151,17 @@ export default function ProductListScreen() {
             }
           }}
         >
-          <Text style={tw`text-blue-600 font-medium`}>Clear All Filters</Text>
+          <Text style={tw`text-green-600 font-medium`}>Clear All Filters</Text>
         </TouchableOpacity>
       )}
     </View>
   );
 
   return (
-    <SafeAreaView style={tw`flex-1 bg-white`}>
+    <SafeAreaView style={tw`flex-1 bg-green-50`}>
       <PageHeader 
         title={category ? `${category}` : "Pharmacy"}
-        backgroundColor="#202b6d"
+        backgroundColor="#16a34a"
         textColor="#fff"
         leftComponent={
           <TouchableOpacity onPress={() => navigation.goBack()} style={tw`p-2`}>
@@ -176,16 +176,16 @@ export default function ProductListScreen() {
       />
 
       {/* Search Bar */}
-      <View style={tw`px-4 pb-2 pt-1 bg-white shadow-sm`}>
+      <View style={tw`px-4 pb-2 pt-1 bg-green-50 shadow-sm`}>
         <View style={[
-          tw`flex-row items-center bg-gray-100 rounded-xl`,
-          isSearchFocused && tw`bg-white border-2 border-blue-500`
+          tw`flex-row items-center bg-green-100 rounded-xl`,
+          isSearchFocused && tw`bg-green-50 border-2 border-green-600`
         ]}>
           <View style={tw`px-3 py-2`}>
-            <Search size={20} color={isSearchFocused ? "#3B82F6" : "#6B7280"} />
+            <Search size={20} color={isSearchFocused ? "#16a34a" : "#6B7280"} />
           </View>
           <TextInput
-            style={tw`flex-1 py-2 pr-3 text-base text-gray-800`}
+            style={tw`flex-1 py-2 pr-3 text-base text-green-800`}
             placeholder="Search by name, brand, or description..."
             placeholderTextColor="#9CA3AF"
             value={searchQuery}
@@ -205,7 +205,7 @@ export default function ProductListScreen() {
 
         <View style={tw`flex-row items-center justify-between mt-2`}>
           <View style={tw`flex-row items-center`}>
-            <Text style={tw`text-sm text-gray-600`}>
+            <Text style={tw`text-sm text-green-700`}>
               {getFilteredAndSortedProducts.length} results
             </Text>
             {(searchQuery || priceFilter || category) && (
@@ -219,21 +219,21 @@ export default function ProductListScreen() {
                   }
                 }}
               >
-                <Text style={tw`text-sm text-blue-600`}>Clear All</Text>
+                <Text style={tw`text-sm text-green-600`}>Clear All</Text>
               </TouchableOpacity>
             )}
           </View>
           <View style={tw`flex-row items-center gap-2`}>
             <TouchableOpacity 
               onPress={() => setSortVisible(true)}
-              style={tw`flex-row items-center bg-white border border-gray-200 rounded-lg px-3 py-1.5`}
+              style={tw`flex-row items-center bg-green-50 border border-green-200 rounded-lg px-3 py-1.5`}
             >
               <ChevronDown size={16} color="#4B5563" />
-              <Text style={tw`ml-1 text-sm text-gray-700`}>Sort</Text>
+              <Text style={tw`ml-1 text-sm text-green-800`}>Sort</Text>
             </TouchableOpacity>
             <TouchableOpacity 
               onPress={() => setFilterVisible(true)}
-              style={tw`bg-white border border-gray-200 rounded-lg px-3 py-1.5`}
+              style={tw`bg-green-50 border border-green-200 rounded-lg px-3 py-1.5`}
             >
               <Filter size={16} color="#4B5563" />
             </TouchableOpacity>
@@ -243,7 +243,7 @@ export default function ProductListScreen() {
 
       {loading ? (
         <View style={tw`flex-1 justify-center items-center`}>
-          <ActivityIndicator size="large" color="#3B82F6" />
+          <ActivityIndicator size="large" color="#16a34a" />
         </View>
       ) : (
         <FlatList
@@ -254,7 +254,7 @@ export default function ProductListScreen() {
           ListEmptyComponent={renderEmptyState}
           renderItem={({ item }) => (
             <TouchableOpacity 
-              style={tw`flex-1 m-2 bg-white rounded-xl shadow-sm border border-gray-100`}
+              style={tw`flex-1 m-2 bg-green-50 rounded-xl shadow-sm border border-green-100`}
               onPress={() => {
                 // Handle product press
               }}
@@ -265,15 +265,15 @@ export default function ProductListScreen() {
                 resizeMode="cover"
               />
               <View style={tw`p-3`}>
-                <Text style={tw`text-lg font-medium text-gray-800`}>{item.name}</Text>
-                <Text style={tw`text-sm text-gray-500`}>{item.brand}</Text>
-                <Text style={tw`text-xs text-gray-500 mt-1`} numberOfLines={2}>
+                <Text style={tw`text-lg font-medium text-green-800`}>{item.name}</Text>
+                <Text style={tw`text-sm text-green-600`}>{item.brand}</Text>
+                <Text style={tw`text-xs text-green-600 mt-1`} numberOfLines={2}>
                   {item.description}
                 </Text>
                 <View style={tw`flex-row items-center justify-between mt-2`}>
-                  <Text style={tw`text-lg font-semibold text-blue-600`}>₹{item.price}</Text>
+                  <Text style={tw`text-lg font-semibold text-green-600`}>₹{item.price}</Text>
                   <TouchableOpacity 
-                    style={tw`bg-blue-600 rounded-full p-2`}
+                    style={tw`bg-green-600 rounded-full p-2`}
                     onPress={() => Alert.alert('Success', `${item.name} added to cart`)}
                   >
                     <Plus size={18} color="white" />
@@ -293,14 +293,14 @@ export default function ProductListScreen() {
         onRequestClose={() => setSortVisible(false)}
       >
         <TouchableOpacity 
-          style={tw`flex-1 bg-black bg-opacity-50`} 
+          style={tw`flex-1 bg-green-900 bg-opacity-10`} 
           activeOpacity={1} 
           onPress={() => setSortVisible(false)}
         >
-          <View style={tw`mt-auto bg-white rounded-t-3xl`}>
-            <View style={tw`w-12 h-1 bg-gray-300 rounded-full mx-auto mt-3`} />
+          <View style={tw`mt-auto bg-green-50 rounded-t-3xl`}>
+            <View style={tw`w-12 h-1 bg-green-200 rounded-full mx-auto mt-3`} />
             <View style={tw`p-4`}>
-              <Text style={tw`text-xl font-semibold text-gray-800 mb-4`}>Sort By</Text>
+              <Text style={tw`text-xl font-semibold text-green-800 mb-4`}>Sort By</Text>
               <TouchableOpacity 
                 style={tw`py-3 px-4 flex-row justify-between items-center`}
                 onPress={() => {
@@ -308,7 +308,7 @@ export default function ProductListScreen() {
                   setSortVisible(false);
                 }}
               >
-                <Text style={tw`text-base ${sortBy === 'name' ? 'text-blue-600 font-medium' : 'text-gray-800'}`}>Name</Text>
+                <Text style={tw`text-base ${sortBy === 'name' ? 'text-green-600 font-medium' : 'text-green-800'}`}>Name</Text>
               </TouchableOpacity>
               <TouchableOpacity 
                 style={tw`py-3 px-4 flex-row justify-between items-center`}
@@ -317,7 +317,7 @@ export default function ProductListScreen() {
                   setSortVisible(false);
                 }}
               >
-                <Text style={tw`text-base ${sortBy === 'price-asc' ? 'text-blue-600 font-medium' : 'text-gray-800'}`}>Price: Low to High</Text>
+                <Text style={tw`text-base ${sortBy === 'price-asc' ? 'text-green-600 font-medium' : 'text-gray-800'}`}>Price: Low to High</Text>
               </TouchableOpacity>
               <TouchableOpacity 
                 style={tw`py-3 px-4 flex-row justify-between items-center`}
@@ -326,7 +326,7 @@ export default function ProductListScreen() {
                   setSortVisible(false);
                 }}
               >
-                <Text style={tw`text-base ${sortBy === 'price-desc' ? 'text-blue-600 font-medium' : 'text-gray-800'}`}>Price: High to Low</Text>
+                <Text style={tw`text-base ${sortBy === 'price-desc' ? 'text-green-600 font-medium' : 'text-gray-800'}`}>Price: High to Low</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -356,7 +356,7 @@ export default function ProductListScreen() {
                   setFilterVisible(false);
                 }}
               >
-                <Text style={tw`text-base ${priceFilter === 'low' ? 'text-blue-600 font-medium' : 'text-gray-800'}`}>Under ₹100</Text>
+                <Text style={tw`text-base ${priceFilter === 'low' ? 'text-green-600 font-medium' : 'text-gray-800'}`}>Under ₹100</Text>
               </TouchableOpacity>
               <TouchableOpacity 
                 style={tw`py-3 px-4 flex-row justify-between items-center`}
@@ -365,7 +365,7 @@ export default function ProductListScreen() {
                   setFilterVisible(false);
                 }}
               >
-                <Text style={tw`text-base ${priceFilter === 'medium' ? 'text-blue-600 font-medium' : 'text-gray-800'}`}>₹100 - ₹500</Text>
+                <Text style={tw`text-base ${priceFilter === 'medium' ? 'text-green-600 font-medium' : 'text-gray-800'}`}>₹100 - ₹500</Text>
               </TouchableOpacity>
               <TouchableOpacity 
                 style={tw`py-3 px-4 flex-row justify-between items-center`}
@@ -374,7 +374,7 @@ export default function ProductListScreen() {
                   setFilterVisible(false);
                 }}
               >
-                <Text style={tw`text-base ${priceFilter === 'high' ? 'text-blue-600 font-medium' : 'text-gray-800'}`}>Above ₹500</Text>
+                <Text style={tw`text-base ${priceFilter === 'high' ? 'text-green-600 font-medium' : 'text-gray-800'}`}>Above ₹500</Text>
               </TouchableOpacity>
               {(priceFilter || category) && (
                 <TouchableOpacity 

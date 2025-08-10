@@ -61,23 +61,23 @@ export default function Onboarding() {
 
   const renderItem = ({ item }: { item: typeof onboardingData[0] }) => {
     return (
-      <View style={tw`w-[${width}px] items-center`}>
+      <View style={tw`w-[${width}px] items-center bg-green-50`}>
         <Image
           source={{ uri: item.image }}
           style={tw`w-[${width * 0.8}px] h-[${width * 0.8}px] rounded-full mt-25`}
         />
         <View style={tw`mt-12 px-5 items-center`}>
-          <Text style={tw`text-3xl font-bold text-blue-600 mb-3 text-center`}>{item.title}</Text>
-          <Text style={tw`text-base text-gray-500 text-center leading-6`}>{item.description}</Text>
+          <Text style={tw`text-3xl font-bold text-green-700 mb-3 text-center`}>{item.title}</Text>
+          <Text style={tw`text-base text-green-800 text-center leading-6`}>{item.description}</Text>
         </View>
       </View>
     );
   };
 
   return (
-    <View style={tw`flex-1 bg-white`}>
+    <View style={tw`flex-1 bg-green-50`}>
       <TouchableOpacity style={tw`absolute top-15 right-5 z-10`} onPress={handleSkip}>
-        <Text style={tw`text-base text-blue-600 font-medium`}>Skip</Text>
+        <Text style={tw`text-base text-emerald-600 font-medium`}>Skip</Text>
       </TouchableOpacity>
 
       <FlatList
@@ -98,14 +98,14 @@ export default function Onboarding() {
           <View
             key={index}
             style={tw`h-2 w-2 rounded-full mx-1 ${
-              index === currentIndex ? 'bg-blue-600' : 'bg-gray-200'
+              index === currentIndex ? 'bg-green-600' : 'bg-green-200'
             }`}
           />
         ))}
       </View>
 
       <TouchableOpacity
-        style={tw`bg-blue-600 py-4 px-10 rounded-full mb-12 self-center`}
+        style={tw`bg-green-600 py-4 px-10 rounded-full mb-12 self-center`}
         onPress={handleNext}
       >
         <Text style={tw`text-white text-base font-semibold`}>

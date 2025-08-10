@@ -84,18 +84,18 @@ const EditProfileScreen = () => {
   if (loading) {
     return (
       <View style={tw`flex-1 justify-center items-center`}>
-        <ActivityIndicator size="large" color="#2E64FE" />
+        <ActivityIndicator size="large" color="#16a34a" />
       </View>
     );
   }  return (
-    <SafeAreaView style={tw`flex-1 bg-gray-50`}>
+    <SafeAreaView style={tw`flex-1 bg-green-50`}>
       <StatusBar
-        backgroundColor="#202b6d"
+        backgroundColor="#16a34a"
         barStyle="light-content"
         translucent={true}
       />
       {/* Header with gradient background */}
-      <View style={tw`bg-[#202b6d] px-4 py-3 shadow-lg`}>
+      <View style={tw`bg-green-600 px-4 py-3 shadow-lg`}>
         <View style={tw`flex-row items-center justify-between`}>
           <TouchableOpacity 
             onPress={() => navigation.goBack()}
@@ -119,14 +119,14 @@ const EditProfileScreen = () => {
           >
             <Image
               source={{ uri: profileImage }}
-              style={tw`w-28 h-28 rounded-full border-2 border-[#202b6d] shadow-lg`}
+              style={tw`w-28 h-28 rounded-full border-2 border-green-600 shadow-lg`}
             />
-            <View style={tw`absolute bottom-0 right-0 bg-[#202b6d] p-2 rounded-full border-2 border-white shadow`}>
+            <View style={tw`absolute bottom-0 right-0 bg-green-600 p-2 rounded-full border-2 border-green-50 shadow`}>
               <Camera size={16} color="#fff" />
             </View>
           </TouchableOpacity>
         </View>        {/* Form */}
-        <View style={tw`bg-white rounded-3xl p-5 shadow-sm border border-gray-100`}>
+        <View style={tw`bg-green-50 rounded-3xl p-5 shadow-sm border border-green-100`}>
           {[
             { label: 'Full Name', value: name, setValue: setName, placeholder: 'Enter full name', icon: 'user' },
             { label: 'Email', value: email, setValue: setEmail, placeholder: 'Enter email', keyboardType: 'email-address' as const },
@@ -136,11 +136,11 @@ const EditProfileScreen = () => {
           ].map(({ label, value, setValue, placeholder, keyboardType }, index) => (
             <View 
               key={index} 
-              style={tw`mb-4 ${index !== 0 ? 'border-t border-gray-100 pt-4' : ''}`}
+              style={tw`mb-4 ${index !== 0 ? 'border-t border-green-100 pt-4' : ''}`}
             >
-              <Text style={tw`mb-2 font-medium text-gray-600 text-sm`}>{label}</Text>
+              <Text style={tw`mb-2 font-medium text-green-700 text-sm`}>{label}</Text>
               <TextInput
-                style={tw`h-12 rounded-xl bg-gray-50 px-4 text-base border border-gray-200 text-gray-800`}
+                style={tw`h-12 rounded-xl bg-green-100 px-4 text-base border border-green-200 text-green-800`}
                 value={value}
                 onChangeText={setValue}
                 placeholder={placeholder}
@@ -152,7 +152,7 @@ const EditProfileScreen = () => {
         </View>
       </ScrollView>      {/* Fixed Save Button */}
       <View style={[
-        tw`absolute left-0 right-0 p-4 bg-white border-t border-gray-100 shadow-lg`,
+        tw`absolute left-0 right-0 p-4 bg-green-50 border-t border-green-100 shadow-lg`,
         { bottom: Platform.OS === 'ios' ? 80 : 60 } // Adjust for footer height
       ]}>
         <TouchableOpacity

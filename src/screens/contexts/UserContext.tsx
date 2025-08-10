@@ -1,64 +1,76 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// src/contexts/UserContext.tsx
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import CookieManager from '@react-native-cookies/cookies';
+import { Alert } from 'react-native';
 
-export type User = {
-  id: string;
-  name: string;
+interface User {
+  id: number;
   email: string;
-  phone?: string;
-  profileImage?: string;
-  token?: string;
-};
+  role: string;
+  username?: string;
+  phone_number?: string;
+}
 
-type UserContextType = {
-  user: User | null;
-  setUser: (user: User | null) => Promise<void>;
+interface UserContextType {
   isLoggedIn: boolean;
-};
+  checkingLogin: boolean;
+  user: User | null;
+  setIsLoggedIn: (val: boolean) => void;
+  logout: () => Promise<void>;
+}
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
-export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUserState] = useState<User | null>(null);
+export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [checkingLogin, setCheckingLogin] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
 
-  // Set user in state and save to storage
-  const setUser = async (newUser: User | null) => {
-    setUserState(newUser);
-    if (newUser) {
-      await AsyncStorage.setItem('user', JSON.stringify(newUser));
-    } else {
-      await AsyncStorage.removeItem('user');
+  const fetchUserData = async () => {
+    try {
+      const response = await fetch('https://landing.docapp.co.in/api/auth/get-user-data', {
+        method: 'GET',
+        credentials: 'include', // send cookie
+      });
+
+      if (!response.ok) throw new Error('Failed to fetch user data');
+
+      const result = await response.json();
+      setUser(result?.userData || null);
+      setIsLoggedIn(true);
+    } catch (error) {
+      console.error('Error fetching user:', error);
+      setUser(null);
+      setIsLoggedIn(false);
+    } finally {
+      setCheckingLogin(false);
     }
   };
 
-  // Load user on mount
   useEffect(() => {
-    const loadUser = async () => {
-      try {
-        const stored = await AsyncStorage.getItem('user');
-        if (stored) {
-          setUserState(JSON.parse(stored));
-        }
-      } catch (e) {
-        // Optionally handle error
-      }
-    };
-    loadUser();
+    fetchUserData();
   }, []);
 
-  const value: UserContextType = {
-    user,
-    setUser,
-    isLoggedIn: !!user,
+  const logout = async () => {
+    try {
+      await CookieManager.clearAll(true); // clears all cookies
+      setUser(null);
+      setIsLoggedIn(false);
+    } catch (error) {
+      console.error('Logout error:', error);
+      Alert.alert('Logout Failed', 'Unable to logout. Please try again.');
+    }
   };
 
-  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+  return (
+    <UserContext.Provider value={{ isLoggedIn, checkingLogin, user, setIsLoggedIn, logout }}>
+      {children}
+    </UserContext.Provider>
+  );
 };
 
 export const useUser = (): UserContextType => {
   const context = useContext(UserContext);
-  if (!context) {
-    throw new Error('useUser must be used within a UserProvider');
-  }
+  if (!context) throw new Error('useUser must be used within a UserProvider');
   return context;
 };

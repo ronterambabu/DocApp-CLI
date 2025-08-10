@@ -218,7 +218,7 @@ const [showLocationModal, setShowLocationModal] = useState(false);
         onPress={onPress}
       >
         <View
-          style={tw`relative bg-white w-[100px] h-[100px] rounded-[30px] items-center justify-center overflow-hidden shadow-sm`}
+          style={tw`relative bg-green-50 w-[100px] h-[100px] rounded-[30px] items-center justify-center overflow-hidden shadow-sm`}
         >
           {image ? (
             <Image
@@ -232,7 +232,7 @@ const [showLocationModal, setShowLocationModal] = useState(false);
             ) : null
           )}
           {badge && (
-            <View style={tw`absolute top-0 right-0 bg-red-600 rounded-full px-2 py-1`}>
+            <View style={tw`absolute top-0 right-0 bg-emerald-500 rounded-full px-2 py-1`}>
               <Text style={tw`text-white text-xs text-center`}>{badge}</Text>
             </View>
           )}
@@ -245,16 +245,15 @@ const [showLocationModal, setShowLocationModal] = useState(false);
   };
 
   return (
-    <SafeAreaView style={tw`flex-1 bg-gray-100`}>
+    <SafeAreaView style={tw`flex-1 bg-green-50`}>
       <ScrollView
         contentContainerStyle={tw`pb-20`}
         showsVerticalScrollIndicator={false}
       >
 <View
   style={[
-    tw`px-4 pb-4`,
+    tw`px-4 pb-4 bg-green-600`,
     {
-      backgroundColor: '#202b6d',
       borderBottomLeftRadius: 35,
       borderBottomRightRadius: 35,
       paddingTop: Platform.OS === 'android' ? 35 : 60,
@@ -269,7 +268,7 @@ const [showLocationModal, setShowLocationModal] = useState(false);
       <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
         <Image
           source={{ uri: profileImageUri }}
-          style={tw`w-14 h-14 rounded-full border-2 border-white`}
+          style={tw`w-14 h-14 rounded-full border-2 border-green-200`}
         />
       </TouchableOpacity>
 
@@ -296,11 +295,11 @@ const [showLocationModal, setShowLocationModal] = useState(false);
                 setShowLocationModal(false);
               }}
             >
-              <Text style={tw`text-lg ${selectedLocation === city ? 'text-blue-600 font-bold' : 'text-gray-700'}`}>{city}</Text>
+              <Text style={tw`text-lg ${selectedLocation === city ? 'text-green-700 font-bold' : 'text-green-800'}`}>{city}</Text>
             </TouchableOpacity>
           ))}
           <TouchableOpacity style={tw`mt-4`} onPress={() => setShowLocationModal(false)}>
-            <Text style={tw`text-blue-600 font-bold`}>Close</Text>
+            <Text style={tw`text-green-700 font-bold`}>Close</Text>
           </TouchableOpacity>
         </View>
       </Modal>      {/* Language & Notification */}
@@ -313,10 +312,10 @@ const [showLocationModal, setShowLocationModal] = useState(false);
           <Text style={tw`ml-1 text-white text-xs`}>{selectedLanguage.slice(0, 2)}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('Notification')} style={tw`ml-3`}>
-          <View>
-            <Bell size={20} color="white" />
-            <View style={tw`absolute top-0 right-0 w-2 h-2 rounded-full bg-red-600`} />
-          </View>
+            <View>
+              <Bell size={20} color="white" />
+              <View style={tw`absolute top-0 right-0 w-2 h-2 rounded-full bg-emerald-500`} />
+            </View>
         </TouchableOpacity>
       </View>
 
@@ -327,25 +326,25 @@ const [showLocationModal, setShowLocationModal] = useState(false);
         style={tw`m-0 justify-end`}
       >
         <View style={tw`bg-white rounded-t-3xl`}>
-          <View style={tw`p-4 border-b border-gray-200`}>
-            <View style={tw`w-12 h-1 bg-gray-300 rounded-full mx-auto mb-4`} />
+          <View style={tw`p-4 border-b border-green-100`}>
+            <View style={tw`w-12 h-1 bg-green-200 rounded-full mx-auto mb-4`} />
             <Text style={tw`text-xl font-bold text-center`}>Select Language</Text>
           </View>
           <ScrollView style={tw`max-h-[70%]`}>
             {languages.map((lang) => (
               <TouchableOpacity
                 key={lang.code}
-                style={tw`flex-row items-center justify-between px-6 py-4 border-b border-gray-100`}
+                style={tw`flex-row items-center justify-between px-6 py-4 border-b border-green-50`}
                 onPress={() => {
                   setSelectedLanguage(lang.name);
                   setShowLanguageModal(false);
                 }}
               >
-                <Text style={tw`text-base ${selectedLanguage === lang.name ? 'text-blue-600 font-bold' : 'text-gray-700'}`}>
+                <Text style={tw`text-base ${selectedLanguage === lang.name ? 'text-green-700 font-bold' : 'text-green-800'}`}>
                   {lang.name}
                 </Text>
                 {selectedLanguage === lang.name && (
-                  <View style={tw`w-6 h-6 rounded-full bg-blue-600 items-center justify-center`}>
+                  <View style={tw`w-6 h-6 rounded-full bg-green-600 items-center justify-center`}>
                     <Text style={tw`text-white font-bold text-sm`}>✓</Text>
                   </View>
                 )}
@@ -353,10 +352,10 @@ const [showLocationModal, setShowLocationModal] = useState(false);
             ))}
           </ScrollView>
           <TouchableOpacity
-            style={tw`p-4 border-t border-gray-200`}
+            style={tw`p-4 border-t border-green-100`}
             onPress={() => setShowLanguageModal(false)}
           >
-            <Text style={tw`text-center text-blue-600 font-bold text-lg`}>Close</Text>
+            <Text style={tw`text-center text-green-700 font-bold text-lg`}>Close</Text>
           </TouchableOpacity>
         </View>
       </Modal>
@@ -368,8 +367,8 @@ const [showLocationModal, setShowLocationModal] = useState(false);
       activeOpacity={0.9}
       style={tw`mt-4 mb-4 flex-row items-center px-4 py-2.5 bg-white rounded-full shadow-sm border border-gray-200`}
     >
-      <Search size={18} color="#6B7280" />
-      <Text style={tw`ml-3 text-gray-600 text-sm`}>
+      <Search size={18} color="#059669" />
+      <Text style={tw`ml-3 text-green-700 text-sm`}>
         Search doctors, clinics, tests...
       </Text>
     </TouchableOpacity>
@@ -457,7 +456,7 @@ const [showLocationModal, setShowLocationModal] = useState(false);
               <View
                 key={index}
                 style={tw`w-2 h-2 bg-gray-300 rounded-full mx-1 ${
-                  activeBannerIndex === index ? 'bg-blue-900 w-4 shadow-sm' : ''
+                  activeBannerIndex === index ? 'bg-green-800 w-4 shadow-sm' : ''
                 }`}
               />
             ))}
@@ -485,10 +484,10 @@ const [showLocationModal, setShowLocationModal] = useState(false);
                 style={tw`w-[30%] mb-4 items-center`} 
                 onPress={() => navigation.navigate('AllSpecialtiesScreen')}
               >
-                <View style={tw`bg-indigo-100 w-[100px] h-[100px] rounded-[30px] items-center justify-center`}>
-                  <ChevronRight size={18} color="#A3A3A3" />
+                <View style={tw`bg-green-100 w-[100px] h-[100px] rounded-[30px] items-center justify-center`}>
+                  <ChevronRight size={18} color="#059669" />
                 </View>
-                <Text style={tw`text-xs mt-2 text-center text-blue-800 font-bold`}>
+                <Text style={tw`text-xs mt-2 text-center text-green-700 font-bold`}>
                   View More
                 </Text>
               </TouchableOpacity>
@@ -506,7 +505,7 @@ const [showLocationModal, setShowLocationModal] = useState(false);
               onPress={() => navigation.navigate('AllHospitals')}
               activeOpacity={0.7}
             >
-              <Text style={tw`text-xs text-gray-400 font-semibold py-2 px-2`}>
+              <Text style={tw`text-xs text-green-700 font-semibold py-2 px-2`}>
                 View All
               </Text>
             </TouchableOpacity>
@@ -531,8 +530,8 @@ const [showLocationModal, setShowLocationModal] = useState(false);
                 <View style={tw`absolute bottom-0 left-0 right-0 bg-black/50 py-1.5 px-2`}>
                   <Text style={tw`text-sm font-bold text-white`}>{hospital.name}</Text>
                   <View style={tw`flex-row items-center mt-0.5`}>
-                    <MapPin size={10} color="#E5E7EB" />
-                    <Text style={tw`text-xs text-gray-200 ml-1`}>{hospital.location}</Text>
+                    <MapPin size={10} color="#bbf7d0" />
+                    <Text style={tw`text-xs text-green-100 ml-1`}>{hospital.location}</Text>
                   </View>
                 </View>
               </TouchableOpacity>
@@ -550,7 +549,7 @@ const [showLocationModal, setShowLocationModal] = useState(false);
               onPress={() => navigation.navigate('AllPharmacies')}
               activeOpacity={0.7}
             >
-              <Text style={tw`text-xs text-gray-400 font-semibold py-2 px-2`}>
+              <Text style={tw`text-xs text-green-700 font-semibold py-2 px-2`}>
                 View All
               </Text>
             </TouchableOpacity>
@@ -575,8 +574,8 @@ const [showLocationModal, setShowLocationModal] = useState(false);
                 <View style={tw`absolute bottom-0 left-0 right-0 bg-black/50 py-1.5 px-2`}>
                   <Text style={tw`text-sm font-bold text-white`}>{pharmacy.name}</Text>
                   <View style={tw`flex-row items-center mt-0.5`}>
-                    <MapPin size={12} color="#E5E7EB" />
-                    <Text style={tw`text-xs text-gray-200 ml-1`}>{pharmacy.location}</Text>
+                    <MapPin size={12} color="#bbf7d0" />
+                    <Text style={tw`text-xs text-green-100 ml-1`}>{pharmacy.location}</Text>
                   </View>
                 </View>
               </TouchableOpacity>
@@ -594,7 +593,7 @@ const [showLocationModal, setShowLocationModal] = useState(false);
               onPress={() => navigation.navigate('AllOffersScreen')}
               activeOpacity={0.7}
             >
-              <Text style={tw`text-xs text-gray-400 font-semibold py-2 px-2`}>
+              <Text style={tw`text-xs text-green-700 font-semibold py-2 px-2`}>
                 View All
               </Text>
             </TouchableOpacity>

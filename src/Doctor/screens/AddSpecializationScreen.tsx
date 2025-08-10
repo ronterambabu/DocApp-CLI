@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Keyboard, TouchableWithoutFeedback, ActivityIndicator } from 'react-native';
 import DoctorHeader from '../components/DoctorHeader';
+import tw from 'twrnc';
+
 
 const AddSpecializationScreen = () => {
   const [specialization, setSpecialization] = useState('');
@@ -31,11 +33,11 @@ const AddSpecializationScreen = () => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={{ flex: 1, backgroundColor: '#f6f8fa' }}>
+      <View style={tw`flex-1 bg-green-50`}>
         <DoctorHeader title="Add Specialization" showSettings={true} showNotifications={true} />
-        <View style={styles.container}>
-          <View style={styles.card}>
-            <Text style={styles.title}>Add Specialization</Text>
+        <View style={tw`flex-1 justify-center items-center`}>
+          <View style={tw`w-11/12 bg-white rounded-2xl p-6 shadow-sm`}>
+            <Text style={tw`text-2xl font-bold text-green-700 mb-4`}>Add Specialization</Text>
             <TextInput
               style={styles.input}
               placeholder="Specialization Name"

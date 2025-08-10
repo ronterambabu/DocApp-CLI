@@ -48,10 +48,10 @@ const TestBookingScreen = () => {
   const renderItem = ({ item }: { item: typeof TEST_DATA[0] }) => {
     const isSelected = selectedTests.includes(item.id);
     return (
-      <TouchableOpacity
-        style={tw`bg-white p-4 rounded-xl mb-3 mx-4 border ${
-          isSelected ? 'border-blue-600 bg-blue-50' : 'border-gray-300'
-        }`}
+          <TouchableOpacity
+            style={tw`bg-green-50 p-4 rounded-xl mb-3 mx-4 border ${
+              isSelected ? 'border-green-600 bg-green-100' : 'border-green-200'
+            }`}
         onPress={() => toggleSelection(item.id)}
         activeOpacity={0.8}
         accessibilityRole="checkbox"
@@ -60,13 +60,13 @@ const TestBookingScreen = () => {
       >
         <View style={tw`flex-row items-center`}>
           {isSelected ? (
-            <CheckSquare size={24} color="#2E86DE" />
+                <CheckSquare size={24} color="#16a34a" />
           ) : (
             <Square size={24} color="#888" />
           )}
           <View style={tw`ml-3 flex-1`}>
-            <Text style={tw`text-base font-medium text-gray-900`}>{item.name}</Text>
-            <Text style={tw`text-sm text-gray-600 mt-1`}>₹{item.price}</Text>
+            <Text style={tw`text-base font-medium text-green-900`}>{item.name}</Text>
+            <Text style={tw`text-sm text-green-700 mt-1`}>₹{item.price}</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -89,12 +89,12 @@ const TestBookingScreen = () => {
 
       {/* Bottom Bar */}
       {selectedTests.length > 0 && (
-        <View style={tw`absolute bottom-0 left-0 right-0 bg-white px-4 py-3 border-t border-gray-200 flex-row justify-between items-center`}>
-          <Text style={tw`text-base font-medium text-gray-800`}>
+        <View style={tw`absolute bottom-0 left-0 right-0 bg-green-50 px-4 py-3 border-t border-green-200 flex-row justify-between items-center`}>
+          <Text style={tw`text-base font-medium text-green-800`}>
             {selectedTests.length} test(s) — ₹{totalAmount}
           </Text>
           <TouchableOpacity
-            style={tw`bg-blue-600 py-2 px-5 rounded-2xl`}
+              style={tw`bg-green-600 py-2 px-5 rounded-2xl`}
             onPress={handleBooking}
             accessibilityRole="button"
             accessibilityLabel={`Book ${selectedTests.length} tests for ₹${totalAmount}`}

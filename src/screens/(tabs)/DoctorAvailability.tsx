@@ -120,9 +120,9 @@ const DoctorAvailabilityScreen = () => {
             return (
               <TouchableOpacity
                 key={idx}
-                style={tw`border ${available ? 'border-green-500' : 'border-gray-300'} 
-                         px-4 py-2 rounded-lg mb-2 mr-2 
-                         ${available ? 'bg-white' : 'bg-gray-50'}`}
+                               style={tw`border ${available ? 'border-green-500' : 'border-green-200'} 
+                                        px-4 py-2 rounded-lg mb-2 mr-2 
+                                        ${available ? 'bg-green-50' : 'bg-green-100'}`}
                 activeOpacity={0.85}
                 onPress={() => available && handleSlotSelection(slot)}
                 disabled={!available}
@@ -139,11 +139,11 @@ const DoctorAvailabilityScreen = () => {
   };
 
   return (
-    <View style={[tw`flex-1 bg-white`, { paddingTop: insets.top }]}>
+    <View style={[tw`flex-1 bg-white`, { paddingTop: insets.top }]}> 
       <PageHeader
         title=""
-        backgroundColor="#059669"
-        textColor="#fff"
+        backgroundColor="#059669" // Tailwind green-600
+        textColor="#fff" // Tailwind white
         onBackPress={() => navigation.goBack()}
         leftComponent={
           <View style={tw`flex-row items-center`}>

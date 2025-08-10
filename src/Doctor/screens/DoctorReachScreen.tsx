@@ -4,6 +4,7 @@ import { Text } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import PageLayout from '../../components/PageLayout';
 import DoctorHeader from '../components/DoctorHeader';
+import tw from 'twrnc';
 
 const DoctorReachScreen = () => {
   const stats = [
@@ -14,45 +15,41 @@ const DoctorReachScreen = () => {
   ];
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#fff' }}>
+    <View style={tw`flex-1 bg-green-50`}>
       <DoctorHeader title="Online Reach" showSettings showNotifications />
-      <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Your Online Reach</Text>
-          <Text style={styles.subtitle}>Monitor and improve your online presence</Text>
+      <ScrollView contentContainerStyle={tw`pb-6`}> 
+        <View style={tw`p-5 bg-green-100 rounded-b-2xl mb-4`}> 
+          <Text style={tw`text-2xl font-bold text-green-700 mb-2`}>Your Online Reach</Text>
+          <Text style={tw`text-base text-green-600`}>Monitor and improve your online presence</Text>
         </View>
 
-        <View style={styles.statsGrid}>
+        <View style={tw`flex-row flex-wrap justify-between px-4 mb-4`}> 
           {stats.map((stat, index) => (
-            <View key={index} style={styles.statCard}>
-              <Icon name={stat.icon} size={32} color="#1d9be3" />
-              <Text style={styles.statCount}>{stat.count}</Text>
-              <Text style={styles.statTitle}>{stat.title}</Text>
+            <View key={index} style={tw`bg-white rounded-xl p-4 mb-4 w-[47%] items-center shadow-sm`}>
+              <Icon name={stat.icon} size={32} color="#16a34a" />
+              <Text style={tw`text-2xl font-bold text-green-700 mt-2`}>{stat.count}</Text>
+              <Text style={tw`text-green-600 mt-1`}>{stat.title}</Text>
             </View>
           ))}
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Profile Completion</Text>
-          <View style={styles.progressBar}>
-            <View style={[styles.progress, { width: '85%' }]} />
+        <View style={tw`px-4 mb-4`}> 
+          <Text style={tw`text-lg font-bold text-green-700 mb-2`}>Profile Completion</Text>
+          <View style={tw`h-3 bg-green-100 rounded-full overflow-hidden mb-2`}> 
+            <View style={[tw`h-3 bg-green-600 rounded-full`, { width: '85%' }]} />
           </View>
-          <Text style={styles.progressText}>85% Complete</Text>
+          <Text style={tw`text-green-600`}>85% Complete</Text>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Improve Your Reach</Text>
-          <View style={styles.tipCard}>
-            <Icon name="lightbulb-on" size={24} color="#1d9be3" />
-            <Text style={styles.tipText}>
-              Complete your profile to appear higher in search results
-            </Text>
+        <View style={tw`px-4 mb-4`}> 
+          <Text style={tw`text-lg font-bold text-green-700 mb-2`}>Improve Your Reach</Text>
+          <View style={tw`bg-green-100 rounded-xl p-4 mb-2 flex-row items-center`}>
+            <Icon name="lightbulb-on" size={24} color="#16a34a" />
+            <Text style={tw`text-green-600 ml-2`}>Complete your profile to appear higher in search results</Text>
           </View>
-          <View style={styles.tipCard}>
-            <Icon name="star" size={24} color="#1d9be3" />
-            <Text style={styles.tipText}>
-              Encourage satisfied patients to leave reviews
-            </Text>
+          <View style={tw`bg-green-100 rounded-xl p-4 flex-row items-center`}>
+            <Icon name="star" size={24} color="#16a34a" />
+            <Text style={tw`text-green-600 ml-2`}>Encourage satisfied patients to leave reviews</Text>
           </View>
         </View>
       </ScrollView>

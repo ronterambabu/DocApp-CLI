@@ -67,15 +67,15 @@ const OpenSourceLicensesScreen = () => {
   };
 
   return (
-    <View style={tw`flex-1 bg-[#f8fafc]`}>
+    <View style={tw`flex-1 bg-green-50`}>
       <DoctorHeader title="Open Source Licenses" />
       <ScrollView contentContainerStyle={tw`p-4 pb-10`}>
-        <Text style={tw`text-2xl font-bold text-[#202b6d] mb-2 text-center`}>Open Source Licenses</Text>
-        <Text style={tw`text-base text-gray-500 mb-6 text-center`}>Third-party libraries used in this app</Text>
+        <Text style={tw`text-2xl font-bold text-green-700 mb-2 text-center`}>Open Source Licenses</Text>
+        <Text style={tw`text-base text-green-600 mb-6 text-center`}>Third-party libraries used in this app</Text>
 
         <View style={tw`bg-white rounded-xl p-4 mb-4`}>
-          <Text style={tw`text-lg font-bold text-[#202b6d] mb-3`}>Acknowledgments</Text>
-          <Text style={tw`text-gray-700 leading-6`}>
+          <Text style={tw`text-lg font-bold text-green-700 mb-3`}>Acknowledgments</Text>
+          <Text style={tw`text-green-700 leading-6`}>
             This application uses various open-source libraries. We are grateful to the developers 
             and contributors of these projects for their valuable work.
           </Text>

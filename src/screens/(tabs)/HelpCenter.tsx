@@ -37,11 +37,11 @@ const HelpCenterScreen = () => {
   return (
     <PageLayout
       title="Help Center"
-      headerBackgroundColor="#2E3192"
+        headerBackgroundColor="#16a34a"
       scrollable={true}
     >
       <View style={tw`px-4`}>
-        <Text style={tw`text-base text-gray-600 mb-6`}>
+        <Text style={tw`text-base text-green-700 mb-6`}>
           How can we assist you today?
         </Text>
 
@@ -51,13 +51,13 @@ const HelpCenterScreen = () => {
             <TouchableOpacity
               key={topic.id}
               onPress={() => handleHelpTopicPress(topic)}
-              style={tw`bg-white rounded-xl px-4 py-4 mb-3 flex-row items-center justify-between shadow`}
+              style={tw`bg-green-50 rounded-xl px-4 py-4 mb-3 flex-row items-center justify-between shadow`}
               accessibilityRole="button"
               accessibilityLabel={topic.title}
             >
               <View style={tw`flex-row items-center`}>
                 <topic.icon size={22} color="#007bff" />
-                <Text style={tw`ml-3 text-base text-gray-800 font-medium`}>
+                <Text style={tw`ml-3 text-base text-green-800 font-medium`}>
                   {topic.title}
                 </Text>
               </View>
@@ -68,11 +68,11 @@ const HelpCenterScreen = () => {
 
         {/* Contact Support */}
         <View>
-          <Text style={tw`text-base font-semibold mb-3 text-gray-700`}>
+          <Text style={tw`text-base font-semibold mb-3 text-green-800`}>
             Still need help?
           </Text>
           <TouchableOpacity
-            style={tw`bg-blue-600 py-4 px-4 rounded-xl flex-row items-center justify-center`}
+            style={tw`bg-green-600 py-4 px-4 rounded-xl flex-row items-center justify-center`}
             onPress={handleContactSupport}
             accessibilityRole="button"
             accessibilityLabel="Contact Support"

@@ -14,38 +14,38 @@ const PersonalDetailsScreen = () => {
   return (
     <PageLayout
       title="Personal Details"
-      headerBackgroundColor="#2E3192"
+      headerBackgroundColor="bg-green-600"
       scrollable={true}
     >
-      <View style={[tw`bg-white rounded-xl p-4 mx-4`, { elevation: 1 }]}>
+      <View style={[tw`bg-green-50 rounded-xl p-4 mx-4`, { elevation: 1 }]}> 
         <View style={tw`mb-4`}>
-          <Text style={tw`text-sm text-gray-500`}>Full Name</Text>
-          <Text style={tw`text-base text-gray-900 mt-1 font-medium`}>{name}</Text>
+          <Text style={tw`text-sm text-green-700`}>Full Name</Text>
+          <Text style={tw`text-base text-green-900 mt-1 font-medium`}>{name}</Text>
         </View>
 
         <View style={tw`mb-4`}>
-          <Text style={tw`text-sm text-gray-500`}>Email</Text>
-          <Text style={tw`text-base text-gray-900 mt-1 font-medium`}>{email}</Text>
+          <Text style={tw`text-sm text-green-700`}>Email</Text>
+          <Text style={tw`text-base text-green-900 mt-1 font-medium`}>{email}</Text>
         </View>
 
         <View style={tw`mb-4`}>
-          <Text style={tw`text-sm text-gray-500`}>Phone</Text>
-          <Text style={tw`text-base text-gray-900 mt-1 font-medium`}>{phone}</Text>
+          <Text style={tw`text-sm text-green-700`}>Phone</Text>
+          <Text style={tw`text-base text-green-900 mt-1 font-medium`}>{phone}</Text>
         </View>
 
         <View style={tw`mb-4`}>
-          <Text style={tw`text-sm text-gray-500`}>Gender</Text>
-          <Text style={tw`text-base text-gray-900 mt-1 font-medium`}>{gender}</Text>
+          <Text style={tw`text-sm text-green-700`}>Gender</Text>
+          <Text style={tw`text-base text-green-900 mt-1 font-medium`}>{gender}</Text>
         </View>
 
         <View style={tw`mb-4`}>
-          <Text style={tw`text-sm text-gray-500`}>Date of Birth</Text>
-          <Text style={tw`text-base text-gray-900 mt-1 font-medium`}>{dob}</Text>
+          <Text style={tw`text-sm text-green-700`}>Date of Birth</Text>
+          <Text style={tw`text-base text-green-900 mt-1 font-medium`}>{dob}</Text>
         </View>
 
         <View style={tw`mb-4`}>
-          <Text style={tw`text-sm text-gray-500`}>Address</Text>
-          <Text style={tw`text-base text-gray-900 mt-1 font-medium`}>{address}</Text>
+          <Text style={tw`text-sm text-green-700`}>Address</Text>
+          <Text style={tw`text-base text-green-900 mt-1 font-medium`}>{address}</Text>
         </View>
       </View>
     </PageLayout>

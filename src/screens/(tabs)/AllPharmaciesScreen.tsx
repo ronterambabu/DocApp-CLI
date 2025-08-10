@@ -68,7 +68,7 @@ const AllPharmaciesScreen = () => {
   const renderPharmacyCard = ({ item }: { item: typeof pharmacies[0] }) => (
     <TouchableOpacity
       onPress={() => navigation.navigate('PharmacyDetailsScreen', { id: item.id })}
-      style={tw`bg-white rounded-2xl mx-4 mb-4 shadow-md overflow-hidden`}
+      style={tw`bg-green-50 rounded-2xl mx-4 mb-4 shadow-md overflow-hidden`}
       accessibilityRole="button"
       accessibilityLabel={`${item.name} pharmacy in ${item.location}`}
     >
@@ -81,8 +81,8 @@ const AllPharmaciesScreen = () => {
         }}
       />
       <View style={tw`p-4`}>
-        <Text style={tw`text-lg font-bold text-gray-900`}>{item.name}</Text>
-        <Text style={tw`text-sm text-gray-500 mt-1`}>{item.location}</Text>
+        <Text style={tw`text-lg font-bold text-green-900`}>{item.name}</Text>
+        <Text style={tw`text-sm text-green-600 mt-1`}>{item.location}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -90,19 +90,19 @@ const AllPharmaciesScreen = () => {
   return (
     <PageLayout
       title="All Pharmacies"
-      headerBackgroundColor="#2E3192"
+        headerBackgroundColor="#16a34a"
       scrollable={false}
     >
       {/* Search Bar */}
       <View style={tw`px-4 mt-4 mb-3`}>
-        <View style={tw`flex-row items-center bg-white rounded-full px-4 py-2 shadow`}>
+        <View style={tw`flex-row items-center bg-green-50 rounded-full px-4 py-2 shadow`}>
           <Search size={20} color="#9CA3AF" style={tw`mr-2`} />
           <TextInput
             placeholder="Search pharmacies..."
             placeholderTextColor="#9CA3AF"
             value={searchQuery}
             onChangeText={setSearchQuery}
-            style={tw`flex-1 text-base text-gray-800`}
+            style={tw`flex-1 text-base text-green-800`}
             accessibilityLabel="Search pharmacies"
           />
         </View>
@@ -116,7 +116,7 @@ const AllPharmaciesScreen = () => {
         contentContainerStyle={tw`pb-10`}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={
-          <Text style={tw`text-center mt-10 text-base text-gray-400`}>
+          <Text style={tw`text-center mt-10 text-base text-green-400`}>
             No pharmacies found.
           </Text>
         }

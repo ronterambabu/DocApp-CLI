@@ -15,67 +15,67 @@ const CashlessSettingsScreen = () => {
   const [instantRefunds, setInstantRefunds] = useState(true);
 
   return (
-    <View style={tw`flex-1 bg-[#f8fafc]`}>
+    <View style={tw`flex-1 bg-green-50`}>
       <DoctorHeader title="Cashless Settings" />
       <ScrollView contentContainerStyle={tw`p-4 pb-10`}>
-        <Text style={tw`text-2xl font-bold text-[#202b6d] mb-2 text-center`}>Payment Settings</Text>
-        <Text style={tw`text-base text-gray-500 mb-6 text-center`}>Manage your cashless payment options</Text>
+        <Text style={tw`text-2xl font-bold text-green-700 mb-2 text-center`}>Payment Settings</Text>
+        <Text style={tw`text-base text-green-600 mb-6 text-center`}>Manage your cashless payment options</Text>
 
         {/* Payment Methods */}
-        <View style={tw`bg-white rounded-xl p-4 mb-4`}>
-          <Text style={tw`text-lg font-bold text-[#202b6d] mb-4`}>Payment Methods</Text>
+        <View style={tw`bg-green-100 rounded-xl p-4 mb-4`}>
+          <Text style={tw`text-lg font-bold text-green-700 mb-4`}>Payment Methods</Text>
           
           <View style={tw`flex-row justify-between items-center mb-4`}>
             <View>
-              <Text style={tw`text-gray-700 font-medium`}>Enable Cashless Payments</Text>
-              <Text style={tw`text-gray-500 text-sm`}>Accept digital payments from patients</Text>
+              <Text style={tw`text-green-700 font-medium`}>Enable Cashless Payments</Text>
+              <Text style={tw`text-green-600 text-sm`}>Accept digital payments from patients</Text>
             </View>
             <Switch
               value={cashlessEnabled}
               onValueChange={setCashlessEnabled}
-              trackColor={{ false: '#cbd5e1', true: '#bbd4fa' }}
-              thumbColor={cashlessEnabled ? '#1d9be3' : '#94a3b8'}
+              trackColor={{ false: '#bbf7d0', true: '#059669' }}
+              thumbColor={cashlessEnabled ? '#16a34a' : '#bbf7d0'}
             />
           </View>
 
           <View style={tw`flex-row justify-between items-center mb-4`}>
             <View>
-              <Text style={tw`text-gray-700 font-medium`}>Auto Settlement</Text>
-              <Text style={tw`text-gray-500 text-sm`}>Automatically settle payments daily</Text>
+              <Text style={tw`text-green-700 font-medium`}>Auto Settlement</Text>
+              <Text style={tw`text-green-600 text-sm`}>Automatically settle payments daily</Text>
             </View>
             <Switch
               value={autoSettlement}
               onValueChange={setAutoSettlement}
-              trackColor={{ false: '#cbd5e1', true: '#bbd4fa' }}
-              thumbColor={autoSettlement ? '#1d9be3' : '#94a3b8'}
+              trackColor={{ false: '#bbf7d0', true: '#059669' }}
+              thumbColor={autoSettlement ? '#16a34a' : '#bbf7d0'}
             />
           </View>
 
           <View style={tw`flex-row justify-between items-center`}>
             <View>
-              <Text style={tw`text-gray-700 font-medium`}>Instant Refunds</Text>
-              <Text style={tw`text-gray-500 text-sm`}>Process refunds immediately</Text>
+              <Text style={tw`text-green-700 font-medium`}>Instant Refunds</Text>
+              <Text style={tw`text-green-600 text-sm`}>Process refunds immediately</Text>
             </View>
             <Switch
               value={instantRefunds}
               onValueChange={setInstantRefunds}
-              trackColor={{ false: '#cbd5e1', true: '#bbd4fa' }}
-              thumbColor={instantRefunds ? '#1d9be3' : '#94a3b8'}
+              trackColor={{ false: '#bbf7d0', true: '#059669' }}
+              thumbColor={instantRefunds ? '#16a34a' : '#bbf7d0'}
             />
           </View>
         </View>
 
         {/* Bank Details */}
-        <View style={tw`bg-white rounded-xl p-4 mb-4`}>
-          <Text style={tw`text-lg font-bold text-[#202b6d] mb-4`}>Bank Details</Text>
+        <View style={tw`bg-green-100 rounded-xl p-4 mb-4`}>
+          <Text style={tw`text-lg font-bold text-green-700 mb-4`}>Bank Details</Text>
           <TouchableOpacity 
-            style={tw`bg-[#202b6d] rounded-lg py-3 items-center mb-3`}
+            style={tw`bg-green-600 rounded-lg py-3 items-center mb-3`}
             onPress={() => Alert.alert('Bank Details', 'Add or update your bank account details')}
           >
             <Text style={tw`text-white font-bold`}>Update Bank Account</Text>
           </TouchableOpacity>
           <TouchableOpacity 
-            style={tw`bg-[#1d9be3] rounded-lg py-3 items-center`}
+            style={tw`bg-emerald-500 rounded-lg py-3 items-center`}
             onPress={() => Alert.alert('Transaction History', 'View your payment history')}
           >
             <Text style={tw`text-white font-bold`}>View Transaction History</Text>
@@ -84,7 +84,7 @@ const CashlessSettingsScreen = () => {
 
         {/* Save Button */}
         <TouchableOpacity
-          style={tw`bg-[#202b6d] rounded-lg py-4 items-center mx-4 mb-4`}
+          style={tw`bg-green-600 rounded-lg py-4 items-center mx-4 mb-4`}
           onPress={() => {
             Alert.alert('Success', 'Cashless settings saved successfully!');
           }}
